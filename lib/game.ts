@@ -268,15 +268,6 @@ export abstract class Game3D extends GameImpl {
     Audio = new AudioContext();
     Cameras: Array<Entity> = [];
     Targets: Record<string, RenderTarget> = {};
-
-    constructor() {
-        super();
-
-        this.Gl.enable(GL_DEPTH_TEST);
-        this.Gl.enable(GL_CULL_FACE);
-
-        this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
 }
 
 /**

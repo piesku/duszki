@@ -1,6 +1,6 @@
 import {Game3D} from "../lib/game.js";
 import {create_spritesheet_from} from "../lib/texture.js";
-import {GL_BLEND, GL_DEPTH_TEST} from "../lib/webgl.js";
+import {GL_BLEND, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
@@ -11,7 +11,6 @@ import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
-import {sys_physics2d_bounds} from "./systems/sys_physics2d_bounds.js";
 import {sys_physics2d_integrate} from "./systems/sys_physics2d_integrate.js";
 import {sys_physics2d_resolve} from "./systems/sys_physics2d_resolve.js";
 import {sys_poll} from "./systems/sys_poll.js";
@@ -37,22 +36,22 @@ export class Game extends Game3D {
     InstanceData = new Float32Array(this.World.Capacity * FLOATS_PER_INSTANCE);
     InstanceBuffer = this.Gl.createBuffer()!;
 
+    ClearStyle = "#763b36";
     SceneWidth = 32;
-    SceneHeight = 32;
+    SceneHeight = 20;
 
     constructor() {
         super();
 
         this.Gl.clearColor(0, 0, 0, 0);
-        this.Gl.disable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);
+        this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
 
     override FixedUpdate(delta: number) {
         // Collisions and physics.
         sys_physics2d_integrate(this, delta);
-        sys_physics2d_bounds(this, delta);
         sys_transform2d(this, delta);
         sys_collide2d(this, delta);
         sys_physics2d_resolve(this, delta);

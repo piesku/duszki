@@ -1,6 +1,5 @@
 import {instantiate} from "../../lib/game.js";
 import {float} from "../../lib/random.js";
-import {camera2d} from "../components/com_camera2d.js";
 import {children} from "../components/com_children.js";
 import {collide2d} from "../components/com_collide2d.js";
 import {control_always2d} from "../components/com_control_always2d.js";
@@ -11,6 +10,7 @@ import {RigidKind, rigid_body2d} from "../components/com_rigid_body2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, Layer, WORLD_CAPACITY} from "../game.js";
 import {World} from "../world.js";
+import {blueprint_camera} from "./blu_camera.js";
 import {blueprint_square} from "./blu_square.js";
 
 export function scene_stage(game: Game) {
@@ -18,11 +18,7 @@ export function scene_stage(game: Game) {
     game.ViewportResized = true;
 
     // Camera.
-    instantiate(game, [
-        spatial_node2d(),
-        local_transform2d([0, 0]),
-        camera2d([game.SceneWidth / 2 + 1, game.SceneHeight / 2 + 1]),
-    ]);
+    instantiate(game, blueprint_camera(game));
 
     {
         // Background.
