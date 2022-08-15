@@ -7,793 +7,793 @@ export let spritesheet: {
         height: number;
     };
 } = {
-    "tile_0000.png": {
+    "000.png": {
         "x": 0,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0001.png": {
+    "001.png": {
         "x": 16,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0002.png": {
+    "002.png": {
         "x": 0,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0003.png": {
+    "003.png": {
         "x": 16,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0004.png": {
+    "004.png": {
         "x": 32,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0005.png": {
+    "005.png": {
         "x": 32,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0006.png": {
+    "006.png": {
         "x": 0,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0007.png": {
+    "007.png": {
         "x": 16,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0008.png": {
+    "008.png": {
         "x": 32,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0009.png": {
+    "009.png": {
         "x": 48,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0010.png": {
+    "010.png": {
         "x": 48,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0011.png": {
+    "011.png": {
         "x": 48,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0012.png": {
+    "012.png": {
         "x": 0,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0013.png": {
+    "013.png": {
         "x": 16,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0014.png": {
+    "014.png": {
         "x": 32,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0015.png": {
+    "015.png": {
         "x": 48,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0016.png": {
+    "016.png": {
         "x": 64,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0017.png": {
+    "017.png": {
         "x": 64,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0018.png": {
+    "018.png": {
         "x": 64,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0019.png": {
+    "019.png": {
         "x": 64,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0020.png": {
+    "020.png": {
         "x": 0,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0021.png": {
+    "021.png": {
         "x": 16,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0022.png": {
+    "022.png": {
         "x": 32,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0023.png": {
+    "023.png": {
         "x": 48,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0024.png": {
+    "024.png": {
         "x": 64,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0025.png": {
+    "025.png": {
         "x": 80,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0026.png": {
+    "026.png": {
         "x": 80,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0027.png": {
+    "027.png": {
         "x": 80,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0028.png": {
+    "028.png": {
         "x": 80,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0029.png": {
+    "029.png": {
         "x": 80,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0030.png": {
+    "030.png": {
         "x": 0,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0031.png": {
+    "031.png": {
         "x": 16,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0032.png": {
+    "032.png": {
         "x": 32,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0033.png": {
+    "033.png": {
         "x": 48,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0034.png": {
+    "034.png": {
         "x": 64,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0035.png": {
+    "035.png": {
         "x": 80,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0036.png": {
+    "036.png": {
         "x": 96,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0037.png": {
+    "037.png": {
         "x": 96,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0038.png": {
+    "038.png": {
         "x": 96,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0039.png": {
+    "039.png": {
         "x": 96,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0040.png": {
+    "040.png": {
         "x": 96,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0041.png": {
+    "041.png": {
         "x": 96,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0042.png": {
+    "042.png": {
         "x": 0,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0043.png": {
+    "043.png": {
         "x": 16,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0044.png": {
+    "044.png": {
         "x": 32,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0045.png": {
+    "045.png": {
         "x": 48,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0046.png": {
+    "046.png": {
         "x": 64,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0047.png": {
+    "047.png": {
         "x": 80,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0048.png": {
+    "048.png": {
         "x": 96,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0049.png": {
+    "049.png": {
         "x": 112,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0050.png": {
+    "050.png": {
         "x": 112,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0051.png": {
+    "051.png": {
         "x": 112,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0052.png": {
+    "052.png": {
         "x": 112,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0053.png": {
+    "053.png": {
         "x": 112,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0054.png": {
+    "054.png": {
         "x": 112,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0055.png": {
+    "055.png": {
         "x": 112,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0056.png": {
+    "056.png": {
         "x": 0,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0057.png": {
+    "057.png": {
         "x": 16,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0058.png": {
+    "058.png": {
         "x": 32,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0059.png": {
+    "059.png": {
         "x": 48,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0060.png": {
+    "060.png": {
         "x": 64,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0061.png": {
+    "061.png": {
         "x": 80,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0062.png": {
+    "062.png": {
         "x": 96,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0063.png": {
+    "063.png": {
         "x": 112,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0064.png": {
+    "064.png": {
         "x": 128,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0065.png": {
+    "065.png": {
         "x": 128,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0066.png": {
+    "066.png": {
         "x": 128,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0067.png": {
+    "067.png": {
         "x": 128,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0068.png": {
+    "068.png": {
         "x": 128,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0069.png": {
+    "069.png": {
         "x": 128,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0070.png": {
+    "070.png": {
         "x": 128,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0071.png": {
+    "071.png": {
         "x": 128,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0072.png": {
+    "072.png": {
         "x": 0,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0073.png": {
+    "073.png": {
         "x": 16,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0074.png": {
+    "074.png": {
         "x": 32,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0075.png": {
+    "075.png": {
         "x": 48,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0076.png": {
+    "076.png": {
         "x": 64,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0077.png": {
+    "077.png": {
         "x": 80,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0078.png": {
+    "078.png": {
         "x": 96,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0079.png": {
+    "079.png": {
         "x": 112,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0080.png": {
+    "080.png": {
         "x": 128,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0081.png": {
+    "081.png": {
         "x": 144,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0082.png": {
+    "082.png": {
         "x": 144,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0083.png": {
+    "083.png": {
         "x": 144,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0084.png": {
+    "084.png": {
         "x": 144,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0085.png": {
+    "085.png": {
         "x": 144,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0086.png": {
+    "086.png": {
         "x": 144,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0087.png": {
+    "087.png": {
         "x": 144,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0088.png": {
+    "088.png": {
         "x": 144,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0089.png": {
+    "089.png": {
         "x": 144,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0090.png": {
+    "090.png": {
         "x": 0,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0091.png": {
+    "091.png": {
         "x": 16,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0092.png": {
+    "092.png": {
         "x": 32,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0093.png": {
+    "093.png": {
         "x": 48,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0094.png": {
+    "094.png": {
         "x": 64,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0095.png": {
+    "095.png": {
         "x": 80,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0096.png": {
+    "096.png": {
         "x": 96,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0097.png": {
+    "097.png": {
         "x": 112,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0098.png": {
+    "098.png": {
         "x": 128,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0099.png": {
+    "099.png": {
         "x": 144,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0100.png": {
+    "100.png": {
         "x": 160,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0101.png": {
+    "101.png": {
         "x": 160,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0102.png": {
+    "102.png": {
         "x": 160,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0103.png": {
+    "103.png": {
         "x": 160,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0104.png": {
+    "104.png": {
         "x": 160,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0105.png": {
+    "105.png": {
         "x": 160,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0106.png": {
+    "106.png": {
         "x": 160,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0107.png": {
+    "107.png": {
         "x": 160,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0108.png": {
+    "108.png": {
         "x": 160,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0109.png": {
+    "109.png": {
         "x": 160,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0110.png": {
+    "110.png": {
         "x": 0,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0111.png": {
+    "111.png": {
         "x": 16,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0112.png": {
+    "112.png": {
         "x": 32,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0113.png": {
+    "113.png": {
         "x": 48,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0114.png": {
+    "114.png": {
         "x": 64,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0115.png": {
+    "115.png": {
         "x": 80,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0116.png": {
+    "116.png": {
         "x": 96,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0117.png": {
+    "117.png": {
         "x": 112,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0118.png": {
+    "118.png": {
         "x": 128,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0119.png": {
+    "119.png": {
         "x": 144,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0120.png": {
+    "120.png": {
         "x": 160,
         "y": 160,
         "width": 16,
         "height": 16
     },
-    "tile_0121.png": {
+    "121.png": {
         "x": 176,
         "y": 0,
         "width": 16,
         "height": 16
     },
-    "tile_0122.png": {
+    "122.png": {
         "x": 176,
         "y": 16,
         "width": 16,
         "height": 16
     },
-    "tile_0123.png": {
+    "123.png": {
         "x": 176,
         "y": 32,
         "width": 16,
         "height": 16
     },
-    "tile_0124.png": {
+    "124.png": {
         "x": 176,
         "y": 48,
         "width": 16,
         "height": 16
     },
-    "tile_0125.png": {
+    "125.png": {
         "x": 176,
         "y": 64,
         "width": 16,
         "height": 16
     },
-    "tile_0126.png": {
+    "126.png": {
         "x": 176,
         "y": 80,
         "width": 16,
         "height": 16
     },
-    "tile_0127.png": {
+    "127.png": {
         "x": 176,
         "y": 96,
         "width": 16,
         "height": 16
     },
-    "tile_0128.png": {
+    "128.png": {
         "x": 176,
         "y": 112,
         "width": 16,
         "height": 16
     },
-    "tile_0129.png": {
+    "129.png": {
         "x": 176,
         "y": 128,
         "width": 16,
         "height": 16
     },
-    "tile_0130.png": {
+    "130.png": {
         "x": 176,
         "y": 144,
         "width": 16,
         "height": 16
     },
-    "tile_0131.png": {
+    "131.png": {
         "x": 176,
         "y": 160,
         "width": 16,
