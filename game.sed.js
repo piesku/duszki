@@ -18,6 +18,7 @@ var GL_STATIC_DRAW = 35044;
 var GL_STREAM_DRAW = 35040;
 var GL_ARRAY_BUFFER = 34962;
 var GL_BLEND = 3042;
+var GL_DEPTH_TEST = 2929;
 var GL_RGBA = 6408;
 var GL_PIXEL_UNSIGNED_BYTE = 5121;
 var GL_FRAGMENT_SHADER = 35632;
@@ -815,14 +816,6 @@ Collisions: []
 }
 
 
-function control_player() {
-return (game2, entity) => {
-game2.World.Signature[entity] |= 16 /* ControlPlayer */;
-game2.World.ControlPlayer[entity] = {};
-};
-}
-
-
 function lifespan(remaining, action) {
 return (game2, entity) => {
 game2.World.Signature[entity] |= 256 /* Lifespan */;
@@ -834,16 +827,8 @@ Action: action
 }
 
 
-function move2d(move_speed, rotation_speed) {
-return (game2, entity) => {
-game2.World.Signature[entity] |= 1024 /* Move2D */;
-game2.World.Move2D[entity] = {
-MoveSpeed: move_speed,
-RotationSpeed: rotation_speed,
-Direction: [0, 0],
-Rotation: 0
-};
-};
+function clamp(min, max, num) {
+return Math.max(min, Math.min(max, num));
 }
 
 
@@ -1664,6 +1649,12 @@ Sprite: game2.InstanceData.subarray(instance_offset + 12, instance_offset + 16)
 };
 };
 }
+function order(z) {
+return (game2, entity) => {
+let instance_offset = entity * FLOATS_PER_INSTANCE;
+game2.InstanceData[instance_offset + 6] = clamp(-1, 1, z);
+};
+}
 function set_sprite(game2, entity, sprite_name) {
 let instance_offset = entity * FLOATS_PER_INSTANCE;
 game2.InstanceData[instance_offset + 12] = spritesheet[sprite_name].x;
@@ -1690,46 +1681,43 @@ IsGrounded: false
 }
 
 
-function spatial_node2d(is_gyroscope = false) {
-return (game2, entity) => {
-game2.World.Signature[entity] |= 32768 /* SpatialNode2D */ | 64 /* Dirty */;
-game2.World.SpatialNode2D[entity] = {
-World: game2.InstanceData.subarray(entity * FLOATS_PER_INSTANCE, entity * FLOATS_PER_INSTANCE + 6),
-Self: create(),
-IsGyroscope: is_gyroscope
-};
-};
-}
-
-
 var SQUARE_LIFESPAN = 10;
 function blueprint_square(game2) {
 return [
-spatial_node2d(),
 local_transform2d(),
 collide2d(true, 2 /* Object */, 1 /* Terrain */ | 2 /* Object */),
 rigid_body2d(1 /* Dynamic */, 0.3),
-control_player(),
-move2d(7, 0),
 render2d("121.png"),
+order(0.9),
 lifespan(SQUARE_LIFESPAN)
 ];
 }
 
 
+var QUERY5 = 16 /* ControlPlayer */ | 512 /* LocalTransform2D */;
+var pointer_position = [0, 0];
 var SPAWN_INTERVAL = 0.1;
 var time_since_last_spawn = 0;
-var pointer_position = [0, 0];
 function sys_control_mouse(game2, delta) {
+time_since_last_spawn += delta;
+if (!pointer_viewport(game2, pointer_position)) {
+return;
+}
 let camera_entity = game2.Cameras[0];
 if (camera_entity === void 0) {
 return;
 }
-time_since_last_spawn += delta;
-if (time_since_last_spawn > SPAWN_INTERVAL) {
-if (pointer_viewport(game2, pointer_position) && pointer_down(game2, 0)) {
 let camera = game2.World.Camera2D[camera_entity];
 viewport_to_world(pointer_position, camera, pointer_position);
+for (let ent = 0; ent < game2.World.Signature.length; ent++) {
+if ((game2.World.Signature[ent] & QUERY5) == QUERY5) {
+let local = game2.World.LocalTransform2D[ent];
+copy2(local.Translation, pointer_position);
+game2.World.Signature[ent] |= 64 /* Dirty */;
+}
+}
+if (time_since_last_spawn > SPAWN_INTERVAL) {
+if (pointer_down(game2, 0)) {
 instantiate(game2, [...blueprint_square(game2), copy_position(pointer_position)]);
 time_since_last_spawn = 0;
 }
@@ -1737,7 +1725,7 @@ time_since_last_spawn = 0;
 }
 
 
-var QUERY5 = 32768 /* SpatialNode2D */ | 128 /* Draw */;
+var QUERY6 = 32768 /* SpatialNode2D */ | 128 /* Draw */;
 function sys_draw2d(game2, delta) {
 let camera_entity = game2.Cameras[0];
 if (camera_entity === void 0) {
@@ -1750,7 +1738,7 @@ ctx.fillStyle = game2.ClearStyle;
 ctx.fillRect(0, 0, game2.ViewportWidth, game2.ViewportHeight);
 ctx.transform(camera.Pv[0] / 2 * game2.ViewportWidth, -(camera.Pv[1] / 2) * game2.ViewportWidth, -(camera.Pv[2] / 2) * game2.ViewportHeight, camera.Pv[3] / 2 * game2.ViewportHeight, (camera.Pv[4] + 1) / 2 * game2.ViewportWidth, (camera.Pv[5] + 1) / 2 * game2.ViewportHeight);
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY5) == QUERY5) {
+if ((game2.World.Signature[ent] & QUERY6) == QUERY6) {
 let node = game2.World.SpatialNode2D[ent];
 ctx.save();
 ctx.transform(node.World[0], -node.World[1], -node.World[2], node.World[3], node.World[4], -node.World[5]);
@@ -1788,10 +1776,10 @@ world.DestroyEntity(entity);
 }
 
 
-var QUERY6 = 256 /* Lifespan */;
+var QUERY7 = 256 /* Lifespan */;
 function sys_lifespan(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY6) == QUERY6) {
+if ((game2.World.Signature[i] & QUERY7) == QUERY7) {
 update3(game2, i, delta);
 }
 }
@@ -1808,10 +1796,10 @@ destroy_all(game2.World, entity);
 }
 
 
-var QUERY7 = 512 /* LocalTransform2D */ | 1024 /* Move2D */ | 64 /* Dirty */;
+var QUERY8 = 512 /* LocalTransform2D */ | 1024 /* Move2D */ | 64 /* Dirty */;
 function sys_move2d(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY7) === QUERY7) {
+if ((game2.World.Signature[i] & QUERY8) === QUERY8) {
 update4(game2, i, delta);
 }
 }
@@ -1848,11 +1836,11 @@ move.Rotation = 0;
 }
 
 
-var QUERY8 = 512 /* LocalTransform2D */ | 8192 /* RigidBody2D */;
+var QUERY9 = 512 /* LocalTransform2D */ | 8192 /* RigidBody2D */;
 var GRAVITY = -9.8;
 function sys_physics2d_integrate(game2, delta) {
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY8) === QUERY8) {
+if ((game2.World.Signature[ent] & QUERY9) === QUERY9) {
 update5(game2, ent, delta);
 }
 }
@@ -1875,15 +1863,15 @@ set2(rigid_body.Acceleration, 0, 0);
 }
 
 
-var QUERY9 = 512 /* LocalTransform2D */ | 4 /* Collide2D */ | 8192 /* RigidBody2D */;
+var QUERY10 = 512 /* LocalTransform2D */ | 4 /* Collide2D */ | 8192 /* RigidBody2D */;
 function sys_physics2d_resolve(game2, delta) {
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY9) === QUERY9) {
+if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
 update6(game2, ent);
 }
 }
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY9) === QUERY9) {
+if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
 let rigid_body = game2.World.RigidBody2D[ent];
 if (rigid_body.Kind === 1 /* Dynamic */) {
 copy2(rigid_body.VelocityLinear, rigid_body.VelocityResolved);
@@ -1930,11 +1918,11 @@ copy2(rigid_body.VelocityResolved, rigid_body.VelocityLinear);
 }
 
 
-var QUERY10 = 131072 /* Task */;
+var QUERY11 = 131072 /* Task */;
 function sys_poll(game2, delta) {
 let tasks_to_complete = [];
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
+if ((game2.World.Signature[ent] & QUERY11) === QUERY11) {
 if (has_blocking_dependencies(game2.World, ent)) {
 continue;
 }
@@ -2017,10 +2005,10 @@ game2.Gl.drawArraysInstanced(material.Mode, 0, 4, game2.World.Signature.length);
 }
 
 
-var QUERY11 = 1 /* AnimateSprite */ | 4096 /* Render2D */;
+var QUERY12 = 1 /* AnimateSprite */ | 4096 /* Render2D */;
 function sys_render2d_animate(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY11) === QUERY11) {
+if ((game2.World.Signature[i] & QUERY12) === QUERY12) {
 update7(game2, i, delta);
 }
 }
@@ -2041,7 +2029,7 @@ animate.Time -= animate.Duration;
 }
 
 
-var QUERY12 = 2 /* Camera2D */;
+var QUERY13 = 2 /* Camera2D */;
 var UNIT_PX = 32;
 function sys_resize2d(game2, delta) {
 if (game2.ViewportWidth != window.innerWidth || game2.ViewportHeight != window.innerHeight) {
@@ -2051,7 +2039,7 @@ if (game2.ViewportResized) {
 game2.ViewportWidth = game2.BackgroundCanvas.width = game2.SceneCanvas.width = game2.ForegroundCanvas.width = window.innerWidth;
 game2.ViewportHeight = game2.BackgroundCanvas.height = game2.SceneCanvas.height = game2.ForegroundCanvas.height = window.innerHeight;
 for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-if ((game2.World.Signature[ent] & QUERY12) === QUERY12) {
+if ((game2.World.Signature[ent] & QUERY13) === QUERY13) {
 update8(game2, ent);
 }
 }
@@ -2078,10 +2066,10 @@ invert(projection.Projection, projection.Inverse);
 }
 
 
-var QUERY13 = 512 /* LocalTransform2D */ | 16384 /* Shake */;
+var QUERY14 = 512 /* LocalTransform2D */ | 16384 /* Shake */;
 function sys_shake2d(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY13) == QUERY13) {
+if ((game2.World.Signature[i] & QUERY14) == QUERY14) {
 update9(game2, i);
 }
 }
@@ -2095,10 +2083,10 @@ game2.World.Signature[entity] |= 64 /* Dirty */;
 }
 
 
-var QUERY14 = 32768 /* SpatialNode2D */ | 65536 /* Spawn */;
+var QUERY15 = 32768 /* SpatialNode2D */ | 65536 /* Spawn */;
 function sys_spawn2d(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY14) == QUERY14) {
+if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
 update10(game2, i, delta);
 }
 }
@@ -2120,10 +2108,10 @@ throw new Error("No more entities can be created; the world at maximum capacity.
 }
 
 
-var QUERY15 = 262144 /* Toggle */;
+var QUERY16 = 262144 /* Toggle */;
 function sys_toggle(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
+if ((game2.World.Signature[i] & QUERY16) == QUERY16) {
 update11(game2, i, delta);
 }
 }
@@ -2199,10 +2187,10 @@ update_spatial_node(game2, child, entity);
 }
 
 
-var QUERY16 = 4 /* Collide2D */ | 524288 /* Trigger */;
+var QUERY17 = 4 /* Collide2D */ | 524288 /* Trigger */;
 function sys_trigger2d(game2, delta) {
 for (let i = 0; i < game2.World.Signature.length; i++) {
-if ((game2.World.Signature[i] & QUERY16) === QUERY16) {
+if ((game2.World.Signature[i] & QUERY17) === QUERY17) {
 update12(game2, i);
 }
 }
@@ -2267,6 +2255,7 @@ this.ClearStyle = "#763b36";
 this.SceneWidth = 32;
 this.SceneHeight = 20;
 this.Gl.clearColor(0, 0, 0, 0);
+this.Gl.enable(GL_DEPTH_TEST);
 this.Gl.enable(GL_BLEND);
 this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 setup_render2d_buffers(this.Gl, this.InstanceBuffer);
@@ -2302,40 +2291,44 @@ sys_ui(this, delta);
 var map_sample = { "compressionlevel": -1, "height": 20, "infinite": false, "layers": [{ "data": [14, 51, 16, 1, 1, 3221225485, 1, 1, 1, 2, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 14, 1610612787, 17, 3, 3, 4, 1, 1, 1, 14, 41, 41, 41, 41, 41, 16, 1, 1, 1, 1, 1, 25, 1, 1, 1, 1, 1, 1, 1, 1, 1073741837, 1, 14, 1610612787, 58, 41, 41, 16, 25, 1, 1, 14, 1610612789, 51, 51, 52, 51, 16, 2, 3, 4, 1, 1, 1, 1, 2, 3, 7, 3, 3, 3, 7, 3, 4, 14, 1610612787, 51, 52, 51, 16, 1, 1, 1, 14, 1610612787, 49, 3221225522, 49, 49, 16, 14, 41, 16, 1, 1, 536870925, 1, 14, 41, 19, 41, 30, 41, 19, 41, 16, 14, 1610612787, 5, 27, 27, 28, 1, 1073741837, 1, 14, 1610612787, 49, 49, 49, 49, 16, 14, 1610612789, 16, 1, 1, 1, 1073741837, 14, 1610612789, 31, 51, 51, 52, 31, 51, 16, 14, 1610612787, 16, 2, 3, 3, 3, 3, 4, 26, 27, 27, 27, 27, 27, 28, 14, 1610612787, 17, 7, 3, 3, 4, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 14, 1610612787, 16, 14, 41, 41, 41, 41, 17, 3, 3, 3, 3, 4, 1, 1, 14, 1610612787, 58, 19, 41, 41, 16, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 18, 1610612787, 17, 18, 1610612789, 51, 52, 51, 58, 41, 41, 22, 41, 16, 2684354573, 1, 14, 1610612787, 51, 31, 51, 51, 16, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 60, 1610612787, 58, 60, 1610612787, 49, 49, 49, 51, 51, 51, 51, 51, 17, 3, 3, 18, 1610612787, 49, 43, 49, 3221225522, 17, 18, 1610612787, 49, 49, 49, 49, 49, 2684354610, 17, 51, 54, 51, 51, 54, 43, 49, 50, 49, 49, 49, 49, 49, 58, 41, 41, 60, 1610612787, 49, 49, 43, 49, 58, 60, 37, 38, 38, 38, 38, 38, 39, 58, 49, 43, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 51, 52, 51, 51, 54, 49, 49, 49, 49, 51, 52, 54, 49, 49, 49, 49, 49, 49, 51, 49, 49, 49, 5, 27, 6, 1610612790, 49, 49, 2147483698, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 5, 27, 27, 27, 27, 27, 27, 27, 27, 49, 49, 49, 16, 1, 14, 1610612787, 49, 49, 49, 49, 49, 49, 5, 27, 27, 27, 27, 27, 27, 6, 1610612790, 49, 16, 1, 1, 1, 1, 1, 1, 1, 1, 27, 27, 27, 28, 3221225485, 14, 1610612787, 49, 49, 5, 27, 27, 27, 28, 2, 3, 3, 3, 3, 3, 18, 1610612787, 49, 16, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 1, 1, 2, 18, 1610612787, 49, 49, 17, 3, 4, 1, 1, 14, 41, 20, 41, 41, 21, 60, 1610612787, 49, 16, 1, 1, 1073741837, 14, 41, 11, 12, 41, 1, 2, 3, 3, 18, 60, 1610612787, 49, 49, 58, 41, 17, 3, 3, 18, 1610612789, 32, 51, 51, 33, 51, 54, 2147483698, 16, 1, 1, 1, 14, 1610612789, 51, 51, 51, 1, 14, 41, 41, 60, 1610612789, 54, 49, 49, 51, 51, 58, 41, 41, 60, 1610612787, 49, 43, 49, 49, 49, 49, 49, 17, 3, 3, 3, 18, 1610612787, 49, 49, 49, 1, 14, 1610612789, 52, 51, 54, 49, 49, 2147483698, 42, 49, 51, 51, 51, 51, 54, 43, 49, 49, 49, 49, 49, 49, 58, 41, 41, 41, 60, 1610612787, 49, 49, 49, 1, 14, 1610612787, 3758096434, 49, 49, 49, 49, 49, 3758096434, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 43, 49, 51, 51, 51, 51, 51, 54, 49, 49, 49, 1, 14, 1610612787, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 3758096434, 49], "height": 20, "id": 1, "name": "Dungeon", "opacity": 1, "type": "tilelayer", "visible": true, "width": 32, "x": 0, "y": 0 }, { "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 65, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 67, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 62, 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 73, 0, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 0, 0, 0, 62, 88, 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 98, 62, 0, 0, 0, 0, 0, 85, 0, 0, 0, 2147483758, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 99, 61, 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 78, 78, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483773, 0, 0, 0, 0, 0, 0, 0, 0, 2147483749, 0, 0, 0, 0, 0, 0, 0, 0, 94, 71, 71, 71, 71, 71, 72, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "height": 20, "id": 4, "name": "Objects", "opacity": 1, "type": "tilelayer", "visible": false, "width": 32, "x": 0, "y": 0 }, { "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "height": 20, "id": 5, "name": "Carts", "opacity": 1, "type": "tilelayer", "visible": false, "width": 32, "x": 0, "y": 0 }], "nextlayerid": 6, "nextobjectid": 1, "orientation": "orthogonal", "renderorder": "right-down", "tiledversion": "1.9.1", "tileheight": 16, "tilesets": [{ "firstgid": 1, "source": "../../../Downloads/Kenney Game Assets All-in-1 1/2D assets/Tiny Dungeon/Tiled/sampleSheet.tsx" }], "tilewidth": 16, "type": "map", "version": "1.9", "width": 32 };
 
 
-var TILE_FLIP_HORIZONTAL = 1 << 31;
-var TILE_FLIP_VERTICAL = 1 << 30;
-var TILE_FLIP_DIAGONAL = 1 << 29;
-var TILE_FLIP_IGNORED = 1 << 28;
-var TILE_ROTATE_LEFT = TILE_FLIP_VERTICAL | TILE_FLIP_DIAGONAL;
-var TILE_ROTATE_RIGHT = TILE_FLIP_HORIZONTAL | TILE_FLIP_DIAGONAL;
-var TILE_ROTATE_180 = TILE_FLIP_HORIZONTAL | TILE_FLIP_VERTICAL;
-var TILE_ALL_FLAGS = TILE_FLIP_HORIZONTAL | TILE_FLIP_VERTICAL | TILE_FLIP_DIAGONAL | TILE_FLIP_IGNORED;
-function instantiate_tiled_layer(game2, layer) {
+function instantiate_tiled_layer(game2, layer, z) {
 for (let i = 0; i < layer.data.length; i++) {
 let global_id = layer.data[i];
-let tile_id = global_id & ~TILE_ALL_FLAGS;
+let tile_id = global_id & ~-268435456 /* All */;
 if (tile_id == 0) {
 continue;
 }
 let x = i % layer.width + 0.5;
 let y = layer.height - Math.floor(i / layer.width) - 0.5;
 let local;
-if ((global_id & TILE_ROTATE_LEFT) == TILE_ROTATE_LEFT) {
+if ((global_id & 1610612736 /* RotateLeft */) == 1610612736 /* RotateLeft */) {
 local = local_transform2d([x, y], 90);
-} else if ((global_id & TILE_ROTATE_RIGHT) == TILE_ROTATE_RIGHT) {
+} else if ((global_id & -1610612736 /* RotateRight */) == -1610612736 /* RotateRight */) {
 local = local_transform2d([x, y], -90);
-} else if ((global_id & TILE_ROTATE_180) == TILE_ROTATE_180) {
+} else if ((global_id & -1073741824 /* Rotate180 */) == -1073741824 /* Rotate180 */) {
 local = local_transform2d([x, y], 180);
-} else if (global_id & TILE_FLIP_HORIZONTAL) {
+} else if (global_id & -2147483648 /* Horizontal */) {
 local = local_transform2d([x, y], 0, [-1, 1]);
-} else if (global_id & TILE_FLIP_VERTICAL) {
+} else if (global_id & 1073741824 /* Vertical */) {
 local = local_transform2d([x, y], 0, [1, -1]);
 } else {
 local = local_transform2d([x, y]);
 }
 let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-instantiate(game2, [local, render2d(tile_name)]);
+instantiate(game2, [local, render2d(tile_name), order(z)]);
 }
+}
+
+
+function spatial_node2d(is_gyroscope = false) {
+return (game2, entity) => {
+game2.World.Signature[entity] |= 32768 /* SpatialNode2D */ | 64 /* Dirty */;
+game2.World.SpatialNode2D[entity] = {
+World: game2.InstanceData.subarray(entity * FLOATS_PER_INSTANCE, entity * FLOATS_PER_INSTANCE + 6),
+Self: create(),
+IsGyroscope: is_gyroscope
+};
+};
 }
 
 
@@ -2348,13 +2341,27 @@ camera2d([game2.SceneWidth / 2 + 1, game2.SceneHeight / 2 + 1])
 }
 
 
+function control_player() {
+return (game2, entity) => {
+game2.World.Signature[entity] |= 16 /* ControlPlayer */;
+game2.World.ControlPlayer[entity] = {};
+};
+}
+
+
+function blueprint_cursor(game2) {
+return [local_transform2d(), control_player(), render2d("060.png"), order(1)];
+}
+
+
 function scene_dungeon(game2) {
 game2.World = new World(WORLD_CAPACITY);
 game2.ViewportResized = true;
 instantiate(game2, [...blueprint_camera(game2), set_position(16, 10)]);
-instantiate_tiled_layer(game2, map_sample.layers[0]);
-instantiate_tiled_layer(game2, map_sample.layers[1]);
-instantiate_tiled_layer(game2, map_sample.layers[2]);
+instantiate(game2, [...blueprint_cursor(game2), set_position(16, 10)]);
+instantiate_tiled_layer(game2, map_sample.layers[0], 0.1);
+instantiate_tiled_layer(game2, map_sample.layers[1], 0.2);
+instantiate_tiled_layer(game2, map_sample.layers[2], 0.3);
 }
 
 
