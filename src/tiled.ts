@@ -31,8 +31,8 @@ export function instantiate_tiled_layer(game: Game, layer: TiledLayer, z: number
             continue;
         }
 
-        let x = (i % layer.width) + 0.5;
-        let y = layer.height - Math.floor(i / layer.width) - 0.5;
+        let x = i % layer.width;
+        let y = layer.height - Math.floor(i / layer.width) - 1;
         let local: ReturnType<typeof local_transform2d>;
 
         // Rotate and flip flags are stored in the global ID.

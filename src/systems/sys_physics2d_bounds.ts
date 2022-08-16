@@ -22,8 +22,8 @@ function update(game: Game, entity: Entity, delta: number) {
     let rigid_body = game.World.RigidBody2D[entity];
 
     if (rigid_body.Kind === RigidKind.Dynamic) {
-        let top = game.SceneHeight / 2;
-        let right = game.SceneWidth / 2;
+        let top = game.World.Height / 2;
+        let right = game.World.Width / 2;
 
         if (local.Translation[1] > top) {
             local.Translation[1] = top;

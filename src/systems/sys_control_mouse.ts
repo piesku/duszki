@@ -32,8 +32,8 @@ export function sys_control_mouse(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let local = game.World.LocalTransform2D[ent];
-            local.Translation[0] = Math.floor(pointer_position[0]) + 0.5;
-            local.Translation[1] = Math.floor(pointer_position[1]) + 0.5;
+            local.Translation[0] = Math.round(pointer_position[0]);
+            local.Translation[1] = Math.round(pointer_position[1]);
             game.World.Signature[ent] |= Has.Dirty;
         }
     }

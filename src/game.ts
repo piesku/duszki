@@ -37,8 +37,6 @@ export class Game extends Game3D {
     InstanceBuffer = this.Gl.createBuffer()!;
 
     ClearStyle = "#763b36";
-    SceneWidth = 32;
-    SceneHeight = 20;
 
     constructor() {
         super();
