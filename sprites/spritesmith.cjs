@@ -13,6 +13,7 @@ let sheet = files.pop();
 Spritesmith.run(
     {
         src: files,
+        padding: 1,
     },
     function handleResult(err, result) {
         if (err) {
