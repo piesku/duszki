@@ -1,12 +1,10 @@
 import {instantiate} from "../../lib/game.js";
-import {path_find} from "../../lib/pathfind.js";
 import {map_sample} from "../../maps/map_sample.js";
-import {
-    copy_position,
-    local_transform2d,
-    set_position,
-} from "../components/com_local_transform2d.js";
+import {callback} from "../components/com_callback.js";
+import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
+import {move2d} from "../components/com_move2d.js";
 import {order, render2d} from "../components/com_render2d.js";
+import {walk} from "../components/com_walk.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {instantiate_tiled_layer} from "../tiled.js";
 import {node_to_position, World} from "../world.js";
@@ -70,18 +68,15 @@ export function scene_dungeon(game: Game) {
         }
     }
 
-    let path = path_find(game.World.Navigation, 1, 107);
-    console.log(path);
-
-    if (path) {
-        for (let waypoint of path) {
-            let position = game.World.Navigation.Centroids[waypoint];
-            instantiate(game, [
-                local_transform2d(),
-                copy_position(position),
-                render2d("121.png"),
-                order(0.5),
-            ]);
-        }
-    }
+    instantiate(game, [
+        local_transform2d([1, 19]),
+        render2d("121.png"),
+        order(0.5),
+        move2d(3, 0),
+        walk(1),
+        callback((game, entity) => {
+            let walk = game.World.Walk[entity];
+            walk.DestinationNode = 107;
+        }),
+    ]);
 }

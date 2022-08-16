@@ -23,6 +23,7 @@ import {sys_toggle} from "./systems/sys_toggle.js";
 import {sys_transform2d} from "./systems/sys_transform2d.js";
 import {sys_trigger2d} from "./systems/sys_trigger2d.js";
 import {sys_ui} from "./systems/sys_ui.js";
+import {sys_walk} from "./systems/sys_walk.js";
 import {Has, World} from "./world.js";
 
 export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
@@ -73,6 +74,7 @@ export class Game extends Game3D {
         sys_control_always2d(this, delta);
 
         // Game logic.
+        sys_walk(this, delta);
         sys_move2d(this, delta);
         sys_lifespan(this, delta);
         sys_shake2d(this, delta);

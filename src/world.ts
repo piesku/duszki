@@ -20,6 +20,7 @@ import {Spawn} from "./components/com_spawn.js";
 import {Task} from "./components/com_task.js";
 import {Toggle} from "./components/com_toggle.js";
 import {Trigger} from "./components/com_trigger.js";
+import {Walk} from "./components/com_walk.js";
 
 const enum Component {
     AnimateSprite,
@@ -42,6 +43,7 @@ const enum Component {
     Task,
     Toggle,
     Trigger,
+    Walk,
 }
 
 export const enum Has {
@@ -66,6 +68,7 @@ export const enum Has {
     Task = 1 << Component.Task,
     Toggle = 1 << Component.Toggle,
     Trigger = 1 << Component.Trigger,
+    Walk = 1 << Component.Walk,
 }
 
 export class World extends WorldImpl {
@@ -92,6 +95,7 @@ export class World extends WorldImpl {
     Task: Array<Task> = [];
     Toggle: Array<Toggle> = [];
     Trigger: Array<Trigger> = [];
+    Walk: Array<Walk> = [];
 }
 
 export function node_to_position(out: Vec2, world: World, node: number) {
