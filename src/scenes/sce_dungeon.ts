@@ -1,7 +1,12 @@
 import {instantiate} from "../../lib/game.js";
+import {element, float} from "../../lib/random.js";
 import {map_sample} from "../../maps/map_sample.js";
 import {callback} from "../components/com_callback.js";
-import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
+import {
+    copy_position,
+    local_transform2d,
+    set_position,
+} from "../components/com_local_transform2d.js";
 import {move2d} from "../components/com_move2d.js";
 import {order, render2d} from "../components/com_render2d.js";
 import {walk} from "../components/com_walk.js";
@@ -43,11 +48,8 @@ export function scene_dungeon(game: Game) {
         }
 
         // Createa a new navigation node.
-        game.World.Navigation.Centroids[i] = [0, 0];
+        game.World.Navigation.Centroids[i] = node_to_position(game.World, i);
         game.World.Navigation.Graph[i] = [];
-
-        let position = game.World.Navigation.Centroids[i];
-        node_to_position(position, game.World, i);
 
         let edges = game.World.Navigation.Graph[i];
         if (i > 0 && nav.data[i - 1] > 0) {
@@ -68,15 +70,22 @@ export function scene_dungeon(game: Game) {
         }
     }
 
-    instantiate(game, [
-        local_transform2d([1, 19]),
-        render2d("121.png"),
-        order(0.5),
-        move2d(3, 0),
-        walk(1),
-        callback((game, entity) => {
-            let walk = game.World.Walk[entity];
-            walk.DestinationNode = 107;
-        }),
-    ]);
+    let node_ids = game.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== undefined);
+
+    let duszki = 100;
+    for (let i = 0; i < duszki; i++) {
+        let origin = element(node_ids);
+        instantiate(game, [
+            local_transform2d(),
+            copy_position(game.World.Navigation.Centroids[origin]),
+            render2d("121.png"),
+            order(0.5),
+            move2d(float(2, 4), 0),
+            walk(origin),
+            callback((game, entity) => {
+                let walk = game.World.Walk[entity];
+                walk.DestinationNode = element(node_ids);
+            }),
+        ]);
+    }
 }

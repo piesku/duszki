@@ -98,9 +98,8 @@ export class World extends WorldImpl {
     Walk: Array<Walk> = [];
 }
 
-export function node_to_position(out: Vec2, world: World, node: number) {
-    out[0] = node % world.Width;
-    out[1] = world.Height - Math.floor(node / world.Width) - 1;
+export function node_to_position(world: World, node: number): Vec2 {
+    return [node % world.Width, world.Height - Math.floor(node / world.Width) - 1];
 }
 
 export function position_to_node(world: World, position: Vec2) {
