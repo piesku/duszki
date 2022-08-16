@@ -1,6 +1,6 @@
 import {instantiate} from "../lib/game.js";
 import {local_transform2d} from "./components/com_local_transform2d.js";
-import {render2d} from "./components/com_render2d.js";
+import {order, render2d} from "./components/com_render2d.js";
 import {Game} from "./game.js";
 
 interface TiledLayer {
@@ -23,7 +23,7 @@ const enum TileFlip {
     All = TileFlip.Horizontal | TileFlip.Vertical | TileFlip.Diagonal | TileFlip.Ignored,
 }
 
-export function instantiate_tiled_layer(game: Game, layer: TiledLayer) {
+export function instantiate_tiled_layer(game: Game, layer: TiledLayer, z: number) {
     for (let i = 0; i < layer.data.length; i++) {
         let global_id = layer.data[i]; // Global ID with flip flags.
         let tile_id = global_id & ~TileFlip.All; // Remove flip flags.
@@ -51,6 +51,6 @@ export function instantiate_tiled_layer(game: Game, layer: TiledLayer) {
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        instantiate(game, [local, render2d(tile_name)]);
+        instantiate(game, [local, render2d(tile_name), order(z)]);
     }
 }
