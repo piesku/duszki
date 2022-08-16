@@ -12,6 +12,7 @@ main {
     word-break: break-word;
     user-select: none;
     touch-action: none;
+    image-rendering: pixelated;
 }
 [hidden] {
     display: none;
