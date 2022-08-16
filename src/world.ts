@@ -1,4 +1,4 @@
-import {WorldImpl} from "../lib/world.js";
+import {Entity, WorldImpl} from "../lib/world.js";
 import {AnimateSprite} from "./components/com_animate_sprite.js";
 import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
@@ -10,6 +10,7 @@ import {Lifespan} from "./components/com_lifespan.js";
 import {LocalTransform2D} from "./components/com_local_transform2d.js";
 import {Move2D} from "./components/com_move2d.js";
 import {Named} from "./components/com_named.js";
+import {Navigable} from "./components/com_navigable.js";
 import {Render2D} from "./components/com_render2d.js";
 import {RigidBody2D} from "./components/com_rigid_body2d.js";
 import {Shake} from "./components/com_shake.js";
@@ -32,6 +33,7 @@ const enum Component {
     LocalTransform2D,
     Move2D,
     Named,
+    Navigable,
     Render2D,
     RigidBody2D,
     Shake,
@@ -56,6 +58,7 @@ export const enum Has {
     LocalTransform2D = 1 << Component.LocalTransform2D,
     Move2D = 1 << Component.Move2D,
     Named = 1 << Component.Named,
+    Navigable = 1 << Component.Navigable,
     Render2D = 1 << Component.Render2D,
     RigidBody2D = 1 << Component.RigidBody2D,
     Shake = 1 << Component.Shake,
@@ -78,6 +81,7 @@ export class World extends WorldImpl {
     LocalTransform2D: Array<LocalTransform2D> = [];
     Move2D: Array<Move2D> = [];
     Named: Array<Named> = [];
+    Navigable: Array<Navigable> = [];
     Render2D: Array<Render2D> = [];
     RigidBody2D: Array<RigidBody2D> = [];
     Shake: Array<Shake> = [];
@@ -86,4 +90,6 @@ export class World extends WorldImpl {
     Task: Array<Task> = [];
     Toggle: Array<Toggle> = [];
     Trigger: Array<Trigger> = [];
+
+    NodeToEntity: Array<Entity> = [];
 }

@@ -1,18 +1,21 @@
+import {World} from "../src/world.js";
 import {EPSILON} from "./math.js";
-import {NavMesh} from "./navmesh.js";
-import {distance_squared} from "./vec3.js";
+import {distance_squared} from "./vec2.js";
 
 type VectorField = Array<number>;
 
 /**
- * A* path-finding on a navigation mesh.
+ * A* path-finding among Navigable entities.
  *
- * @param navmesh - The NavMesh with the graph of navigable nodes.
+ * @param world - The World with LocalTransform2D and Navigable component data.
  * @param origin - The start node.
  * @param goal - The destination node.
  */
-export function path_find(navmesh: NavMesh, origin: number, goal: number) {
+export function path_find(world: World, origin: number, goal: number) {
     let predecessors: VectorField = [];
+
+    let goal_entity = world.NodeToEntity[goal];
+    let goal_navigable = world.Navigable[goal_entity];
 
     // The cost from the origin for each visited node (G).
     let g: Array<number> = [];
@@ -37,10 +40,13 @@ export function path_find(navmesh: NavMesh, origin: number, goal: number) {
             return [...path_follow(predecessors, goal)];
         }
 
+        let current_entity = world.NodeToEntity[current];
+        let current_navigable = world.Navigable[current_entity];
+
         // For every neighbor `next` of the current node…
-        for (let i = 0; i < navmesh.Graph[current].length; i++) {
-            let next = navmesh.Graph[current][i][0];
-            let cost = navmesh.Graph[current][i][1];
+        for (let i = 0; i < current_navigable.Edges.length; i++) {
+            let next = current_navigable.Edges[i][0];
+            let cost = current_navigable.Edges[i][1];
             // The G cost of getting from the origin to `next` is the G cost of
             // the current node plus the cost of getting from the current node
             // to `next`.
@@ -48,7 +54,12 @@ export function path_find(navmesh: NavMesh, origin: number, goal: number) {
             if (g[next] === undefined) {
                 // We've never visited this neighboring node before. Update the
                 // G cost, compute the H cost, compute the F cost.
-                h[next] = distance_squared(navmesh.Centroids[next], navmesh.Centroids[goal]);
+                let next_entity = world.NodeToEntity[next];
+                let next_navigable = world.Navigable[next_entity];
+                h[next] = distance_squared(
+                    next_navigable.WorldPosition,
+                    goal_navigable.WorldPosition
+                );
                 g[next] = g_next;
                 f[next] = g_next + h[next];
                 // Record that we've reached this neighbor from the current
