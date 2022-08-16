@@ -1,7 +1,6 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_down, pointer_viewport} from "../../lib/input.js";
 import {Vec2} from "../../lib/math.js";
-import {copy} from "../../lib/vec2.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {copy_position} from "../components/com_local_transform2d.js";
 import {Game} from "../game.js";
@@ -33,7 +32,8 @@ export function sys_control_mouse(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let local = game.World.LocalTransform2D[ent];
-            copy(local.Translation, pointer_position);
+            local.Translation[0] = Math.floor(pointer_position[0]) + 0.5;
+            local.Translation[1] = Math.floor(pointer_position[1]) + 0.5;
             game.World.Signature[ent] |= Has.Dirty;
         }
     }
