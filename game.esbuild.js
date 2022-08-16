@@ -516,6 +516,7 @@
       this.AnimateSprite = [];
       this.Camera2D = [];
       this.Collide2D = [];
+      this.ControlAi = [];
       this.ControlAlways2D = [];
       this.ControlPlayer = [];
       this.Children = [];
@@ -540,7 +541,7 @@
   }
 
   // ../src/systems/sys_camera2d.ts
-  var QUERY = 32768 /* SpatialNode2D */ | 2 /* Camera2D */;
+  var QUERY = 65536 /* SpatialNode2D */ | 2 /* Camera2D */;
   function sys_camera2d(game2, delta) {
     game2.Cameras = [];
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
@@ -578,7 +579,7 @@
   }
 
   // ../src/systems/sys_collide2d.ts
-  var QUERY2 = 32768 /* SpatialNode2D */ | 4 /* Collide2D */;
+  var QUERY2 = 65536 /* SpatialNode2D */ | 4 /* Collide2D */;
   function sys_collide2d(game2, delta) {
     let static_colliders = [];
     let dynamic_colliders = [];
@@ -628,11 +629,41 @@
     }
   }
 
+  // ../lib/random.ts
+  var seed = 1;
+  function rand() {
+    seed = seed * 16807 % 2147483647;
+    return (seed - 1) / 2147483646;
+  }
+  function integer(min = 0, max = 1) {
+    return ~~(rand() * (max - min + 1) + min);
+  }
+  function float(min = 0, max = 1) {
+    return rand() * (max - min) + min;
+  }
+  function element(arr) {
+    return arr[integer(0, arr.length - 1)];
+  }
+
+  // ../src/systems/sys_control_ai.ts
+  var QUERY3 = 8 /* ControlAi */ | 2097152 /* Walk */;
+  function sys_control_ai(game2, delta) {
+    let node_ids = game2.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== void 0);
+    for (let ent = 0; ent < game2.World.Signature.length; ent++) {
+      if ((game2.World.Signature[ent] & QUERY3) == QUERY3) {
+        let walk2 = game2.World.Walk[ent];
+        if (walk2.DestinationNode === null && walk2.Path.length === 0) {
+          walk2.DestinationNode = element(node_ids);
+        }
+      }
+    }
+  }
+
   // ../src/systems/sys_control_always2d.ts
-  var QUERY3 = 8 /* ControlAlways2D */ | 1024 /* Move2D */;
+  var QUERY4 = 16 /* ControlAlways2D */ | 2048 /* Move2D */;
   function sys_control_always2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY3) === QUERY3) {
+      if ((game2.World.Signature[i] & QUERY4) === QUERY4) {
         update(game2, i);
       }
     }
@@ -643,19 +674,19 @@
     if (control.Direction) {
       move.Direction[0] = control.Direction[0];
       move.Direction[1] = control.Direction[1];
-      game2.World.Signature[entity] |= 64 /* Dirty */;
+      game2.World.Signature[entity] |= 128 /* Dirty */;
     }
     if (control.Rotation) {
       move.Rotation = control.Rotation;
-      game2.World.Signature[entity] |= 64 /* Dirty */;
+      game2.World.Signature[entity] |= 128 /* Dirty */;
     }
   }
 
   // ../src/systems/sys_control_keyboard.ts
-  var QUERY4 = 16 /* ControlPlayer */ | 1024 /* Move2D */ | 8192 /* RigidBody2D */;
+  var QUERY5 = 32 /* ControlPlayer */ | 2048 /* Move2D */ | 16384 /* RigidBody2D */;
   function sys_control_keyboard(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY4) == QUERY4) {
+      if ((game2.World.Signature[ent] & QUERY5) == QUERY5) {
         update2(game2, ent);
       }
     }
@@ -665,11 +696,11 @@
     let rigid_body = game2.World.RigidBody2D[entity];
     if (game2.InputState["ArrowLeft"]) {
       move.Direction[0] -= 1;
-      game2.World.Signature[entity] |= 64 /* Dirty */;
+      game2.World.Signature[entity] |= 128 /* Dirty */;
     }
     if (game2.InputState["ArrowRight"]) {
       move.Direction[0] += 1;
-      game2.World.Signature[entity] |= 64 /* Dirty */;
+      game2.World.Signature[entity] |= 128 /* Dirty */;
     }
     if (game2.InputState["ArrowUp"] && rigid_body.IsGrounded) {
       rigid_body.Acceleration[1] = 500;
@@ -791,7 +822,7 @@
   // ../src/components/com_local_transform2d.ts
   function local_transform2d(translation = [0, 0], rotation = 0, scale2 = [1, 1]) {
     return (game2, entity) => {
-      game2.World.Signature[entity] |= 512 /* LocalTransform2D */ | 64 /* Dirty */;
+      game2.World.Signature[entity] |= 1024 /* LocalTransform2D */ | 128 /* Dirty */;
       game2.World.LocalTransform2D[entity] = {
         Translation: translation,
         Rotation: rotation,
@@ -835,7 +866,7 @@
   // ../src/components/com_lifespan.ts
   function lifespan(remaining, action) {
     return (game2, entity) => {
-      game2.World.Signature[entity] |= 256 /* Lifespan */;
+      game2.World.Signature[entity] |= 512 /* Lifespan */;
       game2.World.Lifespan[entity] = {
         Remaining: remaining,
         Action: action
@@ -1649,7 +1680,7 @@
     return (game2, entity) => {
       let instance_offset = entity * FLOATS_PER_INSTANCE;
       game2.InstanceData[instance_offset + 6] = 0;
-      game2.InstanceData[instance_offset + 7] = 4096 /* Render2D */;
+      game2.InstanceData[instance_offset + 7] = 8192 /* Render2D */;
       game2.InstanceData[instance_offset + 8] = color[0];
       game2.InstanceData[instance_offset + 9] = color[1];
       game2.InstanceData[instance_offset + 10] = color[2];
@@ -1658,7 +1689,7 @@
       game2.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
       game2.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
       game2.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
-      game2.World.Signature[entity] |= 4096 /* Render2D */;
+      game2.World.Signature[entity] |= 8192 /* Render2D */;
       game2.World.Render2D[entity] = {
         Detail: game2.InstanceData.subarray(instance_offset + 6, instance_offset + 8),
         Color: game2.InstanceData.subarray(instance_offset + 8, instance_offset + 12),
@@ -1683,7 +1714,7 @@
   // ../src/components/com_rigid_body2d.ts
   function rigid_body2d(kind, bounciness = 1, friction = 1e-3) {
     return (game2, entity) => {
-      game2.World.Signature[entity] |= 8192 /* RigidBody2D */;
+      game2.World.Signature[entity] |= 16384 /* RigidBody2D */;
       game2.World.RigidBody2D[entity] = {
         Kind: kind,
         Friction: friction,
@@ -1711,7 +1742,7 @@
   }
 
   // ../src/systems/sys_control_mouse.ts
-  var QUERY5 = 16 /* ControlPlayer */ | 512 /* LocalTransform2D */;
+  var QUERY6 = 32 /* ControlPlayer */ | 1024 /* LocalTransform2D */;
   var pointer_position = [0, 0];
   var SPAWN_INTERVAL = 0.1;
   var time_since_last_spawn = 0;
@@ -1727,11 +1758,11 @@
     let camera = game2.World.Camera2D[camera_entity];
     viewport_to_world(pointer_position, camera, pointer_position);
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY5) == QUERY5) {
+      if ((game2.World.Signature[ent] & QUERY6) == QUERY6) {
         let local = game2.World.LocalTransform2D[ent];
         local.Translation[0] = Math.round(pointer_position[0]);
         local.Translation[1] = Math.round(pointer_position[1]);
-        game2.World.Signature[ent] |= 64 /* Dirty */;
+        game2.World.Signature[ent] |= 128 /* Dirty */;
       }
     }
     if (time_since_last_spawn > SPAWN_INTERVAL) {
@@ -1743,7 +1774,7 @@
   }
 
   // ../src/systems/sys_draw2d.ts
-  var QUERY6 = 32768 /* SpatialNode2D */ | 128 /* Draw */;
+  var QUERY7 = 65536 /* SpatialNode2D */ | 256 /* Draw */;
   function sys_draw2d(game2, delta) {
     let camera_entity = game2.Cameras[0];
     if (camera_entity === void 0) {
@@ -1756,7 +1787,7 @@
     ctx.fillRect(0, 0, game2.ViewportWidth, game2.ViewportHeight);
     ctx.transform(camera.Pv[0] / 2 * game2.ViewportWidth, -(camera.Pv[1] / 2) * game2.ViewportWidth, -(camera.Pv[2] / 2) * game2.ViewportHeight, camera.Pv[3] / 2 * game2.ViewportHeight, (camera.Pv[4] + 1) / 2 * game2.ViewportWidth, (camera.Pv[5] + 1) / 2 * game2.ViewportHeight);
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY6) == QUERY6) {
+      if ((game2.World.Signature[ent] & QUERY7) == QUERY7) {
         let node = game2.World.SpatialNode2D[ent];
         ctx.save();
         ctx.transform(node.World[0], -node.World[1], -node.World[2], node.World[3], node.World[4], -node.World[5]);
@@ -1782,7 +1813,7 @@
 
   // ../src/components/com_children.ts
   function destroy_all(world, entity) {
-    if (world.Signature[entity] & 32 /* Children */) {
+    if (world.Signature[entity] & 64 /* Children */) {
       for (let child of world.Children[entity].Children) {
         destroy_all(world, child);
       }
@@ -1794,10 +1825,10 @@
   }
 
   // ../src/systems/sys_lifespan.ts
-  var QUERY7 = 256 /* Lifespan */;
+  var QUERY8 = 512 /* Lifespan */;
   function sys_lifespan(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY7) == QUERY7) {
+      if ((game2.World.Signature[i] & QUERY8) == QUERY8) {
         update3(game2, i, delta);
       }
     }
@@ -1814,10 +1845,10 @@
   }
 
   // ../src/systems/sys_move2d.ts
-  var QUERY8 = 512 /* LocalTransform2D */ | 1024 /* Move2D */ | 64 /* Dirty */;
+  var QUERY9 = 1024 /* LocalTransform2D */ | 2048 /* Move2D */ | 128 /* Dirty */;
   function sys_move2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY8) === QUERY8) {
+      if ((game2.World.Signature[i] & QUERY9) === QUERY9) {
         update4(game2, i, delta);
       }
     }
@@ -1830,7 +1861,7 @@
       direction[0] = move.Direction[0];
       direction[1] = move.Direction[1];
       let amount = Math.min(1, length(direction));
-      if (game2.World.Signature[entity] & 32768 /* SpatialNode2D */) {
+      if (game2.World.Signature[entity] & 65536 /* SpatialNode2D */) {
         let node = game2.World.SpatialNode2D[entity];
         if (node.Parent !== void 0) {
           let parent = game2.World.SpatialNode2D[node.Parent];
@@ -1854,11 +1885,11 @@
   }
 
   // ../src/systems/sys_physics2d_integrate.ts
-  var QUERY9 = 512 /* LocalTransform2D */ | 8192 /* RigidBody2D */;
+  var QUERY10 = 1024 /* LocalTransform2D */ | 16384 /* RigidBody2D */;
   var GRAVITY = -9.8;
   function sys_physics2d_integrate(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY9) === QUERY9) {
+      if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
         update5(game2, ent, delta);
       }
     }
@@ -1875,21 +1906,21 @@
       scale(velocity_delta, rigid_body.VelocityLinear, delta);
       add(local.Translation, local.Translation, velocity_delta);
       local.Rotation += rigid_body.VelocityAngular * delta;
-      game2.World.Signature[entity] |= 64 /* Dirty */;
+      game2.World.Signature[entity] |= 128 /* Dirty */;
       set2(rigid_body.Acceleration, 0, 0);
     }
   }
 
   // ../src/systems/sys_physics2d_resolve.ts
-  var QUERY10 = 512 /* LocalTransform2D */ | 4 /* Collide2D */ | 8192 /* RigidBody2D */;
+  var QUERY11 = 1024 /* LocalTransform2D */ | 4 /* Collide2D */ | 16384 /* RigidBody2D */;
   function sys_physics2d_resolve(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
+      if ((game2.World.Signature[ent] & QUERY11) === QUERY11) {
         update6(game2, ent);
       }
     }
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
+      if ((game2.World.Signature[ent] & QUERY11) === QUERY11) {
         let rigid_body = game2.World.RigidBody2D[ent];
         if (rigid_body.Kind === 1 /* Dynamic */) {
           copy2(rigid_body.VelocityLinear, rigid_body.VelocityResolved);
@@ -1907,10 +1938,10 @@
       let has_collision = false;
       for (let i = 0; i < collide.Collisions.length; i++) {
         let collision = collide.Collisions[i];
-        if (game2.World.Signature[collision.Other] & 8192 /* RigidBody2D */) {
+        if (game2.World.Signature[collision.Other] & 16384 /* RigidBody2D */) {
           has_collision = true;
           add(local.Translation, local.Translation, collision.Hit);
-          game2.World.Signature[entity] |= 64 /* Dirty */;
+          game2.World.Signature[entity] |= 128 /* Dirty */;
           let other_body = game2.World.RigidBody2D[collision.Other];
           switch (other_body.Kind) {
             case 0 /* Static */:
@@ -1936,11 +1967,11 @@
   }
 
   // ../src/systems/sys_poll.ts
-  var QUERY11 = 131072 /* Task */;
+  var QUERY12 = 262144 /* Task */;
   function sys_poll(game2, delta) {
     let tasks_to_complete = [];
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY11) === QUERY11) {
+      if ((game2.World.Signature[ent] & QUERY12) === QUERY12) {
         if (has_blocking_dependencies(game2.World, ent)) {
           continue;
         }
@@ -1979,10 +2010,10 @@
     }
   }
   function has_blocking_dependencies(world, entity) {
-    if (world.Signature[entity] & 32 /* Children */) {
+    if (world.Signature[entity] & 64 /* Children */) {
       let children = world.Children[entity];
       for (let child of children.Children) {
-        if (world.Signature[child] & 131072 /* Task */) {
+        if (world.Signature[child] & 262144 /* Task */) {
           return true;
         }
       }
@@ -1993,7 +2024,7 @@
   // ../src/systems/sys_render2d.ts
   function sys_render2d(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      let signature = game2.World.Signature[ent] & (4096 /* Render2D */ | 32768 /* SpatialNode2D */);
+      let signature = game2.World.Signature[ent] & (8192 /* Render2D */ | 65536 /* SpatialNode2D */);
       let offset = ent * FLOATS_PER_INSTANCE + 7;
       if (game2.InstanceData[offset] !== signature) {
         game2.InstanceData[offset] = signature;
@@ -2023,10 +2054,10 @@
   }
 
   // ../src/systems/sys_render2d_animate.ts
-  var QUERY12 = 1 /* AnimateSprite */ | 4096 /* Render2D */;
+  var QUERY13 = 1 /* AnimateSprite */ | 8192 /* Render2D */;
   function sys_render2d_animate(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY12) === QUERY12) {
+      if ((game2.World.Signature[i] & QUERY13) === QUERY13) {
         update7(game2, i, delta);
       }
     }
@@ -2047,7 +2078,7 @@
   }
 
   // ../src/systems/sys_resize2d.ts
-  var QUERY13 = 2 /* Camera2D */;
+  var QUERY14 = 2 /* Camera2D */;
   var UNIT_PX = 32;
   function sys_resize2d(game2, delta) {
     if (game2.ViewportWidth != window.innerWidth || game2.ViewportHeight != window.innerHeight) {
@@ -2057,7 +2088,7 @@
       game2.ViewportWidth = game2.BackgroundCanvas.width = game2.SceneCanvas.width = game2.ForegroundCanvas.width = window.innerWidth;
       game2.ViewportHeight = game2.BackgroundCanvas.height = game2.SceneCanvas.height = game2.ForegroundCanvas.height = window.innerHeight;
       for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-        if ((game2.World.Signature[ent] & QUERY13) === QUERY13) {
+        if ((game2.World.Signature[ent] & QUERY14) === QUERY14) {
           update8(game2, ent);
         }
       }
@@ -2084,10 +2115,10 @@
   }
 
   // ../src/systems/sys_shake2d.ts
-  var QUERY14 = 512 /* LocalTransform2D */ | 16384 /* Shake */;
+  var QUERY15 = 1024 /* LocalTransform2D */ | 32768 /* Shake */;
   function sys_shake2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY14) == QUERY14) {
+      if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
         update9(game2, i);
       }
     }
@@ -2097,14 +2128,14 @@
     let local = game2.World.LocalTransform2D[entity];
     local.Translation[0] = (Math.random() - 0.5) * shake.Radius * 2;
     local.Translation[1] = (Math.random() - 0.5) * shake.Radius * 2;
-    game2.World.Signature[entity] |= 64 /* Dirty */;
+    game2.World.Signature[entity] |= 128 /* Dirty */;
   }
 
   // ../src/systems/sys_spawn2d.ts
-  var QUERY15 = 32768 /* SpatialNode2D */ | 65536 /* Spawn */;
+  var QUERY16 = 65536 /* SpatialNode2D */ | 131072 /* Spawn */;
   function sys_spawn2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
+      if ((game2.World.Signature[i] & QUERY16) == QUERY16) {
         update10(game2, i, delta);
       }
     }
@@ -2126,10 +2157,10 @@
   }
 
   // ../src/systems/sys_toggle.ts
-  var QUERY16 = 262144 /* Toggle */;
+  var QUERY17 = 524288 /* Toggle */;
   function sys_toggle(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY16) == QUERY16) {
+      if ((game2.World.Signature[i] & QUERY17) == QUERY17) {
         update11(game2, i, delta);
       }
     }
@@ -2153,12 +2184,12 @@
   var RAD_TO_DEG = 180 / Math.PI;
 
   // ../src/systems/sys_transform2d.ts
-  var QUERY_DIRTY = 512 /* LocalTransform2D */ | 64 /* Dirty */;
-  var QUERY_NODE = 512 /* LocalTransform2D */ | 32768 /* SpatialNode2D */;
+  var QUERY_DIRTY = 1024 /* LocalTransform2D */ | 128 /* Dirty */;
+  var QUERY_NODE = 1024 /* LocalTransform2D */ | 65536 /* SpatialNode2D */;
   function sys_transform2d(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
       if ((game2.World.Signature[ent] & QUERY_DIRTY) === QUERY_DIRTY) {
-        if (game2.World.Signature[ent] & 32768 /* SpatialNode2D */) {
+        if (game2.World.Signature[ent] & 65536 /* SpatialNode2D */) {
           update_spatial_node(game2, ent);
         } else {
           update_instance_data(game2, ent);
@@ -2167,7 +2198,7 @@
     }
   }
   function update_instance_data(game2, entity) {
-    game2.World.Signature[entity] &= ~64 /* Dirty */;
+    game2.World.Signature[entity] &= ~128 /* Dirty */;
     let local = game2.World.LocalTransform2D[entity];
     let instance_offset = entity * FLOATS_PER_INSTANCE;
     game2.InstanceData[instance_offset + 0] = local.Scale[0];
@@ -2178,7 +2209,7 @@
   }
   var world_position2 = [0, 0];
   function update_spatial_node(game2, entity, parent) {
-    game2.World.Signature[entity] &= ~64 /* Dirty */;
+    game2.World.Signature[entity] &= ~128 /* Dirty */;
     let local = game2.World.LocalTransform2D[entity];
     let node = game2.World.SpatialNode2D[entity];
     compose(node.World, local.Translation, local.Rotation * DEG_TO_RAD, local.Scale);
@@ -2194,7 +2225,7 @@
       }
     }
     invert(node.Self, node.World);
-    if (game2.World.Signature[entity] & 32 /* Children */) {
+    if (game2.World.Signature[entity] & 64 /* Children */) {
       let children = game2.World.Children[entity];
       for (let i = 0; i < children.Children.length; i++) {
         let child = children.Children[i];
@@ -2206,10 +2237,10 @@
   }
 
   // ../src/systems/sys_trigger2d.ts
-  var QUERY17 = 4 /* Collide2D */ | 524288 /* Trigger */;
+  var QUERY18 = 4 /* Collide2D */ | 1048576 /* Trigger */;
   function sys_trigger2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY17) === QUERY17) {
+      if ((game2.World.Signature[i] & QUERY18) === QUERY18) {
         update12(game2, i);
       }
     }
@@ -2306,10 +2337,10 @@
   }
 
   // ../src/systems/sys_walk.ts
-  var QUERY18 = 512 /* LocalTransform2D */ | 1048576 /* Walk */ | 1024 /* Move2D */;
+  var QUERY19 = 1024 /* LocalTransform2D */ | 2097152 /* Walk */ | 2048 /* Move2D */;
   function sys_walk(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY18) == QUERY18) {
+      if ((game2.World.Signature[ent] & QUERY19) == QUERY19) {
         update13(game2, ent);
       }
     }
@@ -2341,7 +2372,7 @@
         let move = game2.World.Move2D[entity];
         normalize(diff, diff);
         add(move.Direction, move.Direction, diff);
-        game2.World.Signature[entity] |= 64 /* Dirty */;
+        game2.World.Signature[entity] |= 128 /* Dirty */;
       }
     }
   }
@@ -2352,7 +2383,7 @@
     constructor() {
       super();
       this.World = new World(WORLD_CAPACITY);
-      this.MaterialRender2D = mat_render2d(this.Gl, 4096 /* Render2D */, 32768 /* SpatialNode2D */);
+      this.MaterialRender2D = mat_render2d(this.Gl, 8192 /* Render2D */, 65536 /* SpatialNode2D */);
       this.Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img"));
       this.InstanceData = new Float32Array(this.World.Capacity * FLOATS_PER_INSTANCE);
       this.InstanceBuffer = this.Gl.createBuffer();
@@ -2376,6 +2407,7 @@
       sys_camera2d(this, delta);
       sys_control_keyboard(this, delta);
       sys_control_mouse(this, delta);
+      sys_control_ai(this, delta);
       sys_control_always2d(this, delta);
       sys_walk(this, delta);
       sys_move2d(this, delta);
@@ -2391,56 +2423,8 @@
     }
   };
 
-  // ../lib/random.ts
-  var seed = 1;
-  function rand() {
-    seed = seed * 16807 % 2147483647;
-    return (seed - 1) / 2147483646;
-  }
-  function integer(min = 0, max = 1) {
-    return ~~(rand() * (max - min + 1) + min);
-  }
-  function float(min = 0, max = 1) {
-    return rand() * (max - min) + min;
-  }
-  function element(arr) {
-    return arr[integer(0, arr.length - 1)];
-  }
-
   // ../maps/map_sample.ts
   var map_sample = { "compressionlevel": -1, "height": 20, "infinite": false, "layers": [{ "data": [14, 1610612787, 16, 1, 1, 3221225485, 1, 1, 1, 2, 3, 3, 3, 3, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 14, 1610612787, 17, 3, 3, 4, 1, 1, 1, 14, 41, 41, 41, 41, 41, 16, 1, 1, 1, 1, 1, 25, 1, 1, 1, 1, 1, 1, 1, 1, 1073741837, 1, 14, 1610612787, 58, 41, 41, 16, 25, 1, 1, 14, 1610612789, 51, 51, 52, 51, 16, 2, 3, 4, 1, 1, 1, 1, 2, 3, 7, 3, 3, 3, 7, 3, 4, 14, 1610612787, 51, 52, 51, 16, 1, 1, 1, 14, 1610612787, 49, 3221225522, 49, 49, 16, 14, 41, 16, 1, 1, 536870925, 1, 14, 41, 19, 41, 30, 41, 19, 41, 16, 14, 1610612787, 5, 27, 27, 28, 1, 1073741837, 1, 14, 1610612787, 49, 49, 49, 49, 16, 14, 1610612789, 16, 1, 1, 1, 1073741837, 14, 1610612789, 31, 51, 51, 52, 31, 51, 16, 14, 1610612787, 16, 2, 3, 3, 3, 3, 4, 26, 27, 27, 27, 27, 27, 28, 14, 1610612787, 17, 7, 3, 3, 4, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 14, 1610612787, 16, 14, 41, 41, 41, 41, 17, 3, 3, 3, 3, 4, 1, 1, 14, 1610612787, 58, 19, 41, 41, 16, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 18, 1610612787, 17, 18, 1610612789, 51, 52, 51, 58, 41, 41, 22, 41, 16, 2684354573, 1, 14, 1610612787, 51, 31, 51, 51, 16, 14, 1610612787, 49, 49, 49, 49, 49, 49, 16, 60, 1610612787, 58, 60, 1610612787, 49, 49, 49, 51, 51, 51, 51, 51, 17, 3, 3, 18, 1610612787, 49, 43, 49, 3221225522, 17, 18, 1610612787, 49, 49, 49, 49, 49, 2684354610, 17, 51, 54, 51, 51, 54, 43, 49, 50, 49, 49, 49, 49, 49, 58, 41, 41, 60, 1610612787, 49, 49, 43, 49, 58, 60, 37, 38, 38, 38, 38, 38, 39, 58, 49, 43, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 51, 52, 51, 51, 54, 49, 49, 49, 49, 51, 52, 54, 49, 49, 49, 49, 49, 49, 51, 49, 49, 49, 5, 27, 6, 1610612790, 49, 49, 2147483698, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 5, 27, 27, 27, 27, 27, 27, 27, 27, 49, 49, 49, 16, 1, 14, 1610612787, 49, 49, 49, 49, 49, 49, 5, 27, 27, 27, 27, 27, 27, 6, 1610612790, 49, 16, 1, 1, 1, 1, 1, 1, 1, 1, 27, 27, 27, 28, 3221225485, 14, 1610612787, 68, 49, 5, 27, 27, 27, 28, 2, 3, 3, 3, 3, 3, 18, 1610612787, 49, 16, 1, 1, 1, 2, 3, 3, 3, 3, 1, 1, 1, 1, 2, 18, 1610612787, 84, 49, 17, 3, 4, 1, 1, 14, 41, 20, 41, 41, 21, 60, 1610612787, 49, 16, 1, 1, 1073741837, 14, 41, 11, 12, 41, 1, 2, 3, 3, 18, 60, 1610612787, 84, 49, 58, 41, 17, 3, 3, 18, 1610612789, 32, 51, 51, 33, 51, 54, 2147483698, 16, 1, 1, 1, 14, 1610612789, 51, 51, 51, 1, 14, 41, 41, 60, 1610612789, 54, 84, 49, 51, 51, 58, 41, 41, 60, 1610612787, 49, 43, 49, 49, 49, 49, 49, 17, 3, 3, 3, 18, 1610612787, 49, 49, 49, 1, 14, 1610612789, 52, 51, 54, 49, 84, 2147483698, 42, 49, 51, 51, 51, 51, 54, 43, 49, 49, 49, 49, 49, 49, 58, 41, 41, 41, 60, 1610612787, 49, 49, 49, 1, 14, 1610612787, 3758096434, 49, 49, 49, 94, 71, 71, 71, 71, 71, 72, 49, 49, 49, 49, 49, 49, 49, 43, 49, 51, 51, 51, 51, 51, 54, 49, 49, 49, 1, 14, 1610612787, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 84, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 3758096434, 49], "height": 20, "id": 1, "name": "Dungeon", "opacity": 1, "type": "tilelayer", "visible": true, "width": 32, "x": 0, "y": 0 }, { "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 107, 76, 115, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 0, 0, 1073741932, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 65, 0, 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 67, 0, 67, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 0, 109, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 73, 0, 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 88, 0, 119, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 0, 0, 0, 0, 0, 85, 0, 0, 0, 2147483758, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 1, 1, 1, 2, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 124, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483773, 0, 0, 0, 0, 0, 0, 0, 0, 2147483749, 0, 0, 0, 0, 0, 0, 0, 0, 94, 71, 71, 71, 71, 71, 72, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 0, 76, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "height": 20, "id": 4, "name": "Objects", "opacity": 1, "type": "tilelayer", "visible": true, "width": 32, "x": 0, "y": 0 }, { "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "height": 20, "id": 5, "name": "Carts", "opacity": 1, "type": "tilelayer", "visible": false, "width": 32, "x": 0, "y": 0 }, { "data": [0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 49, 0, 0, 0, 0, 0, 49, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 0, 49, 49, 0, 0, 49, 0, 0, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 49, 0, 49, 0, 49, 0, 49, 0, 0, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 0, 49, 0, 0, 49, 49, 49, 49, 0, 0, 0, 49, 0, 0, 0, 0, 0, 49, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 0, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 49, 49, 49, 0, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 49, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 49, 0, 0, 0, 0, 0, 0, 49, 49, 0, 0, 0, 0, 0, 0, 0, 49, 49, 49, 0, 0, 0, 0, 0, 0, 49, 0, 49, 49, 0, 49, 49, 49, 0, 0, 0, 0, 0, 49, 49, 49, 0, 0, 0, 0, 0, 0, 49, 49, 0, 49, 49, 49, 0, 0, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 0, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 0, 0, 0, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 49, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 0, 0, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49, 49], "height": 20, "id": 7, "name": "Navigation", "opacity": 0.25, "tintcolor": "#00ff00", "type": "tilelayer", "visible": true, "width": 32, "x": 0, "y": 0 }], "nextlayerid": 8, "nextobjectid": 1, "orientation": "orthogonal", "renderorder": "right-down", "tiledversion": "1.9.1", "tileheight": 16, "tilesets": [{ "firstgid": 1, "source": "../assets/Tiny Dungeon/Tiled/sampleSheet.tsx" }], "tilewidth": 16, "type": "map", "version": "1.9", "width": 32 };
-
-  // ../src/components/com_callback.ts
-  function callback(fn) {
-    return (game2, entity) => {
-      fn(game2, entity);
-    };
-  }
-
-  // ../src/components/com_move2d.ts
-  function move2d(move_speed, rotation_speed) {
-    return (game2, entity) => {
-      game2.World.Signature[entity] |= 1024 /* Move2D */;
-      game2.World.Move2D[entity] = {
-        MoveSpeed: move_speed,
-        RotationSpeed: rotation_speed,
-        Direction: [0, 0],
-        Rotation: 0
-      };
-    };
-  }
-
-  // ../src/components/com_walk.ts
-  function walk(current_node) {
-    return (game2, entity) => {
-      game2.World.Signature[entity] |= 1048576 /* Walk */;
-      game2.World.Walk[entity] = {
-        CurrentNode: current_node,
-        DestinationNode: null,
-        Path: []
-      };
-    };
-  }
 
   // ../src/tiled.ts
   function instantiate_tiled_layer(game2, layer, z) {
@@ -2474,7 +2458,7 @@
   // ../src/components/com_spatial_node2d.ts
   function spatial_node2d(is_gyroscope = false) {
     return (game2, entity) => {
-      game2.World.Signature[entity] |= 32768 /* SpatialNode2D */ | 64 /* Dirty */;
+      game2.World.Signature[entity] |= 65536 /* SpatialNode2D */ | 128 /* Dirty */;
       game2.World.SpatialNode2D[entity] = {
         World: game2.InstanceData.subarray(entity * FLOATS_PER_INSTANCE, entity * FLOATS_PER_INSTANCE + 6),
         Self: create(),
@@ -2495,7 +2479,7 @@
   // ../src/components/com_control_player.ts
   function control_player() {
     return (game2, entity) => {
-      game2.World.Signature[entity] |= 16 /* ControlPlayer */;
+      game2.World.Signature[entity] |= 32 /* ControlPlayer */;
       game2.World.ControlPlayer[entity] = {};
     };
   }
@@ -2503,6 +2487,52 @@
   // ../src/scenes/blu_cursor.ts
   function blueprint_cursor(game2) {
     return [local_transform2d(), control_player(), render2d("060.png"), order(1)];
+  }
+
+  // ../src/components/com_control_ai.ts
+  function control_ai() {
+    return (game2, entity) => {
+      game2.World.Signature[entity] |= 8 /* ControlAi */;
+      game2.World.ControlAi[entity] = {};
+    };
+  }
+
+  // ../src/components/com_move2d.ts
+  function move2d(move_speed, rotation_speed) {
+    return (game2, entity) => {
+      game2.World.Signature[entity] |= 2048 /* Move2D */;
+      game2.World.Move2D[entity] = {
+        MoveSpeed: move_speed,
+        RotationSpeed: rotation_speed,
+        Direction: [0, 0],
+        Rotation: 0
+      };
+    };
+  }
+
+  // ../src/components/com_walk.ts
+  function walk(current_node) {
+    return (game2, entity) => {
+      game2.World.Signature[entity] |= 2097152 /* Walk */;
+      game2.World.Walk[entity] = {
+        CurrentNode: current_node,
+        DestinationNode: null,
+        Path: []
+      };
+    };
+  }
+
+  // ../src/scenes/blu_duszek.ts
+  function blueprint_duszek(game2, origin) {
+    return [
+      local_transform2d(),
+      copy_position(game2.World.Navigation.Centroids[origin]),
+      render2d("121.png"),
+      order(0.5),
+      control_ai(),
+      walk(origin),
+      move2d(float(2, 4), 0)
+    ];
   }
 
   // ../src/scenes/sce_dungeon.ts
@@ -2546,18 +2576,7 @@
     let duszki = 100;
     for (let i = 0; i < duszki; i++) {
       let origin = element(node_ids);
-      instantiate(game2, [
-        local_transform2d(),
-        copy_position(game2.World.Navigation.Centroids[origin]),
-        render2d("121.png"),
-        order(0.5),
-        move2d(float(2, 4), 0),
-        walk(origin),
-        callback((game3, entity) => {
-          let walk2 = game3.World.Walk[entity];
-          walk2.DestinationNode = element(node_ids);
-        })
-      ]);
+      instantiate(game2, blueprint_duszek(game2, origin));
     }
   }
 
