@@ -33,8 +33,8 @@ export function scene_dungeon(game: Game) {
     instantiate_tiled_layer(game, map_sample.layers[0], 0.1);
 
     // Objects.
-    instantiate_tiled_layer(game, map_sample.layers[1], 0.2);
-    instantiate_tiled_layer(game, map_sample.layers[2], 0.3);
+    instantiate_tiled_layer(game, map_sample.layers[1], 0.6);
+    instantiate_tiled_layer(game, map_sample.layers[2], 0.7);
 
     let nav = map_sample.layers[3];
     for (let i = 0; i < nav.data.length; i++) {
@@ -80,7 +80,7 @@ export function scene_dungeon(game: Game) {
                 local_transform2d(),
                 copy_position(position),
                 render2d("121.png"),
-                order(1),
+                order(0.5),
             ]);
         }
     }
