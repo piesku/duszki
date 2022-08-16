@@ -5,6 +5,7 @@ import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
+import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_always2d} from "./systems/sys_control_always2d.js";
 import {sys_control_keyboard} from "./systems/sys_control_keyboard.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
@@ -71,6 +72,7 @@ export class Game extends Game3D {
         sys_control_mouse(this, delta);
 
         // AI.
+        sys_control_ai(this, delta);
         sys_control_always2d(this, delta);
 
         // Game logic.

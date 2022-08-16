@@ -1,20 +1,13 @@
 import {instantiate} from "../../lib/game.js";
-import {element, float} from "../../lib/random.js";
+import {element} from "../../lib/random.js";
 import {map_sample} from "../../maps/map_sample.js";
-import {callback} from "../components/com_callback.js";
-import {
-    copy_position,
-    local_transform2d,
-    set_position,
-} from "../components/com_local_transform2d.js";
-import {move2d} from "../components/com_move2d.js";
-import {order, render2d} from "../components/com_render2d.js";
-import {walk} from "../components/com_walk.js";
+import {set_position} from "../components/com_local_transform2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {instantiate_tiled_layer} from "../tiled.js";
 import {node_to_position, World} from "../world.js";
 import {blueprint_camera} from "./blu_camera.js";
 import {blueprint_cursor} from "./blu_cursor.js";
+import {blueprint_duszek} from "./blu_duszek.js";
 
 export function scene_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
@@ -71,21 +64,9 @@ export function scene_dungeon(game: Game) {
     }
 
     let node_ids = game.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== undefined);
-
     let duszki = 100;
     for (let i = 0; i < duszki; i++) {
         let origin = element(node_ids);
-        instantiate(game, [
-            local_transform2d(),
-            copy_position(game.World.Navigation.Centroids[origin]),
-            render2d("121.png"),
-            order(0.5),
-            move2d(float(2, 4), 0),
-            walk(origin),
-            callback((game, entity) => {
-                let walk = game.World.Walk[entity];
-                walk.DestinationNode = element(node_ids);
-            }),
-        ]);
+        instantiate(game, blueprint_duszek(game, origin));
     }
 }
