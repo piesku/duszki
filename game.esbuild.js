@@ -539,6 +539,9 @@
   function node_to_position(world, node) {
     return [node % world.Width, world.Height - Math.floor(node / world.Width) - 1];
   }
+  function position_to_node(world, position) {
+    return (world.Height - position[1] - 1) * world.Width + position[0];
+  }
 
   // ../src/systems/sys_camera2d.ts
   var QUERY = 65536 /* SpatialNode2D */ | 2 /* Camera2D */;
@@ -648,7 +651,12 @@
   // ../src/systems/sys_control_ai.ts
   var QUERY3 = 8 /* ControlAi */ | 2097152 /* Walk */;
   function sys_control_ai(game2, delta) {
-    let node_ids = game2.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== void 0);
+    let node_ids = [];
+    for (let i = 0; i < game2.World.Navigation.Graph.length; i++) {
+      if (game2.World.Navigation.Graph[i]) {
+        node_ids.push(i);
+      }
+    }
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
       if ((game2.World.Signature[ent] & QUERY3) == QUERY3) {
         let walk2 = game2.World.Walk[ent];
@@ -2348,6 +2356,10 @@
   function update13(game2, entity) {
     let nav = game2.World.Navigation;
     let walk2 = game2.World.Walk[entity];
+    let local = game2.World.LocalTransform2D[entity];
+    if (walk2.CurrentNode === void 0) {
+      walk2.CurrentNode = position_to_node(game2.World, local.Translation);
+    }
     if (walk2.DestinationNode !== null) {
       console.time("path_find");
       let path = path_find(nav, walk2.DestinationNode, walk2.CurrentNode);
@@ -2358,10 +2370,10 @@
       walk2.DestinationNode = null;
     }
     if (walk2.Path.length > 0) {
-      let local = game2.World.LocalTransform2D[entity];
+      let local2 = game2.World.LocalTransform2D[entity];
       let next = walk2.Path[0];
       let diff = [0, 0];
-      subtract(diff, nav.Centroids[next], local.Translation);
+      subtract(diff, nav.Centroids[next], local2.Translation);
       if (length(diff) < 0.1) {
         walk2.Path.shift();
         if (walk2.Path.length == 0) {
@@ -2511,11 +2523,10 @@
   }
 
   // ../src/components/com_walk.ts
-  function walk(current_node) {
+  function walk() {
     return (game2, entity) => {
       game2.World.Signature[entity] |= 2097152 /* Walk */;
       game2.World.Walk[entity] = {
-        CurrentNode: current_node,
         DestinationNode: null,
         Path: []
       };
@@ -2523,14 +2534,13 @@
   }
 
   // ../src/scenes/blu_duszek.ts
-  function blueprint_duszek(game2, origin) {
+  function blueprint_duszek(game2) {
     return [
       local_transform2d(),
-      copy_position(game2.World.Navigation.Centroids[origin]),
       render2d("121.png"),
       order(0.5),
       control_ai(),
-      walk(origin),
+      walk(),
       move2d(float(2, 4), 0)
     ];
   }
@@ -2572,11 +2582,21 @@
         edges.push([i + nav.width, 1]);
       }
     }
-    let node_ids = game2.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== void 0);
-    let duszki = 100;
-    for (let i = 0; i < duszki; i++) {
-      let origin = element(node_ids);
-      instantiate(game2, blueprint_duszek(game2, origin));
+    {
+      let node_ids = [];
+      for (let i = 0; i < game2.World.Navigation.Graph.length; i++) {
+        if (game2.World.Navigation.Graph[i]) {
+          node_ids.push(i);
+        }
+      }
+      let duszki = 100;
+      for (let i = 0; i < duszki; i++) {
+        let origin = element(node_ids);
+        instantiate(game2, [
+          ...blueprint_duszek(game2),
+          copy_position(game2.World.Navigation.Centroids[origin])
+        ]);
+      }
     }
   }
 
