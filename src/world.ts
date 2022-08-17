@@ -107,5 +107,5 @@ export function node_to_position(world: World, node: number): Vec2 {
 }
 
 export function position_to_node(world: World, position: Vec2) {
-    return position[1] * world.Width + position[0];
+    return (world.Height - position[1] - 1) * world.Width + position[0];
 }

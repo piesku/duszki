@@ -1,7 +1,7 @@
 import {instantiate} from "../../lib/game.js";
 import {element} from "../../lib/random.js";
 import {map_sample} from "../../maps/map_sample.js";
-import {set_position} from "../components/com_local_transform2d.js";
+import {copy_position, set_position} from "../components/com_local_transform2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {instantiate_tiled_layer} from "../tiled.js";
 import {node_to_position, World} from "../world.js";
@@ -63,10 +63,22 @@ export function scene_dungeon(game: Game) {
         }
     }
 
-    let node_ids = game.World.Navigation.Graph.map((_, i) => i).filter((i) => i !== undefined);
-    let duszki = 100;
-    for (let i = 0; i < duszki; i++) {
-        let origin = element(node_ids);
-        instantiate(game, blueprint_duszek(game, origin));
+    {
+        // Duszki.
+        let node_ids = [];
+        for (let i = 0; i < game.World.Navigation.Graph.length; i++) {
+            if (game.World.Navigation.Graph[i]) {
+                node_ids.push(i);
+            }
+        }
+
+        let duszki = 100;
+        for (let i = 0; i < duszki; i++) {
+            let origin = element(node_ids);
+            instantiate(game, [
+                ...blueprint_duszek(game),
+                copy_position(game.World.Navigation.Centroids[origin]),
+            ]);
+        }
     }
 }

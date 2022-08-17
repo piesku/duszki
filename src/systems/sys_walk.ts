@@ -3,7 +3,7 @@ import {path_find} from "../../lib/pathfind.js";
 import {add, length, normalize, subtract} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
-import {Has} from "../world.js";
+import {Has, position_to_node} from "../world.js";
 
 const QUERY = Has.LocalTransform2D | Has.Walk | Has.Move2D;
 
@@ -18,6 +18,12 @@ export function sys_walk(game: Game, delta: number) {
 function update(game: Game, entity: Entity) {
     let nav = game.World.Navigation;
     let walk = game.World.Walk[entity];
+    let local = game.World.LocalTransform2D[entity];
+
+    if (walk.CurrentNode === undefined) {
+        walk.CurrentNode = position_to_node(game.World, local.Translation);
+    }
+
     if (walk.DestinationNode !== null) {
         console.time("path_find");
         // Search FROM the goal TO the origin, so that the waypoints are ordered
