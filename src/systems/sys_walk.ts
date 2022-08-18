@@ -25,11 +25,11 @@ function update(game: Game, entity: Entity) {
     }
 
     if (walk.DestinationNode !== null) {
-        console.time("path_find");
+        //console.time("path_find");
         // Search FROM the goal TO the origin, so that the waypoints are ordered
         // from the one closest to the origin.
         let path = path_find(nav, walk.DestinationNode, walk.CurrentNode);
-        console.timeEnd("path_find");
+        //console.timeEnd("path_find");
         if (path) {
             // Discard the first waypoint, which is always the origin node.
             walk.Path = path.slice(1);

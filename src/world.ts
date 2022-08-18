@@ -103,9 +103,9 @@ export class World extends WorldImpl {
 }
 
 export function node_to_position(world: World, node: number): Vec2 {
-    return [node % world.Width, world.Height - Math.floor(node / world.Width) - 1];
+    return [node % world.Width, Math.floor(node / world.Width)];
 }
 
 export function position_to_node(world: World, position: Vec2) {
-    return (world.Height - position[1] - 1) * world.Width + position[0];
+    return position[1] * world.Width + position[0];
 }

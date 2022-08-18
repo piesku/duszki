@@ -23,16 +23,21 @@ const enum TileFlip {
     All = TileFlip.Horizontal | TileFlip.Vertical | TileFlip.Diagonal | TileFlip.Ignored,
 }
 
-export function instantiate_tiled_layer(game: Game, layer: TiledLayer, z: number) {
-    for (let i = 0; i < layer.data.length; i++) {
-        let global_id = layer.data[i]; // Global ID with flip flags.
+export function instantiate_tiled_layer(
+    game: Game,
+    layer: Array<number>,
+    width: number,
+    z: number
+) {
+    for (let i = 0; i < layer.length; i++) {
+        let global_id = layer[i]; // Global ID with flip flags.
         let tile_id = global_id & ~TileFlip.All; // Remove flip flags.
         if (tile_id == 0) {
             continue;
         }
 
-        let x = i % layer.width;
-        let y = layer.height - Math.floor(i / layer.width) - 1;
+        let x = i % width;
+        let y = Math.floor(i / width);
         let local: ReturnType<typeof local_transform2d>;
 
         // Rotate and flip flags are stored in the global ID.
