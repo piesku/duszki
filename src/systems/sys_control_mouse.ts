@@ -1,5 +1,5 @@
 import {instantiate} from "../../lib/game.js";
-import {pointer_down, pointer_viewport} from "../../lib/input.js";
+import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {Vec2} from "../../lib/math.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {copy_position} from "../components/com_local_transform2d.js";
@@ -39,7 +39,7 @@ export function sys_control_mouse(game: Game, delta: number) {
     }
 
     if (time_since_last_spawn > SPAWN_INTERVAL) {
-        if (pointer_down(game, 0)) {
+        if (pointer_clicked(game, 0)) {
             instantiate(game, [...blueprint_square(game), copy_position(pointer_position)]);
             time_since_last_spawn = 0;
         }

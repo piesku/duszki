@@ -7,6 +7,7 @@ import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_always2d} from "./systems/sys_control_always2d.js";
+import {sys_control_camera} from "./systems/sys_control_camera.js";
 import {sys_control_keyboard} from "./systems/sys_control_keyboard.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
@@ -37,6 +38,7 @@ export class Game extends Game3D {
     InstanceBuffer = this.Gl.createBuffer()!;
 
     ClearStyle = "#763b36";
+    UnitSize = 16;
 
     constructor() {
         super();
@@ -52,13 +54,10 @@ export class Game extends Game3D {
         // Event loop.
         sys_poll(this, delta);
 
-        // Camera.
-        sys_resize2d(this, delta);
-        sys_camera2d(this, delta);
-
         // Player input.
         sys_control_keyboard(this, delta);
         sys_control_mouse(this, delta);
+        sys_control_camera(this, delta);
 
         // AI.
         sys_control_ai(this, delta);
@@ -78,6 +77,10 @@ export class Game extends Game3D {
         // Collisions.
         sys_collide2d(this, delta);
         sys_trigger2d(this, delta);
+
+        // Camera.
+        sys_resize2d(this, delta);
+        sys_camera2d(this, delta);
 
         // Rendering.
         sys_draw2d(this, delta);
