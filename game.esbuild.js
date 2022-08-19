@@ -477,7 +477,7 @@
     return out;
   }
   function from_ortho(out, left, top) {
-    set(out, left, 0, 0, top, 0, 0);
+    set(out, 1 / left, 0, 0, 1 / top, 0, 0);
     return out;
   }
 
@@ -1736,14 +1736,27 @@
     };
   }
 
+  // ../src/components/com_spatial_node2d.ts
+  function spatial_node2d(is_gyroscope = false) {
+    return (game2, entity) => {
+      game2.World.Signature[entity] |= 65536 /* SpatialNode2D */ | 128 /* Dirty */;
+      game2.World.SpatialNode2D[entity] = {
+        World: game2.InstanceData.subarray(entity * FLOATS_PER_INSTANCE, entity * FLOATS_PER_INSTANCE + 6),
+        Self: create(),
+        IsGyroscope: is_gyroscope
+      };
+    };
+  }
+
   // ../src/scenes/blu_square.ts
   var SQUARE_LIFESPAN = 10;
   function blueprint_square(game2) {
     return [
+      spatial_node2d(),
       local_transform2d(),
       collide2d(true, 2 /* Object */, 1 /* Terrain */ | 2 /* Object */),
       rigid_body2d(1 /* Dynamic */, 0.3),
-      render2d("121.png"),
+      render2d("082.png"),
       order(0.9),
       lifespan(SQUARE_LIFESPAN)
     ];
@@ -1790,10 +1803,12 @@
     }
     let camera = game2.World.Camera2D[camera_entity];
     let ctx = game2.BackgroundContext;
-    ctx.resetTransform();
     ctx.fillStyle = game2.ClearStyle;
     ctx.fillRect(0, 0, game2.ViewportWidth, game2.ViewportHeight);
-    ctx.transform(camera.Pv[0] / 2 * game2.ViewportWidth, -(camera.Pv[1] / 2) * game2.ViewportWidth, -(camera.Pv[2] / 2) * game2.ViewportHeight, camera.Pv[3] / 2 * game2.ViewportHeight, (camera.Pv[4] + 1) / 2 * game2.ViewportWidth, (camera.Pv[5] + 1) / 2 * game2.ViewportHeight);
+    ctx = game2.ForegroundContext;
+    ctx.resetTransform();
+    ctx.clearRect(0, 0, game2.ViewportWidth, game2.ViewportHeight);
+    ctx.transform(camera.Pv[0] * game2.ViewportWidth / 2, -camera.Pv[1] * game2.ViewportHeight / 2, -camera.Pv[2] * game2.ViewportWidth / 2, camera.Pv[3] * game2.ViewportHeight / 2, (1 + camera.Pv[4]) * game2.ViewportWidth / 2, (1 - camera.Pv[5]) * game2.ViewportHeight / 2);
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
       if ((game2.World.Signature[ent] & QUERY7) == QUERY7) {
         let node = game2.World.SpatialNode2D[ent];
@@ -2110,16 +2125,16 @@
     let aspect = game2.ViewportWidth / game2.ViewportHeight;
     if (projection.Radius[0] === 0 && projection.Radius[1] === 0) {
       let radius = game2.ViewportHeight / UNIT_PX / 2;
-      from_ortho(projection.Inverse, radius * aspect, radius);
+      from_ortho(projection.Projection, radius * aspect, radius);
     } else {
       let target_aspect = projection.Radius[0] / projection.Radius[1];
       if (aspect < target_aspect) {
-        from_ortho(projection.Inverse, projection.Radius[0], projection.Radius[0] / aspect);
+        from_ortho(projection.Projection, projection.Radius[0], projection.Radius[0] / aspect);
       } else {
-        from_ortho(projection.Inverse, projection.Radius[1] * aspect, projection.Radius[1]);
+        from_ortho(projection.Projection, projection.Radius[1] * aspect, projection.Radius[1]);
       }
     }
-    invert(projection.Projection, projection.Inverse);
+    invert(projection.Inverse, projection.Projection);
   }
 
   // ../src/systems/sys_shake2d.ts
@@ -2463,18 +2478,6 @@
       let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
       instantiate(game2, [local, render2d(tile_name), order(z)]);
     }
-  }
-
-  // ../src/components/com_spatial_node2d.ts
-  function spatial_node2d(is_gyroscope = false) {
-    return (game2, entity) => {
-      game2.World.Signature[entity] |= 65536 /* SpatialNode2D */ | 128 /* Dirty */;
-      game2.World.SpatialNode2D[entity] = {
-        World: game2.InstanceData.subarray(entity * FLOATS_PER_INSTANCE, entity * FLOATS_PER_INSTANCE + 6),
-        Self: create(),
-        IsGyroscope: is_gyroscope
-      };
-    };
   }
 
   // ../src/scenes/blu_camera.ts
