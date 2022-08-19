@@ -12,8 +12,6 @@ import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
-import {sys_physics2d_integrate} from "./systems/sys_physics2d_integrate.js";
-import {sys_physics2d_resolve} from "./systems/sys_physics2d_resolve.js";
 import {sys_poll} from "./systems/sys_poll.js";
 import {sys_render2d} from "./systems/sys_render2d.js";
 import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
@@ -50,15 +48,6 @@ export class Game extends Game3D {
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
 
-    override FixedUpdate(delta: number) {
-        // Collisions and physics.
-        sys_physics2d_integrate(this, delta);
-        sys_transform2d(this, delta);
-        sys_collide2d(this, delta);
-        sys_physics2d_resolve(this, delta);
-        sys_trigger2d(this, delta);
-    }
-
     override FrameUpdate(delta: number) {
         // Event loop.
         sys_poll(this, delta);
@@ -85,6 +74,10 @@ export class Game extends Game3D {
 
         // Commit all positions.
         sys_transform2d(this, delta);
+
+        // Collisions.
+        sys_collide2d(this, delta);
+        sys_trigger2d(this, delta);
 
         // Rendering.
         sys_draw2d(this, delta);
