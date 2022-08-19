@@ -690,11 +690,45 @@
     }
   }
 
+  // ../lib/number.ts
+  function clamp(min, max, num) {
+    return Math.max(min, Math.min(max, num));
+  }
+
+  // ../src/systems/sys_control_camera.ts
+  var QUERY5 = 2 /* Camera2D */ | 1024 /* LocalTransform2D */;
+  var wheel_y_clamped = 0;
+  function sys_control_camera(game2, delta) {
+    if (game2.InputDelta["WheelY"]) {
+      wheel_y_clamped = clamp(-1e3, 500, wheel_y_clamped + game2.InputDelta["WheelY"]);
+      let zoom = 4 ** (wheel_y_clamped / -500);
+      if (0.85 < zoom && zoom < 1.15) {
+        zoom = 1;
+      }
+      game2.UnitSize = 16 * zoom;
+      game2.ViewportResized = true;
+    }
+    if (game2.InputDistance["Mouse0"] > 5) {
+      document.body.classList.add("grabbing");
+      for (let ent = 0; ent < game2.World.Signature.length; ent++) {
+        if ((game2.World.Signature[ent] & QUERY5) === QUERY5) {
+          let local = game2.World.LocalTransform2D[ent];
+          local.Translation[0] -= game2.InputDelta["MouseX"] / game2.UnitSize;
+          local.Translation[1] += game2.InputDelta["MouseY"] / game2.UnitSize;
+          game2.World.Signature[ent] |= 128 /* Dirty */;
+        }
+      }
+    }
+    if (game2.InputDelta["Mouse0"] === -1) {
+      document.body.classList.remove("grabbing");
+    }
+  }
+
   // ../src/systems/sys_control_keyboard.ts
-  var QUERY5 = 32 /* ControlPlayer */ | 2048 /* Move2D */ | 16384 /* RigidBody2D */;
+  var QUERY6 = 32 /* ControlPlayer */ | 2048 /* Move2D */ | 16384 /* RigidBody2D */;
   function sys_control_keyboard(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY5) == QUERY5) {
+      if ((game2.World.Signature[ent] & QUERY6) == QUERY6) {
         update2(game2, ent);
       }
     }
@@ -716,8 +750,8 @@
   }
 
   // ../lib/input.ts
-  function pointer_down(game2, mouse_button, touch_id = mouse_button) {
-    return game2.InputState["Mouse" + mouse_button] > 0 || game2.InputState["Touch" + touch_id] > 0;
+  function pointer_clicked(game2, mouse_button, touch_id = mouse_button) {
+    return game2.InputDelta["Mouse" + mouse_button] === -1 && game2.InputDistance["Mouse" + mouse_button] < 5 || game2.InputDelta["Touch" + touch_id] === -1 && game2.InputDistance["Touch" + touch_id] < 5;
   }
   function pointer_viewport(game2, out) {
     if (game2.InputState["Touch0"] === 1 || game2.InputDelta["Touch0"] === -1) {
@@ -872,11 +906,6 @@
         Action: action
       };
     };
-  }
-
-  // ../lib/number.ts
-  function clamp(min, max, num) {
-    return Math.max(min, Math.min(max, num));
   }
 
   // ../sprites/spritesheet.ts
@@ -1755,7 +1784,7 @@
   }
 
   // ../src/systems/sys_control_mouse.ts
-  var QUERY6 = 32 /* ControlPlayer */ | 1024 /* LocalTransform2D */;
+  var QUERY7 = 32 /* ControlPlayer */ | 1024 /* LocalTransform2D */;
   var pointer_position = [0, 0];
   var SPAWN_INTERVAL = 0.1;
   var time_since_last_spawn = 0;
@@ -1771,7 +1800,7 @@
     let camera = game2.World.Camera2D[camera_entity];
     viewport_to_world(pointer_position, camera, pointer_position);
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY6) == QUERY6) {
+      if ((game2.World.Signature[ent] & QUERY7) == QUERY7) {
         let local = game2.World.LocalTransform2D[ent];
         local.Translation[0] = Math.round(pointer_position[0]);
         local.Translation[1] = Math.round(pointer_position[1]);
@@ -1779,7 +1808,7 @@
       }
     }
     if (time_since_last_spawn > SPAWN_INTERVAL) {
-      if (pointer_down(game2, 0)) {
+      if (pointer_clicked(game2, 0)) {
         instantiate(game2, [...blueprint_square(game2), copy_position(pointer_position)]);
         time_since_last_spawn = 0;
       }
@@ -1787,7 +1816,7 @@
   }
 
   // ../src/systems/sys_draw2d.ts
-  var QUERY7 = 65536 /* SpatialNode2D */ | 256 /* Draw */;
+  var QUERY8 = 65536 /* SpatialNode2D */ | 256 /* Draw */;
   function sys_draw2d(game2, delta) {
     let camera_entity = game2.Cameras[0];
     if (camera_entity === void 0) {
@@ -1802,7 +1831,7 @@
     ctx.clearRect(0, 0, game2.ViewportWidth, game2.ViewportHeight);
     ctx.transform(camera.Pv[0] * game2.ViewportWidth / 2, -camera.Pv[1] * game2.ViewportHeight / 2, -camera.Pv[2] * game2.ViewportWidth / 2, camera.Pv[3] * game2.ViewportHeight / 2, (1 + camera.Pv[4]) * game2.ViewportWidth / 2, (1 - camera.Pv[5]) * game2.ViewportHeight / 2);
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY7) == QUERY7) {
+      if ((game2.World.Signature[ent] & QUERY8) == QUERY8) {
         let node = game2.World.SpatialNode2D[ent];
         ctx.save();
         ctx.transform(node.World[0], -node.World[1], -node.World[2], node.World[3], node.World[4], -node.World[5]);
@@ -1840,10 +1869,10 @@
   }
 
   // ../src/systems/sys_lifespan.ts
-  var QUERY8 = 512 /* Lifespan */;
+  var QUERY9 = 512 /* Lifespan */;
   function sys_lifespan(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY8) == QUERY8) {
+      if ((game2.World.Signature[i] & QUERY9) == QUERY9) {
         update3(game2, i, delta);
       }
     }
@@ -1860,10 +1889,10 @@
   }
 
   // ../src/systems/sys_move2d.ts
-  var QUERY9 = 1024 /* LocalTransform2D */ | 2048 /* Move2D */ | 128 /* Dirty */;
+  var QUERY10 = 1024 /* LocalTransform2D */ | 2048 /* Move2D */ | 128 /* Dirty */;
   function sys_move2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY9) === QUERY9) {
+      if ((game2.World.Signature[i] & QUERY10) === QUERY10) {
         update4(game2, i, delta);
       }
     }
@@ -1900,11 +1929,11 @@
   }
 
   // ../src/systems/sys_poll.ts
-  var QUERY10 = 262144 /* Task */;
+  var QUERY11 = 262144 /* Task */;
   function sys_poll(game2, delta) {
     let tasks_to_complete = [];
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY10) === QUERY10) {
+      if ((game2.World.Signature[ent] & QUERY11) === QUERY11) {
         if (has_blocking_dependencies(game2.World, ent)) {
           continue;
         }
@@ -1987,10 +2016,10 @@
   }
 
   // ../src/systems/sys_render2d_animate.ts
-  var QUERY11 = 1 /* AnimateSprite */ | 8192 /* Render2D */;
+  var QUERY12 = 1 /* AnimateSprite */ | 8192 /* Render2D */;
   function sys_render2d_animate(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY11) === QUERY11) {
+      if ((game2.World.Signature[i] & QUERY12) === QUERY12) {
         update5(game2, i, delta);
       }
     }
@@ -2011,8 +2040,7 @@
   }
 
   // ../src/systems/sys_resize2d.ts
-  var QUERY12 = 2 /* Camera2D */;
-  var UNIT_PX = 32;
+  var QUERY13 = 2 /* Camera2D */;
   function sys_resize2d(game2, delta) {
     if (game2.ViewportWidth != window.innerWidth || game2.ViewportHeight != window.innerHeight) {
       game2.ViewportResized = true;
@@ -2021,7 +2049,7 @@
       game2.ViewportWidth = game2.BackgroundCanvas.width = game2.SceneCanvas.width = game2.ForegroundCanvas.width = window.innerWidth;
       game2.ViewportHeight = game2.BackgroundCanvas.height = game2.SceneCanvas.height = game2.ForegroundCanvas.height = window.innerHeight;
       for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-        if ((game2.World.Signature[ent] & QUERY12) === QUERY12) {
+        if ((game2.World.Signature[ent] & QUERY13) === QUERY13) {
           update6(game2, ent);
         }
       }
@@ -2034,7 +2062,7 @@
     let projection = camera.Projection;
     let aspect = game2.ViewportWidth / game2.ViewportHeight;
     if (projection.Radius[0] === 0 && projection.Radius[1] === 0) {
-      let radius = game2.ViewportHeight / UNIT_PX / 2;
+      let radius = game2.ViewportHeight / game2.UnitSize / 2;
       from_ortho(projection.Projection, radius * aspect, radius);
     } else {
       let target_aspect = projection.Radius[0] / projection.Radius[1];
@@ -2048,10 +2076,10 @@
   }
 
   // ../src/systems/sys_shake2d.ts
-  var QUERY13 = 1024 /* LocalTransform2D */ | 32768 /* Shake */;
+  var QUERY14 = 1024 /* LocalTransform2D */ | 32768 /* Shake */;
   function sys_shake2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY13) == QUERY13) {
+      if ((game2.World.Signature[i] & QUERY14) == QUERY14) {
         update7(game2, i);
       }
     }
@@ -2065,10 +2093,10 @@
   }
 
   // ../src/systems/sys_spawn2d.ts
-  var QUERY14 = 65536 /* SpatialNode2D */ | 131072 /* Spawn */;
+  var QUERY15 = 65536 /* SpatialNode2D */ | 131072 /* Spawn */;
   function sys_spawn2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY14) == QUERY14) {
+      if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
         update8(game2, i, delta);
       }
     }
@@ -2090,10 +2118,10 @@
   }
 
   // ../src/systems/sys_toggle.ts
-  var QUERY15 = 524288 /* Toggle */;
+  var QUERY16 = 524288 /* Toggle */;
   function sys_toggle(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY15) == QUERY15) {
+      if ((game2.World.Signature[i] & QUERY16) == QUERY16) {
         update9(game2, i, delta);
       }
     }
@@ -2170,10 +2198,10 @@
   }
 
   // ../src/systems/sys_trigger2d.ts
-  var QUERY16 = 4 /* Collide2D */ | 1048576 /* Trigger */;
+  var QUERY17 = 4 /* Collide2D */ | 1048576 /* Trigger */;
   function sys_trigger2d(game2, delta) {
     for (let i = 0; i < game2.World.Signature.length; i++) {
-      if ((game2.World.Signature[i] & QUERY16) === QUERY16) {
+      if ((game2.World.Signature[i] & QUERY17) === QUERY17) {
         update10(game2, i);
       }
     }
@@ -2270,10 +2298,10 @@
   }
 
   // ../src/systems/sys_walk.ts
-  var QUERY17 = 1024 /* LocalTransform2D */ | 2097152 /* Walk */ | 2048 /* Move2D */;
+  var QUERY18 = 1024 /* LocalTransform2D */ | 2097152 /* Walk */ | 2048 /* Move2D */;
   function sys_walk(game2, delta) {
     for (let ent = 0; ent < game2.World.Signature.length; ent++) {
-      if ((game2.World.Signature[ent] & QUERY17) == QUERY17) {
+      if ((game2.World.Signature[ent] & QUERY18) == QUERY18) {
         update11(game2, ent);
       }
     }
@@ -2323,6 +2351,7 @@
       this.InstanceData = new Float32Array(this.World.Capacity * FLOATS_PER_INSTANCE);
       this.InstanceBuffer = this.Gl.createBuffer();
       this.ClearStyle = "#763b36";
+      this.UnitSize = 16;
       this.Gl.clearColor(0, 0, 0, 0);
       this.Gl.enable(GL_DEPTH_TEST);
       this.Gl.enable(GL_BLEND);
@@ -2331,10 +2360,9 @@
     }
     FrameUpdate(delta) {
       sys_poll(this, delta);
-      sys_resize2d(this, delta);
-      sys_camera2d(this, delta);
       sys_control_keyboard(this, delta);
       sys_control_mouse(this, delta);
+      sys_control_camera(this, delta);
       sys_control_ai(this, delta);
       sys_control_always2d(this, delta);
       sys_walk(this, delta);
@@ -2346,6 +2374,8 @@
       sys_transform2d(this, delta);
       sys_collide2d(this, delta);
       sys_trigger2d(this, delta);
+      sys_resize2d(this, delta);
+      sys_camera2d(this, delta);
       sys_draw2d(this, delta);
       sys_render2d_animate(this, delta);
       sys_render2d(this, delta);
@@ -2387,11 +2417,7 @@
 
   // ../src/scenes/blu_camera.ts
   function blueprint_camera(game2) {
-    return [
-      spatial_node2d(),
-      local_transform2d(),
-      camera2d([game2.World.Width / 2 + 1, game2.World.Height / 2 + 1])
-    ];
+    return [spatial_node2d(), local_transform2d(), camera2d([0, 0])];
   }
 
   // ../src/components/com_control_player.ts
