@@ -183,6 +183,6 @@ export function get_translation(out: Vec2, a: Mat2D) {
 }
 
 export function from_ortho(out: Mat2D, left: number, top: number) {
-    set(out, left, 0, 0, top, 0, 0);
+    set(out, 1 / left, 0, 0, 1 / top, 0, 0);
     return out;
 }

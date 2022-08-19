@@ -53,17 +53,17 @@ function update(game: Game, entity: Entity) {
         // pixels. This is useful for keeping the unit size constant across
         // different viewport dimensions, and help pixel art sprites look crisp.
         let radius = game.ViewportHeight / UNIT_PX / 2;
-        from_ortho(projection.Inverse, radius * aspect, radius);
+        from_ortho(projection.Projection, radius * aspect, radius);
     } else {
         let target_aspect = projection.Radius[0] / projection.Radius[1];
         if (aspect < target_aspect) {
             // Portrait orientation.
-            from_ortho(projection.Inverse, projection.Radius[0], projection.Radius[0] / aspect);
+            from_ortho(projection.Projection, projection.Radius[0], projection.Radius[0] / aspect);
         } else {
             // Landscape orientation.
-            from_ortho(projection.Inverse, projection.Radius[1] * aspect, projection.Radius[1]);
+            from_ortho(projection.Projection, projection.Radius[1] * aspect, projection.Radius[1]);
         }
     }
 
-    invert(projection.Projection, projection.Inverse);
+    invert(projection.Inverse, projection.Projection);
 }
