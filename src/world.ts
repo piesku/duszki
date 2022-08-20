@@ -75,8 +75,8 @@ export const enum Has {
 }
 
 export class World extends WorldImpl {
-    Width: number = 32;
-    Height: number = 20;
+    Width: number = 120;
+    Height: number = 80;
     Navigation: Navigation = {Graph: [], Centroids: []};
 
     AnimateSprite: Array<AnimateSprite> = [];

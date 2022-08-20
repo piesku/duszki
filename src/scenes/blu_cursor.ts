@@ -4,5 +4,5 @@ import {order, render2d} from "../components/com_render2d.js";
 import {Game} from "../game.js";
 
 export function blueprint_cursor(game: Game) {
-    return [local_transform2d(), control_player(), render2d("060.png"), order(1)];
+    return [local_transform2d(), control_player(), render2d("126.png"), order(1)];
 }

@@ -1,9 +1,9 @@
 import {dispatch} from "./actions.js";
 import {Game} from "./game.js";
-import {scene_stage} from "./scenes/sce_stage.js";
+import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
 
 let game = new Game();
-scene_stage(game);
+scene_editable_dungeon(game);
 game.Start();
 
 // @ts-ignore
