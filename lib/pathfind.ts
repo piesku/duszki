@@ -1,7 +1,8 @@
+import {position_to_node, World} from "../src/world.js";
 import {EPSILON, Vec2} from "./math.js";
 import {distance_squared} from "./vec2.js";
 
-type VectorField = Array<number>;
+type VectorField = number[][];
 
 export interface Navigation {
     Graph: Array<Array<[dest: number, cost: number]>>;
@@ -15,61 +16,71 @@ export interface Navigation {
  * @param origin - The start node.
  * @param goal - The destination node.
  */
-export function path_find(nav: Navigation, origin: number, goal: number) {
+export function path_find(world: World, origin: Vec2, goal: Vec2) {
+    let nav = world.Grid;
     let predecessors: VectorField = [];
 
+    let origin_node = position_to_node(world, origin);
     // The cost from the origin for each visited node (G).
     let g: Array<number> = [];
-    g[origin] = 0;
+    g[origin_node] = 0;
     // The heuristic to the goal for each visited node (H).
     let h: Array<number> = [];
-    h[origin] = 0;
+    h[origin_node] = 0;
     // The total cost for each visited node (F).
     let f: Array<number> = [];
-    f[origin] = 0;
+    f[origin_node] = 0;
 
     // The queue of neighboring nodes to visit next.
     let boundary = [origin];
     while (boundary.length > 0) {
         // Pick the next node with the lowest F cost.
-        let lowest = lowest_cost(boundary, f);
+        let lowest = lowest_cost(world, boundary, f);
         let current = boundary.splice(lowest, 1)[0];
 
-        if (current === goal) {
+        if (position_to_node(world, current) === position_to_node(world, goal)) {
             // We've reached the goal. Return an array of nodes from the goal to
             // the destination.
-            return [...path_follow(predecessors, goal)];
+            return [...path_follow(world, predecessors, goal)];
         }
 
-        // For every neighbor `next` of the current node…
-        for (let i = 0; i < nav.Graph[current].length; i++) {
-            let next = nav.Graph[current][i][0];
-            let cost = nav.Graph[current][i][1];
+        let neighbors: Vec2[] = [
+            [current[0] + 1, current[1]],
+            [current[0] - 1, current[1]],
+            [current[0], current[1] + 1],
+            [current[0], current[1] - 1],
+        ];
+
+        for (let i = 0; i < neighbors.length; i++) {
+            let next = neighbors[i];
+            let cost = 1;
+            let current_node = position_to_node(world, current);
+            let next_node = position_to_node(world, next);
             // The G cost of getting from the origin to `next` is the G cost of
             // the current node plus the cost of getting from the current node
             // to `next`.
-            let g_next = g[current] + cost;
-            if (g[next] === undefined) {
+            let g_next = g[current_node] + cost;
+            if (g[next_node] === undefined) {
                 // We've never visited this neighboring node before. Update the
                 // G cost, compute the H cost, compute the F cost.
-                h[next] = distance_squared(nav.Centroids[next], nav.Centroids[goal]);
-                g[next] = g_next;
-                f[next] = g_next + h[next];
+                h[next_node] = distance_squared(next, goal);
+                g[next_node] = g_next;
+                f[next_node] = g_next + h[next_node];
                 // Record that we've reached this neighbor from the current
                 // node. This will be used to trace the entire path from the
                 // goal back to the origin.
-                predecessors[next] = current;
+                predecessors[next_node] = current;
                 // Add the neighbor to the queue.
                 boundary.push(next);
-            } else if (g_next + EPSILON < g[next]) {
+            } else if (g_next + EPSILON < g[next_node]) {
                 // We visited this neighboring node before, but we arrived at it
                 // via a detour. We now have a better path to it from the
                 // origin, manifested by a better G cost. Recompute the F cost.
-                g[next] = g_next;
-                f[next] = g_next + h[next];
+                g[next_node] = g_next;
+                f[next_node] = g_next + h[next_node];
                 // Record that we've reached this neighbor from the current
                 // node, rather than the one recorded previously.
-                predecessors[next] = current;
+                predecessors[next_node] = current;
             }
         }
     }
@@ -80,10 +91,13 @@ export function path_find(nav: Navigation, origin: number, goal: number) {
 
 // Linearly search for the index of the element of `boundary` with the lowest
 // cost in `cost`.
-function lowest_cost(boundary: Array<number>, cost: Array<number>) {
+function lowest_cost(world: World, boundary: Array<Vec2>, cost: Array<number>) {
     let min = 0;
     for (let i = 0; i < boundary.length; i++) {
-        if (cost[boundary[i]] + EPSILON < cost[boundary[min]]) {
+        if (
+            cost[position_to_node(world, boundary[i])] + EPSILON <
+            cost[position_to_node(world, boundary[min])]
+        ) {
             min = i;
         }
     }
@@ -92,9 +106,9 @@ function lowest_cost(boundary: Array<number>, cost: Array<number>) {
 
 // Follow the path from the goal back to the origin by tracing the predecessors
 // recorded for each node of the graph.
-function* path_follow(path: VectorField, goal: number) {
+function* path_follow(world: World, path: VectorField, goal: Vec2) {
     while (goal !== undefined) {
         yield goal;
-        goal = path[goal];
+        goal = path[position_to_node(world, goal)] as Vec2;
     }
 }

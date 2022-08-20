@@ -29,8 +29,6 @@ import {Has, World} from "./world.js";
 
 export const WORLD_CAPACITY = 65_536 * 4; // = 4MB of InstanceData.
 
-export interface GridCell {}
-
 export class Game extends Game3D {
     World = new World(WORLD_CAPACITY);
 
@@ -63,7 +61,7 @@ export class Game extends Game3D {
         sys_control_camera(this, delta);
 
         // AI.
-        false && sys_control_ai(this, delta);
+        sys_control_ai(this, delta);
         sys_control_always2d(this, delta);
 
         // Game logic.

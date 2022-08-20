@@ -16,7 +16,6 @@ export interface Render2D {
     Detail: Float32Array;
     Color: Float32Array;
     Sprite: Float32Array;
-    SpriteName: string;
 }
 
 /**
@@ -49,7 +48,6 @@ export function render2d(sprite_name: string, color: Vec4 = [1, 1, 1, 1]) {
             Detail: game.InstanceData.subarray(instance_offset + 6, instance_offset + 8),
             Color: game.InstanceData.subarray(instance_offset + 8, instance_offset + 12),
             Sprite: game.InstanceData.subarray(instance_offset + 12, instance_offset + 16),
-            SpriteName: sprite_name,
         };
     };
 }
@@ -73,7 +71,6 @@ export function order(z: number) {
 
 export function set_sprite(game: Game, entity: Entity, sprite_name: string) {
     let instance_offset = entity * FLOATS_PER_INSTANCE;
-    game.World.Render2D[entity].SpriteName = sprite_name;
     game.InstanceData[instance_offset + 12] = spritesheet[sprite_name].x;
     game.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
     game.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;

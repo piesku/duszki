@@ -1,9 +1,11 @@
 import {instantiate} from "../../lib/game.js";
+import {integer} from "../../lib/random.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {instantiate_tiled_layer} from "../tiled.js";
 import {World} from "../world.js";
 import {blueprint_camera} from "./blu_camera.js";
+import {blueprint_duszek} from "./blu_duszek.js";
 
 export function scene_editable_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
@@ -67,12 +69,11 @@ export function scene_editable_dungeon(game: Game) {
     //         }
     //     }
 
-    //     let duszki = 100;
-    //     for (let i = 0; i < duszki; i++) {
-    //         let origin = element(node_ids);
-    //         instantiate(game, [
-    //             ...blueprint_duszek(game),
-    //             copy_position(game.World.Navigation.Centroids[origin]),
-    //         ]);
-    //     }
+    let duszki = 10;
+    for (let i = 0; i < duszki; i++) {
+        let x = integer(0, game.World.Width - 1);
+        let y = integer(0, game.World.Height - 1);
+
+        instantiate(game, [...blueprint_duszek(game), set_position(x, y)]);
+    }
 }
