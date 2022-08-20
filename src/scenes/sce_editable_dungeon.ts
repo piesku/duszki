@@ -16,7 +16,7 @@ export function scene_editable_dungeon(game: Game) {
     ]);
 
     // Terrain.
-    game.tile_entites = instantiate_tiled_layer(
+    instantiate_tiled_layer(
         game,
         new Array(game.World.Width * game.World.Height).fill(1),
         game.World.Width,

@@ -93,7 +93,7 @@ const NeighborSprites = {
 };
 
 function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
-    let tile = game.tile_entites[y * game.World.Width + x];
+    let tile = game.World.Grid[y][x].entity;
     if (tile === undefined) {
         return;
     }
