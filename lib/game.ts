@@ -17,6 +17,8 @@ export abstract class GameImpl {
     Running = 0;
     Now = 0;
 
+    tile_entites: Entity[] = [];
+
     abstract World: WorldImpl;
 
     ViewportWidth = window.innerWidth;
