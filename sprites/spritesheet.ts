@@ -798,5 +798,29 @@ export let spritesheet: {
         "y": 170,
         "width": 16,
         "height": 16
+    },
+    "132.png": {
+        "x": 0,
+        "y": 187,
+        "width": 16,
+        "height": 16
+    },
+    "133.png": {
+        "x": 17,
+        "y": 187,
+        "width": 16,
+        "height": 16
+    },
+    "134.png": {
+        "x": 34,
+        "y": 187,
+        "width": 16,
+        "height": 16
+    },
+    "135.png": {
+        "x": 51,
+        "y": 187,
+        "width": 16,
+        "height": 16
     }
 }
