@@ -1,5 +1,6 @@
 import {instantiate} from "../lib/game.js";
 import {Entity} from "../lib/world.js";
+import {grid} from "./components/com_grid.js";
 import {local_transform2d} from "./components/com_local_transform2d.js";
 import {order, render2d} from "./components/com_render2d.js";
 import {Game} from "./game.js";
@@ -52,7 +53,7 @@ export function instantiate_tiled_layer(
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        tile_entities.push(instantiate(game, [local, render2d(tile_name), order(z)]));
+        tile_entities.push(instantiate(game, [local, render2d(tile_name), order(z), grid()]));
     }
 
     return tile_entities;

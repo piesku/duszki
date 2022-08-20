@@ -1,6 +1,5 @@
 import {Vec2} from "../lib/math.js";
-import {Navigation} from "../lib/pathfind.js";
-import {WorldImpl} from "../lib/world.js";
+import {Entity, WorldImpl} from "../lib/world.js";
 import {AnimateSprite} from "./components/com_animate_sprite.js";
 import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
@@ -74,10 +73,17 @@ export const enum Has {
     Walk = 1 << Component.Walk,
 }
 
+export interface GridCell {
+    entity: Entity;
+    walkable: boolean;
+}
+
 export class World extends WorldImpl {
     Width: number = 120;
     Height: number = 80;
-    Navigation: Navigation = {Graph: [], Centroids: []};
+    Grid: GridCell[][] = Array(this.Height)
+        .fill(0)
+        .map(() => Array(this.Width));
 
     AnimateSprite: Array<AnimateSprite> = [];
     Camera2D: Array<Camera2D> = [];

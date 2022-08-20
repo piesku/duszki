@@ -43,6 +43,7 @@ export function sys_control_mouse(game: Game, delta: number) {
             const x = Math.round(pointer_position[0]);
             const y = Math.round(pointer_position[1]);
 
+            game.World.Grid[y][x].walkable = true;
             make_road(game, x, y);
             time_since_last_spawn = 0;
         }
@@ -51,28 +52,16 @@ export function sys_control_mouse(game: Game, delta: number) {
 
 function make_road(game: Game, x: number, y: number) {
     choose_road_tile_based_on_neighbors(game, x, y);
-    if (
-        game.World.Render2D[game.tile_entites[(y + 1) * game.World.Width + x]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y + 1][x].walkable) {
         choose_road_tile_based_on_neighbors(game, x, y + 1);
     }
-    if (
-        game.World.Render2D[game.tile_entites[y * game.World.Width + x + 1]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y][x + 1].walkable) {
         choose_road_tile_based_on_neighbors(game, x + 1, y);
     }
-    if (
-        game.World.Render2D[game.tile_entites[(y - 1) * game.World.Width + x]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y - 1][x].walkable) {
         choose_road_tile_based_on_neighbors(game, x, y - 1);
     }
-    if (
-        game.World.Render2D[game.tile_entites[y * game.World.Width + x - 1]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y][x - 1].walkable) {
         choose_road_tile_based_on_neighbors(game, x - 1, y);
     }
 }
@@ -111,28 +100,16 @@ function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
 
     let neighbors = 0;
 
-    if (
-        game.World.Render2D[game.tile_entites[(y + 1) * game.World.Width + x]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y + 1][x].walkable) {
         neighbors |= NeighborMasks.UP;
     }
-    if (
-        game.World.Render2D[game.tile_entites[y * game.World.Width + x + 1]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y][x + 1].walkable) {
         neighbors |= NeighborMasks.RIGHT;
     }
-    if (
-        game.World.Render2D[game.tile_entites[(y - 1) * game.World.Width + x]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y - 1][x].walkable) {
         neighbors |= NeighborMasks.DOWN;
     }
-    if (
-        game.World.Render2D[game.tile_entites[y * game.World.Width + x - 1]].SpriteName !==
-        "000.png"
-    ) {
+    if (game.World.Grid[y][x - 1].walkable) {
         neighbors |= NeighborMasks.LEFT;
     }
 
