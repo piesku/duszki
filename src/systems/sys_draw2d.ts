@@ -18,11 +18,7 @@ export function sys_draw2d(game: Game, delta: number) {
 
     let camera = game.World.Camera2D[camera_entity];
 
-    let ctx = game.BackgroundContext;
-    ctx.fillStyle = game.ClearStyle;
-    ctx.fillRect(0, 0, game.ViewportWidth, game.ViewportHeight);
-
-    ctx = game.ForegroundContext;
+    let ctx = game.ForegroundContext;
     ctx.resetTransform();
     ctx.clearRect(0, 0, game.ViewportWidth, game.ViewportHeight);
 

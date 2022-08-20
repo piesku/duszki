@@ -1,0 +1,36 @@
+{ "compressionlevel":-1,
+ "height":5,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[14, 81, 68,
+            97, 98, 99,
+            82, 115, 116,
+            131, 80, 133,
+            93, 111, 109],
+         "height":5,
+         "id":1,
+         "name":"Warstwa Kafelk\u00f3w 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":3,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.1",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/assets\/Monochrome RPG Tileset\/Tilesheet.tsx"
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":"1.9",
+ "width":3
+}

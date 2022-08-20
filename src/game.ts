@@ -3,6 +3,7 @@ import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
+import {sys_build_buildings} from "./systems/sys_build_buildings.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
@@ -37,13 +38,12 @@ export class Game extends Game3D {
     InstanceData = new Float32Array(this.World.Capacity * FLOATS_PER_INSTANCE);
     InstanceBuffer = this.Gl.createBuffer()!;
 
-    ClearStyle = "#763b36";
     UnitSize = 16;
 
     constructor() {
         super();
 
-        this.Gl.clearColor(0, 0, 0, 0);
+        this.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
         this.Gl.enable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);
         this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -55,6 +55,7 @@ export class Game extends Game3D {
         sys_poll(this, delta);
 
         // Player input.
+        sys_build_buildings(this, delta);
         sys_control_keyboard(this, delta);
         sys_control_mouse(this, delta);
         sys_control_camera(this, delta);
