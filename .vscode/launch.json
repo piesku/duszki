@@ -11,5 +11,13 @@
             "url": "http://localhost:1234/src",
             "webRoot": "${workspaceFolder}"
         },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Brave",
+            "runtimeExecutable": "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+            "url": "http://localhost:1234/src",
+            "webRoot": "${workspaceFolder}"
+        }
     ]
 }
