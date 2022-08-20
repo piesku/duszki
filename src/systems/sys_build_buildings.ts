@@ -1,6 +1,7 @@
 import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {Vec2} from "../../lib/math.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
+import {destroy_all} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -36,17 +37,8 @@ export function sys_build_buildings(game: Game, delta: number) {
             if (time_since_last_spawn > SPAWN_INTERVAL && pointer_clicked(game, 0)) {
                 time_since_last_spawn = 0;
                 game.World.Signature[ent] &= ~Has.ControlPlayer;
-
-                let entity_children = game.World.Children[ent];
-                for (let child_entity of entity_children.Children) {
-                    if (game.World.Signature[child_entity] & Has.Render2D) {
-                        let render = game.World.Render2D[child_entity];
-                        render.Color[0] = 1;
-                        render.Color[1] = 1;
-                        render.Color[2] = 1;
-                        render.Color[3] = 1;
-                    }
-                }
+            } else if (pointer_clicked(game, 2)) {
+                destroy_all(game.World, ent);
             }
         }
     }
