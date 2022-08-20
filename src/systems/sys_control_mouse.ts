@@ -49,12 +49,6 @@ export function sys_control_mouse(game: Game, delta: number) {
     }
 }
 
-function set_sprite_if_empty(game: Game, ent: number, sprite: string) {
-    if (game.World.Render2D[ent].SpriteName === "000.png") {
-        set_sprite(game, ent, sprite);
-    }
-}
-
 function make_road(game: Game, x: number, y: number) {
     choose_road_tile_based_on_neighbors(game, x, y);
     if (
