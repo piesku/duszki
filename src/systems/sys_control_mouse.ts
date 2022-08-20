@@ -11,7 +11,7 @@ const pointer_position: Vec2 = [0, 0];
 const SPAWN_INTERVAL = 0.1;
 let time_since_last_spawn = 0;
 
-const GROUND_TILE = "048.png";
+const CENTER_ROAD_TILE = "090.png";
 
 export function sys_control_mouse(game: Game, delta: number) {
     time_since_last_spawn += delta;
@@ -40,21 +40,10 @@ export function sys_control_mouse(game: Game, delta: number) {
 
     if (time_since_last_spawn > SPAWN_INTERVAL) {
         if (pointer_clicked(game, 0)) {
-            // instantiate(game, [...blueprint_square(game), copy_position(pointer_position)]);
-            const width = game.World.Width;
             const x = Math.round(pointer_position[0]);
             const y = Math.round(pointer_position[1]);
 
-            set_sprite(game, game.tile_entites[y * width + x], GROUND_TILE);
-            set_sprite(game, game.tile_entites[(y + 1) * width + x], "014.png");
-            set_sprite_if_empty(game, game.tile_entites[(y + 1) * width + (x - 1)], "013.png");
-            set_sprite_if_empty(game, game.tile_entites[y * width + (x - 1)], "013.png");
-            set_sprite_if_empty(game, game.tile_entites[(y + 1) * width + (x + 1)], "015.png");
-            set_sprite_if_empty(game, game.tile_entites[y * width + (x + 1)], "015.png");
-            set_sprite(game, game.tile_entites[(y + 2) * width + x], "002.png");
-            set_sprite_if_empty(game, game.tile_entites[(y + 2) * width + (x + 1)], "003.png");
-            set_sprite_if_empty(game, game.tile_entites[(y - 1) * width + x], "026.png");
-
+            make_road(game, x, y);
             time_since_last_spawn = 0;
         }
     }
@@ -64,4 +53,94 @@ function set_sprite_if_empty(game: Game, ent: number, sprite: string) {
     if (game.World.Render2D[ent].SpriteName === "000.png") {
         set_sprite(game, ent, sprite);
     }
+}
+
+function make_road(game: Game, x: number, y: number) {
+    choose_road_tile_based_on_neighbors(game, x, y);
+    if (
+        game.World.Render2D[game.tile_entites[(y + 1) * game.World.Width + x]].SpriteName !==
+        "000.png"
+    ) {
+        choose_road_tile_based_on_neighbors(game, x, y + 1);
+    }
+    if (
+        game.World.Render2D[game.tile_entites[y * game.World.Width + x + 1]].SpriteName !==
+        "000.png"
+    ) {
+        choose_road_tile_based_on_neighbors(game, x + 1, y);
+    }
+    if (
+        game.World.Render2D[game.tile_entites[(y - 1) * game.World.Width + x]].SpriteName !==
+        "000.png"
+    ) {
+        choose_road_tile_based_on_neighbors(game, x, y - 1);
+    }
+    if (
+        game.World.Render2D[game.tile_entites[y * game.World.Width + x - 1]].SpriteName !==
+        "000.png"
+    ) {
+        choose_road_tile_based_on_neighbors(game, x - 1, y);
+    }
+}
+
+const enum NeighborMasks {
+    UP = 8,
+    RIGHT = 4,
+    DOWN = 2,
+    LEFT = 1,
+}
+
+const NeighborSprites = {
+    [0]: "090.png",
+    [NeighborMasks.UP]: "104.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: "102.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "106.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "090.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "088.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT]: "103.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "105.png",
+    [NeighborMasks.UP | NeighborMasks.DOWN]: "104.png",
+    [NeighborMasks.RIGHT]: "087.png",
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "087.png",
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "089.png",
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "085.png",
+    [NeighborMasks.DOWN]: "104.png",
+    [NeighborMasks.LEFT]: "087.png",
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "086.png",
+};
+
+function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
+    let tile = game.tile_entites[y * game.World.Width + x];
+    if (tile === undefined) {
+        return;
+    }
+
+    let neighbors = 0;
+
+    if (
+        game.World.Render2D[game.tile_entites[(y + 1) * game.World.Width + x]].SpriteName !==
+        "000.png"
+    ) {
+        neighbors |= NeighborMasks.UP;
+    }
+    if (
+        game.World.Render2D[game.tile_entites[y * game.World.Width + x + 1]].SpriteName !==
+        "000.png"
+    ) {
+        neighbors |= NeighborMasks.RIGHT;
+    }
+    if (
+        game.World.Render2D[game.tile_entites[(y - 1) * game.World.Width + x]].SpriteName !==
+        "000.png"
+    ) {
+        neighbors |= NeighborMasks.DOWN;
+    }
+    if (
+        game.World.Render2D[game.tile_entites[y * game.World.Width + x - 1]].SpriteName !==
+        "000.png"
+    ) {
+        neighbors |= NeighborMasks.LEFT;
+    }
+
+    set_sprite(game, tile, NeighborSprites[neighbors]);
 }
