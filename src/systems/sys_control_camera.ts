@@ -49,14 +49,14 @@ export function sys_control_camera(game: Game, delta: number) {
         }
     }
 
-    if (game.InputDistance["Mouse0"] > 5) {
+    if (game.InputDistance["Mouse2"] > 5) {
         document.body.classList.add("grabbing");
         camera_local.Translation[0] -= game.InputDelta["MouseX"] / game.UnitSize;
         camera_local.Translation[1] += game.InputDelta["MouseY"] / game.UnitSize;
         game.World.Signature[camera_entity] |= Has.Dirty;
     }
 
-    if (game.InputDelta["Mouse0"] === -1) {
+    if (game.InputDelta["Mouse2"] === -1) {
         document.body.classList.remove("grabbing");
     }
 }

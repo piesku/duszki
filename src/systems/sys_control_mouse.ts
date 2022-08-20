@@ -1,21 +1,12 @@
-import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
+import {pointer_down, pointer_viewport} from "../../lib/input.js";
 import {Vec2} from "../../lib/math.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {set_sprite} from "../components/com_render2d.js";
 import {Game} from "../game.js";
-import {Has} from "../world.js";
-
-const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
 const pointer_position: Vec2 = [0, 0];
-const SPAWN_INTERVAL = 0.1;
-let time_since_last_spawn = 0;
-
-const CENTER_ROAD_TILE = "090.png";
 
 export function sys_control_mouse(game: Game, delta: number) {
-    time_since_last_spawn += delta;
-
     if (!pointer_viewport(game, pointer_position)) {
         // No mouse, no touch.
         return;
@@ -29,15 +20,11 @@ export function sys_control_mouse(game: Game, delta: number) {
     let camera = game.World.Camera2D[camera_entity];
     viewport_to_world(pointer_position, camera, pointer_position);
 
-    if (time_since_last_spawn > SPAWN_INTERVAL) {
-        if (pointer_clicked(game, 0)) {
-            const x = Math.round(pointer_position[0]);
-            const y = Math.round(pointer_position[1]);
-
-            game.World.Grid[y][x].walkable = true;
-            make_road(game, x, y);
-            time_since_last_spawn = 0;
-        }
+    const x = Math.round(pointer_position[0]);
+    const y = Math.round(pointer_position[1]);
+    if (!game.World.Grid[y][x].walkable && pointer_down(game, 0)) {
+        game.World.Grid[y][x].walkable = true;
+        make_road(game, x, y);
     }
 }
 
