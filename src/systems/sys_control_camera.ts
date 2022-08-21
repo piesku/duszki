@@ -6,7 +6,6 @@ import {viewport_to_world} from "../components/com_camera2d.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-const QUERY = Has.Camera2D | Has.LocalTransform2D;
 const pointer_position: Vec2 = [0, 0];
 let wheel_y_clamped = 0;
 
