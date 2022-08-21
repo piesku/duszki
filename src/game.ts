@@ -1,7 +1,8 @@
-import {Blueprint, Game3D} from "../lib/game.js";
+import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
+import {map_domek01} from "../maps/map_domek01.js";
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
@@ -42,7 +43,7 @@ export class Game extends Game3D {
 
     UnitSize = 16;
     PointerPosition: Vec2 = [0, 0];
-    ActiveBlueprint: null | Blueprint<Game> = null;
+    ActiveBuilding: null | typeof map_domek01 = null;
 
     constructor() {
         super();

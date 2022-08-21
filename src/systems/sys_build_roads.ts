@@ -1,12 +1,16 @@
-import {pointer_clicked, pointer_down} from "../../lib/input.js";
+import {instantiate} from "../../lib/game.js";
+import {pointer_down} from "../../lib/input.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_sprite} from "../components/com_render2d.js";
 import {Game} from "../game.js";
+import {blueprint_road} from "../scenes/blu_road.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
 export function sys_build_roads(game: Game, delta: number) {
+    let road_placed = false;
+
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let control = game.World.ControlPlayer[ent];
@@ -18,12 +22,13 @@ export function sys_build_roads(game: Game, delta: number) {
             let x = Math.round(local.Translation[0]);
             let y = Math.round(local.Translation[1]);
 
-            if (pointer_clicked(game, 0)) {
+            if (pointer_down(game, 0)) {
                 if (game.World.Grid[y][x].entity === null) {
                     game.World.Grid[y][x].entity = ent;
                     game.World.Grid[y][x].walkable = true;
 
                     game.World.Signature[ent] &= ~Has.ControlPlayer;
+                    road_placed = true;
 
                     make_road(game, x, y);
                 }
@@ -31,6 +36,11 @@ export function sys_build_roads(game: Game, delta: number) {
                 destroy_all(game.World, ent);
             }
         }
+    }
+
+    if (road_placed) {
+        // Create a new phantom road entity, ready to be placed again.
+        instantiate(game, blueprint_road(game));
     }
 }
 
