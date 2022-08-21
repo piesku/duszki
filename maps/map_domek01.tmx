@@ -6,7 +6,7 @@
  <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Tilesheet.tsx"/>
  <layer id="1" name="Warstwa Kafelków 1" width="3" height="5">
   <data encoding="csv">
-14,81,68,
+0,81,0,
 97,98,99,
 82,115,116,
 131,80,133,
