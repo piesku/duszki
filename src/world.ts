@@ -12,6 +12,7 @@ import {Lifespan} from "./components/com_lifespan.js";
 import {LocalTransform2D} from "./components/com_local_transform2d.js";
 import {Move2D} from "./components/com_move2d.js";
 import {Named} from "./components/com_named.js";
+import {Needs} from "./components/com_needs.js";
 import {Render2D} from "./components/com_render2d.js";
 import {RigidBody2D} from "./components/com_rigid_body2d.js";
 import {Shake} from "./components/com_shake.js";
@@ -36,6 +37,7 @@ const enum Component {
     LocalTransform2D,
     Move2D,
     Named,
+    Needs,
     Render2D,
     RigidBody2D,
     Shake,
@@ -62,6 +64,7 @@ export const enum Has {
     LocalTransform2D = 1 << Component.LocalTransform2D,
     Move2D = 1 << Component.Move2D,
     Named = 1 << Component.Named,
+    Needs = 1 << Component.Needs,
     Render2D = 1 << Component.Render2D,
     RigidBody2D = 1 << Component.RigidBody2D,
     Shake = 1 << Component.Shake,
@@ -97,6 +100,7 @@ export class World extends WorldImpl {
     LocalTransform2D: Array<LocalTransform2D> = [];
     Move2D: Array<Move2D> = [];
     Named: Array<Named> = [];
+    Needs: Array<Needs> = [];
     Render2D: Array<Render2D> = [];
     RigidBody2D: Array<RigidBody2D> = [];
     Shake: Array<Shake> = [];
