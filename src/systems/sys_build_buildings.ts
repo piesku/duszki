@@ -1,7 +1,9 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_clicked} from "../../lib/input.js";
 import {destroy_all} from "../components/com_children.js";
+import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
+import {total_cost} from "../generator.js";
 import {blueprint_building} from "../scenes/blu_building.js";
 import {Has} from "../world.js";
 
@@ -17,8 +19,15 @@ export function sys_build_buildings(game: Game, delta: number) {
                 continue;
             }
 
-            if (pointer_clicked(game, 0)) {
+            let generator = game.World.Generator[ent];
+            let gen_config = GENERATORS[generator.Id];
+            let gen_count = game.GeneratorCounts[generator.Id];
+            let cost = total_cost(gen_config, gen_count, 1);
+
+            if (cost <= game.TotalWealth && pointer_clicked(game, 0)) {
+                game.TotalWealth -= cost;
                 game.World.Signature[ent] &= ~Has.ControlPlayer;
+                game.World.Signature[ent] |= Has.Generator;
                 building_placed = true;
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
@@ -26,7 +35,7 @@ export function sys_build_buildings(game: Game, delta: number) {
         }
     }
 
-    if (building_placed && game.ActiveBuilding) {
+    if (building_placed && game.ActiveBuilding !== null) {
         // Create a new phantom buildingd entity, ready to be placed again.
         instantiate(game, blueprint_building(game, game.ActiveBuilding, 0.2));
     }

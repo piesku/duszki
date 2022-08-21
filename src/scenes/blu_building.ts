@@ -1,33 +1,21 @@
 import {Blueprint} from "../../lib/game.js";
+import {map_domek01} from "../../maps/map_domek01.js";
+import {map_domek02} from "../../maps/map_domek02.js";
 import {children} from "../components/com_children.js";
 import {control_player} from "../components/com_control_player.js";
+import {disable} from "../components/com_disable.js";
+import {generator} from "../components/com_generator.js";
 import {local_transform2d} from "../components/com_local_transform2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {tiled_blueprints} from "../tiled.js";
+import {Has} from "../world.js";
 
-interface TiledExport {
-    Layers: Array<Array<number>>;
-    Width: number;
-    Height: number;
-}
+const building_maps = [map_domek01, map_domek02];
 
-const enum TileFlip {
-    // Raw flags defined by Tiled.
-    Horizontal = 1 << 31,
-    Vertical = 1 << 30,
-    Diagonal = 1 << 29,
-    Ignored = 1 << 28,
-
-    // Useful combinations of flags.
-    RotateLeft = TileFlip.Vertical | TileFlip.Diagonal,
-    RotateRight = TileFlip.Horizontal | TileFlip.Diagonal,
-    Rotate180 = TileFlip.Horizontal | TileFlip.Vertical,
-    All = TileFlip.Horizontal | TileFlip.Vertical | TileFlip.Diagonal | TileFlip.Ignored,
-}
-
-export function blueprint_building(game: Game, map: TiledExport, z: number) {
+export function blueprint_building(game: Game, map_id: number, z: number) {
     let child_tiles: Array<Blueprint<Game>> = [];
+    let map = building_maps[map_id];
     for (let layer of map.Layers) {
         for (let tile of tiled_blueprints(layer, map.Width, map.Height, z)) {
             child_tiles.push([spatial_node2d(), ...tile]);
@@ -39,5 +27,7 @@ export function blueprint_building(game: Game, map: TiledExport, z: number) {
         local_transform2d(),
         control_player("building"),
         children(...child_tiles),
+        generator(map_id),
+        disable(Has.Generator),
     ];
 }

@@ -2,7 +2,6 @@ import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
-import {map_domek01} from "../maps/map_domek01.js";
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
@@ -14,6 +13,7 @@ import {sys_control_always2d} from "./systems/sys_control_always2d.js";
 import {sys_control_camera} from "./systems/sys_control_camera.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
+import {sys_generate} from "./systems/sys_generate.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
 import {sys_needs} from "./systems/sys_needs.js";
@@ -43,7 +43,12 @@ export class Game extends Game3D {
 
     UnitSize = 16;
     PointerPosition: Vec2 = [0, 0];
-    ActiveBuilding: null | typeof map_domek01 = null;
+    ActiveBuilding: null | number = null;
+
+    GeneratorCounts: Array<number> = [];
+    IncomePerSecond = 0;
+    TotalWealth = 100;
+    CurrentEra = 0;
 
     constructor() {
         super();
@@ -71,6 +76,7 @@ export class Game extends Game3D {
         sys_control_always2d(this, delta);
 
         // Game logic.
+        sys_generate(this, delta);
         sys_walk(this, delta);
         sys_move2d(this, delta);
         sys_lifespan(this, delta);
