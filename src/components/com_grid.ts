@@ -8,8 +8,9 @@ export function grid(walkable: boolean) {
         let y = Math.round(transform.Translation[1]);
 
         game.World.Grid[y][x] = {
-            entity,
+            tile_entity: entity,
             walkable: walkable,
+            ocupados: [],
         };
     };
 }

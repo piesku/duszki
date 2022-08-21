@@ -6,6 +6,7 @@ import {control_player} from "../components/com_control_player.js";
 import {disable} from "../components/com_disable.js";
 import {generator} from "../components/com_generator.js";
 import {local_transform2d} from "../components/com_local_transform2d.js";
+import {satisfy} from "../components/com_satisfy.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {tiled_blueprints} from "../tiled.js";
@@ -21,6 +22,12 @@ export function blueprint_building(game: Game, map_id: number, z: number) {
             child_tiles.push([spatial_node2d(), ...tile]);
         }
     }
+
+    child_tiles.push([
+        spatial_node2d(),
+        local_transform2d([0, -Math.round(map.Width / 2) - 1]),
+        satisfy("Food"),
+    ]);
 
     return [
         spatial_node2d(),

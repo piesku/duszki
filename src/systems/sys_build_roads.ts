@@ -23,8 +23,8 @@ export function sys_build_roads(game: Game, delta: number) {
             let y = Math.round(local.Translation[1]);
 
             if (pointer_down(game, 0)) {
-                if (game.World.Grid[y][x].entity === null) {
-                    game.World.Grid[y][x].entity = ent;
+                if (game.World.Grid[y][x].tile_entity === null) {
+                    game.World.Grid[y][x].tile_entity = ent;
                     game.World.Grid[y][x].walkable = true;
 
                     game.World.Signature[ent] &= ~Has.ControlPlayer;
@@ -88,7 +88,7 @@ const NeighborSprites = {
 };
 
 function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
-    let tile = game.World.Grid[y][x].entity;
+    let tile = game.World.Grid[y][x].tile_entity;
     if (tile === null) {
         return;
     }

@@ -16,6 +16,7 @@ import {Named} from "./components/com_named.js";
 import {Needs} from "./components/com_needs.js";
 import {Render2D} from "./components/com_render2d.js";
 import {RigidBody2D} from "./components/com_rigid_body2d.js";
+import {Satisfy} from "./components/com_satisfy.js";
 import {Shake} from "./components/com_shake.js";
 import {SpatialNode2D} from "./components/com_spatial_node2d.js";
 import {Spawn} from "./components/com_spawn.js";
@@ -42,6 +43,7 @@ const enum Component {
     Needs,
     Render2D,
     RigidBody2D,
+    Satisfy,
     Shake,
     SpatialNode2D,
     Spawn,
@@ -70,6 +72,7 @@ export const enum Has {
     Needs = 1 << Component.Needs,
     Render2D = 1 << Component.Render2D,
     RigidBody2D = 1 << Component.RigidBody2D,
+    Satisfy = 1 << Component.Satisfy,
     Shake = 1 << Component.Shake,
     SpatialNode2D = 1 << Component.SpatialNode2D,
     Spawn = 1 << Component.Spawn,
@@ -80,8 +83,9 @@ export const enum Has {
 }
 
 export interface GridCell {
-    entity: Entity | null;
+    tile_entity: Entity | null;
     walkable: boolean;
+    ocupados: Entity[];
 }
 
 export class World extends WorldImpl {
@@ -92,7 +96,7 @@ export class World extends WorldImpl {
         .map(() =>
             Array(this.Width)
                 .fill(0)
-                .map(() => ({entity: null, walkable: false}))
+                .map(() => ({tile_entity: null, walkable: false, ocupados: []}))
         );
 
     AnimateSprite: Array<AnimateSprite> = [];
@@ -111,6 +115,7 @@ export class World extends WorldImpl {
     Needs: Array<Needs> = [];
     Render2D: Array<Render2D> = [];
     RigidBody2D: Array<RigidBody2D> = [];
+    Satisfy: Array<Satisfy> = [];
     Shake: Array<Shake> = [];
     SpatialNode2D: Array<SpatialNode2D> = [];
     Spawn: Array<Spawn> = [];

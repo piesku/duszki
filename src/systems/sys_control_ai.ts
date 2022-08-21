@@ -28,7 +28,7 @@ function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
     let needs = game.World.Needs[entity];
 
-    if (needs.Sleep < 0.001) {
+    if (needs.Food < 0.001) {
         console.log("duszek umar z głodu");
         destroy_all(game.World, entity);
         return;
