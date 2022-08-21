@@ -1,8 +1,10 @@
 import {instantiate} from "../../lib/game.js";
 import {element, integer} from "../../lib/random.js";
+import {grid} from "../components/com_grid.js";
 import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
 import {order, render2d} from "../components/com_render2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
+import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
 import {blueprint_camera} from "./blu_camera.js";
 import {blueprint_duszek} from "./blu_duszek.js";
@@ -30,55 +32,27 @@ export function scene_editable_dungeon(game: Game) {
         ]);
     }
 
-    // Objects.
-    // instantiate_tiled_layer(game, map_sample.Layers[1], map_sample.Width, 0.6);
-    // instantiate_tiled_layer(game, map_sample.Layers[2], map_sample.Width, 0.7);
+    // 1 Hell Plaza
+    let center_x = Math.round(game.World.Width / 2);
+    let center_y = Math.round(game.World.Height / 2);
+    let plaza_width = 8;
+    let plaza_height = 4;
+    for (let x = Math.round(center_x - plaza_width / 2); x < center_x + plaza_width / 2; x++) {
+        for (
+            let y = Math.round(center_y - plaza_height / 2);
+            y < center_y + plaza_height / 2;
+            y++
+        ) {
+            instantiate(game, [
+                local_transform2d([x, y]),
+                render2d("000.png"),
+                order(0.1),
+                grid(true),
+            ]);
 
-    // let nav = map_sample.Navigation;
-    // for (let i = 0; i < nav.length; i++) {
-    //     let tile = nav[i];
-    //     if (tile == 0) {
-    //         // Impassable.
-    //         continue;
-    //     }
-
-    //     // Createa a new navigation node.
-    //     game.World.Navigation.Centroids[i] = node_to_position(game.World, i);
-    //     game.World.Navigation.Graph[i] = [];
-
-    //     let edges = game.World.Navigation.Graph[i];
-    //     if (i > 0 && nav[i - 1] > 0) {
-    //         // Left edge.
-    //         edges.push([i - 1, 1]);
-    //     }
-    //     if (i < nav.length - 1 && nav[i + 1] > 0) {
-    //         // Right edge.
-    //         edges.push([i + 1, 1]);
-    //     }
-    //     if (i < nav.length - map_sample.Width && nav[i + map_sample.Width] > 0) {
-    //         // Top edge.
-    //         edges.push([i + map_sample.Width, 1]);
-    //     }
-    //     if (i > map_sample.Width && nav[i - map_sample.Width] > 0) {
-    //         // Bottom edge.
-    //         edges.push([i - map_sample.Width, 1]);
-    //     }
-    // }
-
-    // {
-    //     // Duszki.
-    //     let node_ids = [];
-    //     for (let i = 0; i < game.World.Navigation.Graph.length; i++) {
-    //         if (game.World.Navigation.Graph[i]) {
-    //             node_ids.push(i);
-    //         }
-    //     }
-
-    let duszki = 10;
-    for (let i = 0; i < duszki; i++) {
-        let x = integer(0, game.World.Width - 1);
-        let y = integer(0, game.World.Height - 1);
-
-        instantiate(game, [...blueprint_duszek(game), set_position(x, y)]);
+            make_road(game, x, y);
+        }
     }
+
+    instantiate(game, [...blueprint_duszek(game), set_position(center_x, center_y)]);
 }

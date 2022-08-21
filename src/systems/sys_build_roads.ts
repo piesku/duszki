@@ -34,7 +34,7 @@ export function sys_build_roads(game: Game, delta: number) {
     }
 }
 
-function make_road(game: Game, x: number, y: number) {
+export function make_road(game: Game, x: number, y: number) {
     choose_road_tile_based_on_neighbors(game, x, y);
 
     if (game.World.Grid[y + 1][x].walkable) {

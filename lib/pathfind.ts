@@ -44,15 +44,17 @@ export function path_find(world: World, origin: Vec2, goal: Vec2) {
             return [...path_follow(world, predecessors, goal)];
         }
 
-        let neighbors: Vec2[] = [
+        let neighbors = [
             [current[0] + 1, current[1]],
             [current[0] - 1, current[1]],
             [current[0], current[1] + 1],
             [current[0], current[1] - 1],
-        ];
+        ].filter(([x, y]) => {
+            return world.Grid[y] && world.Grid[y][x] && world.Grid[y][x].walkable;
+        });
 
         for (let i = 0; i < neighbors.length; i++) {
-            let next = neighbors[i];
+            let next = neighbors[i] as Vec2;
             let cost = 1;
             let current_node = position_to_node(world, current);
             let next_node = position_to_node(world, next);

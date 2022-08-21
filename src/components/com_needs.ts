@@ -18,9 +18,9 @@ export function needs() {
             Work: 1,
             Food: 1,
             Sleep: 1,
-            DeltaWork: Math.random(),
-            DeltaFood: Math.random(),
-            DeltaSleep: Math.random(),
+            DeltaWork: 0.01,
+            DeltaFood: 0.01,
+            DeltaSleep: 0.01,
         };
     };
 }

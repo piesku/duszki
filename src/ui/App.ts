@@ -7,5 +7,6 @@ export function App(game: Game) {
         <button onmouseup="$(${Action.EnterPlaceRoad})">Road</button>
         <button onmouseup="$(${Action.EnterPlaceBuilding}, 0)">Domek01</button>
         <button onmouseup="$(${Action.EnterPlaceBuilding}, 1)">Domek02</button>
+        <button onmouseup="$(${Action.SpawnDuszek})">SpawnDuszek</button>
     </div>`;
 }
