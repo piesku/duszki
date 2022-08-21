@@ -10,8 +10,8 @@ export function sys_control_ai(game: Game, delta: number) {
             let walk = game.World.Walk[ent];
             if (walk.DestinationTrigger === null && walk.Path.length === 0) {
                 walk.DestinationTrigger = [
-                    integer(0, game.World.Width - 1),
                     integer(0, game.World.Height - 1),
+                    integer(0, game.World.Width - 1),
                 ];
             }
         }

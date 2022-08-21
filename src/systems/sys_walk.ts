@@ -19,7 +19,7 @@ function update(game: Game, entity: Entity) {
     let walk = game.World.Walk[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    let current_cell: Vec2 = [Math.round(local.Translation[1]), Math.round(local.Translation[0])];
+    let current_cell: Vec2 = [Math.round(local.Translation[0]), Math.round(local.Translation[1])];
 
     if (walk.DestinationTrigger !== null) {
         //console.time("path_find");
