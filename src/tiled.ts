@@ -53,7 +53,7 @@ export function instantiate_tiled_layer(
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        tile_entities.push(instantiate(game, [local, render2d(tile_name), order(z), grid()]));
+        tile_entities.push(instantiate(game, [local, render2d(tile_name), order(z), grid(false)]));
     }
 
     return tile_entities;

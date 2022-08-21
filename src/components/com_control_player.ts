@@ -6,11 +6,15 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-export interface ControlPlayer {}
+export interface ControlPlayer {
+    Kind: "road" | "building";
+}
 
-export function control_player() {
+export function control_player(kind: "road" | "building") {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.ControlPlayer;
-        game.World.ControlPlayer[entity] = {};
+        game.World.ControlPlayer[entity] = {
+            Kind: kind,
+        };
     };
 }

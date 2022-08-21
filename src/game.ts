@@ -1,4 +1,4 @@
-import {Game3D} from "../lib/game.js";
+import {Blueprint, Game3D} from "../lib/game.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
@@ -40,6 +40,7 @@ export class Game extends Game3D {
     InstanceBuffer = this.Gl.createBuffer()!;
 
     UnitSize = 16;
+    ActiveBlueprint: null | Blueprint<Game> = null;
 
     constructor() {
         super();

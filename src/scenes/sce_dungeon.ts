@@ -5,7 +5,6 @@ import {Game, WORLD_CAPACITY} from "../game.js";
 import {instantiate_tiled_layer} from "../tiled.js";
 import {World} from "../world.js";
 import {blueprint_camera} from "./blu_camera.js";
-import {blueprint_cursor} from "./blu_cursor.js";
 
 export function scene_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
@@ -15,12 +14,6 @@ export function scene_dungeon(game: Game) {
     instantiate(game, [
         ...blueprint_camera(game),
         set_position(game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5),
-    ]);
-
-    // Cursor.
-    instantiate(game, [
-        ...blueprint_cursor(game),
-        set_position(game.World.Width / 2, game.World.Height / 2),
     ]);
 
     // Terrain.

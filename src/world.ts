@@ -77,7 +77,7 @@ export const enum Has {
 }
 
 export interface GridCell {
-    entity: Entity;
+    entity: Entity | null;
     walkable: boolean;
 }
 
@@ -86,7 +86,11 @@ export class World extends WorldImpl {
     Height: number = 80;
     Grid: GridCell[][] = Array(this.Height)
         .fill(0)
-        .map(() => Array(this.Width));
+        .map(() =>
+            Array(this.Width)
+                .fill(0)
+                .map(() => ({entity: null, walkable: false}))
+        );
 
     AnimateSprite: Array<AnimateSprite> = [];
     Camera2D: Array<Camera2D> = [];

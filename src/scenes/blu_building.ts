@@ -34,5 +34,10 @@ export function blueprint_building(game: Game, map: TiledExport, z: number) {
         }
     }
 
-    return [spatial_node2d(), local_transform2d(), control_player(), children(...child_tiles)];
+    return [
+        spatial_node2d(),
+        local_transform2d(),
+        control_player("building"),
+        children(...child_tiles),
+    ];
 }
