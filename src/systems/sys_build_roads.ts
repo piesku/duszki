@@ -10,7 +10,7 @@ const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
 const pointer_position: Vec2 = [0, 0];
 
-export function sys_control_mouse(game: Game, delta: number) {
+export function sys_build_roads(game: Game, delta: number) {
     if (!pointer_viewport(game, pointer_position)) {
         // No mouse, no touch.
         return;

@@ -4,13 +4,12 @@ import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../
 import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
+import {sys_build_roads} from "./systems/sys_build_roads.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_always2d} from "./systems/sys_control_always2d.js";
 import {sys_control_camera} from "./systems/sys_control_camera.js";
-import {sys_control_keyboard} from "./systems/sys_control_keyboard.js";
-import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
@@ -57,10 +56,9 @@ export class Game extends Game3D {
         sys_poll(this, delta);
 
         // Player input.
-        sys_build_buildings(this, delta);
-        sys_control_keyboard(this, delta);
-        sys_control_mouse(this, delta);
         sys_control_camera(this, delta);
+        sys_build_buildings(this, delta);
+        sys_build_roads(this, delta);
 
         // AI.
         sys_needs(this, delta);
