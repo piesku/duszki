@@ -21,15 +21,8 @@ export function sys_control_camera(game: Game, delta: number) {
 
     if (game.InputDelta["WheelY"]) {
         let cur_zoom = 4 ** (wheel_y_clamped / -500);
-        if (0.85 < cur_zoom && cur_zoom < 1.15) {
-            cur_zoom = 1;
-        }
-
         wheel_y_clamped = clamp(-1000, 500, wheel_y_clamped + game.InputDelta["WheelY"]);
         let new_zoom = 4 ** (wheel_y_clamped / -500);
-        if (0.85 < new_zoom && new_zoom < 1.15) {
-            new_zoom = 1;
-        }
 
         game.UnitSize = 16 * new_zoom;
         game.ViewportResized = true;
@@ -38,10 +31,14 @@ export function sys_control_camera(game: Game, delta: number) {
             // Position under the mouse cursor at cur_zoom.
             viewport_to_world(pointer_position, camera, pointer_position);
 
+            // Offset from pointer to camera position.
             let offset: Vec2 = [0, 0];
             subtract(offset, pointer_position, camera_local.Translation);
+            // Scale the offset to the new zoom.
             scale(offset, offset, 1 - cur_zoom / new_zoom);
 
+            // Offset the camera position so that the mouse cursor is over the
+            // same position at the new zoom.
             camera_local.Translation[0] += offset[0];
             camera_local.Translation[1] += offset[1];
             game.World.Signature[camera_entity] |= Has.Dirty;
