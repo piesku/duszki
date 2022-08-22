@@ -1,6 +1,11 @@
 import {Blueprint} from "../../lib/game.js";
-import {map_domek01} from "../../maps/map_domek01.js";
-import {map_domek02} from "../../maps/map_domek02.js";
+import {map_farm1} from "../../maps/map_farm1.js";
+import {map_house1} from "../../maps/map_house1.js";
+import {map_mine1} from "../../maps/map_mine1.js";
+import {map_mine2} from "../../maps/map_mine2.js";
+import {map_mine3} from "../../maps/map_mine3.js";
+import {map_mine4} from "../../maps/map_mine4.js";
+import {map_mine5} from "../../maps/map_mine5.js";
 import {children} from "../components/com_children.js";
 import {control_player} from "../components/com_control_player.js";
 import {disable} from "../components/com_disable.js";
@@ -12,7 +17,15 @@ import {Game} from "../game.js";
 import {tiled_blueprints} from "../tiled.js";
 import {Has} from "../world.js";
 
-const building_maps = [map_domek01, map_domek02, map_domek01, map_domek02];
+const building_maps = [
+    map_house1,
+    map_farm1,
+    map_mine1,
+    map_mine2,
+    map_mine3,
+    map_mine4,
+    map_mine5,
+];
 
 export function blueprint_building(game: Game, map_id: number, z: number) {
     let child_tiles: Array<Blueprint<Game>> = [];
