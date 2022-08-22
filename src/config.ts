@@ -7,7 +7,33 @@ export interface GeneratorConfig {
     Multipliers: Array<[number, number]>;
 }
 
+export const enum GeneratorId {
+    House,
+    Farm,
+    Mine1,
+    Mine2,
+    Mine3,
+    Mine4,
+    Mine5,
+}
+
 export const GENERATORS: Array<GeneratorConfig> = [
+    {
+        Name: "🛖 Domek",
+        BaseIncome: 0,
+        IncomeFactor: 1,
+        StartingCost: 5,
+        CostFactor: 1,
+        Multipliers: [],
+    },
+    {
+        Name: "🍕 Jadłodajnia",
+        BaseIncome: 0,
+        IncomeFactor: 1,
+        StartingCost: 5,
+        CostFactor: 1,
+        Multipliers: [],
+    },
     {
         Name: "🌤️ Sundial",
         BaseIncome: 3,

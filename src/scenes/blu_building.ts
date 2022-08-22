@@ -12,7 +12,7 @@ import {Game} from "../game.js";
 import {tiled_blueprints} from "../tiled.js";
 import {Has} from "../world.js";
 
-const building_maps = [map_domek01, map_domek02];
+const building_maps = [map_domek01, map_domek02, map_domek01, map_domek02];
 
 export function blueprint_building(game: Game, map_id: number, z: number) {
     let child_tiles: Array<Blueprint<Game>> = [];
