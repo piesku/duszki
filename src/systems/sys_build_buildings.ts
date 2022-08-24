@@ -1,6 +1,6 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_clicked} from "../../lib/input.js";
-import {destroy_all} from "../components/com_children.js";
+import {destroy_all, query_down} from "../components/com_children.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
 import {total_cost} from "../generator.js";
@@ -29,6 +29,14 @@ export function sys_build_buildings(game: Game, delta: number) {
                 game.World.Signature[ent] &= ~Has.ControlPlayer;
                 game.World.Signature[ent] |= Has.Generator;
                 building_placed = true;
+
+                for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
+                    // Populate the world's grid with the building's footprint.
+                    let spatial = game.World.SpatialNode2D[child_entity];
+                    let x = Math.round(spatial.World[4]);
+                    let y = Math.round(spatial.World[5]);
+                    game.World.Grid[y][x].tile_entity = child_entity;
+                }
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
             }

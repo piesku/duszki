@@ -12,6 +12,7 @@ const cost_fmt = new Intl.NumberFormat("en-US", {
 
 export function App(game: Game) {
     return html`<div onmousedown="event.stopPropagation();" onmouseup="event.stopPropagation();">
+        <button onmouseup="$(${Action.EnterErase})">Remove</button>
         <button onmouseup="$(${Action.EnterPlaceRoad})">Road</button>
         ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
         ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
