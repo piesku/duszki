@@ -20,25 +20,24 @@ export function sys_build_buildings(game: Game, delta: number) {
                 continue;
             }
 
-            // Check whether the building can be placed.
+            // Check whether the building can be placed and tint its tiles accordingly.
             let can_be_placed = true;
             for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
+                let render = game.World.Render2D[child_entity];
                 let spatial = game.World.SpatialNode2D[child_entity];
                 let x = Math.round(spatial.World[4]);
                 let y = Math.round(spatial.World[5]);
                 let cell = game.World.Grid[y][x];
-                if (cell.tile_entity !== null) {
+                if (cell.tile_entity === null) {
+                    render.Color[0] = 0;
+                    render.Color[1] = 1;
+                    render.Color[2] = 0;
+                } else {
                     can_be_placed = false;
-                    break;
+                    render.Color[0] = 1;
+                    render.Color[1] = 0;
+                    render.Color[2] = 0;
                 }
-            }
-
-            // Tint the building according to whether it can be placed.
-            for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
-                let render = game.World.Render2D[child_entity];
-                render.Color[0] = can_be_placed ? 0 : 1;
-                render.Color[1] = can_be_placed ? 1 : 0;
-                render.Color[2] = 0;
             }
 
             let generator = game.World.Generator[ent];
