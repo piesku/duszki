@@ -34,7 +34,7 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (walk.DestinationTrigger === null && walk.Path.length === 0) {
+    if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
         walk.DestinationTrigger = element(walkables);
     }
 }
