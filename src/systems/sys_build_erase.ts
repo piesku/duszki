@@ -2,6 +2,7 @@ import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {destroy_all} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
+import {make_road} from "./sys_build_roads.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
@@ -28,11 +29,15 @@ export function sys_build_erase(game: Game, delta: number) {
                             destroy_all(game.World, cell.tile_entity);
                         }
                     } else {
+                        // It's a road.
                         destroy_all(game.World, cell.tile_entity);
                     }
+
                     cell.tile_entity = null;
                     cell.walkable = false;
                     cell.ocupados = [];
+                    // Adjust the neighbors if necessary.
+                    make_road(game, x, y);
                 }
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
