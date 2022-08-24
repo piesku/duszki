@@ -1,7 +1,7 @@
 import {instantiate} from "../lib/game.js";
 import {first_having} from "../lib/world.js";
 import {destroy_all} from "./components/com_children.js";
-import {set_position} from "./components/com_local_transform2d.js";
+import {copy_position, set_position} from "./components/com_local_transform2d.js";
 import {Game} from "./game.js";
 import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
@@ -24,7 +24,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
-            instantiate(game, blueprint_road(game));
+            instantiate(game, [...blueprint_road(game), copy_position(game.PointerPosition)]);
             break;
         }
         case Action.EnterPlaceBuilding: {
@@ -34,7 +34,10 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             }
 
             let building_id = payload as number;
-            instantiate(game, blueprint_building(game, building_id, 0.2));
+            instantiate(game, [
+                ...blueprint_building(game, building_id, 0.2),
+                copy_position(game.PointerPosition),
+            ]);
             game.ActiveBuilding = building_id;
             break;
         }
@@ -44,7 +47,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
-            instantiate(game, blueprint_eraser(game));
+            instantiate(game, [...blueprint_eraser(game), copy_position(game.PointerPosition)]);
             break;
         }
         case Action.SpawnDuszek: {

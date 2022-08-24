@@ -22,16 +22,34 @@ export function sys_build_roads(game: Game, delta: number) {
             let x = Math.round(local.Translation[0]);
             let y = Math.round(local.Translation[1]);
 
-            if (pointer_down(game, 0)) {
-                if (game.World.Grid[y][x].tile_entity === null) {
-                    game.World.Grid[y][x].tile_entity = ent;
-                    game.World.Grid[y][x].walkable = true;
+            // Check whether the road can be placed.
+            let can_be_placed = true;
+            if (game.World.Grid[y][x].tile_entity !== null) {
+                can_be_placed = false;
+            }
 
-                    game.World.Signature[ent] &= ~Has.ControlPlayer;
-                    road_placed = true;
+            // Tint the road according to whether it can be placed.
+            let render = game.World.Render2D[ent];
+            render.Color[0] = can_be_placed ? 0 : 1;
+            render.Color[1] = can_be_placed ? 1 : 0;
+            render.Color[2] = 0;
 
-                    make_road(game, x, y);
-                }
+            if (can_be_placed && pointer_down(game, 0)) {
+                game.World.Signature[ent] &= ~Has.ControlPlayer;
+                road_placed = true;
+
+                // Populate the world grid.
+                game.World.Grid[y][x].tile_entity = ent;
+                game.World.Grid[y][x].walkable = true;
+
+                // Bring back the original tint.
+                render.Color[0] = 1;
+                render.Color[1] = 1;
+                render.Color[2] = 1;
+
+                // Pick a road tile based on the neighbors, and adjust neighbor
+                // tiles, too.
+                make_road(game, x, y);
             } else if (pointer_down(game, 2)) {
                 destroy_all(game.World, ent);
             }
