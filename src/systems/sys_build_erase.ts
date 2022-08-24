@@ -1,10 +1,13 @@
 import {pointer_clicked, pointer_down} from "../../lib/input.js";
+import {get_translation} from "../../lib/mat2d.js";
+import {Vec2} from "../../lib/math.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {make_road} from "./sys_build_roads.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
+const world_position: Vec2 = [0, 0];
 
 export function sys_build_erase(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
@@ -30,10 +33,11 @@ export function sys_build_erase(game: Game, delta: number) {
                                 Has.Render2D
                             )) {
                                 let child_spatial = game.World.SpatialNode2D[child_entity];
-                                let child_x = Math.round(child_spatial.World[4]);
-                                let child_y = Math.round(child_spatial.World[5]);
-                                game.World.Grid[child_y][child_x].tile_entity = null;
-                                game.World.Grid[child_y][child_x].walkable = false;
+                                get_translation(world_position, child_spatial.World);
+                                let x = Math.round(world_position[0]);
+                                let y = Math.round(world_position[1]);
+                                game.World.Grid[y][x].tile_entity = null;
+                                game.World.Grid[y][x].walkable = false;
                             }
                             // Destroy the building's root entity.
                             destroy_all(game.World, spatial.Parent);

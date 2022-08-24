@@ -1,5 +1,7 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_clicked} from "../../lib/input.js";
+import {get_translation} from "../../lib/mat2d.js";
+import {Vec2} from "../../lib/math.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {GENERATORS} from "../config.js";
@@ -9,6 +11,7 @@ import {blueprint_building} from "../scenes/blu_building.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
+const world_position: Vec2 = [0, 0];
 
 export function sys_build_buildings(game: Game, delta: number) {
     let building_placed = false;
@@ -54,9 +57,10 @@ export function sys_build_buildings(game: Game, delta: number) {
                 // Populate the world grid with the building's footprint and
                 // bring back the original tint.
                 for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
-                    let spatial = game.World.SpatialNode2D[child_entity];
-                    let x = Math.round(spatial.World[4]);
-                    let y = Math.round(spatial.World[5]);
+                    let child_spatial = game.World.SpatialNode2D[child_entity];
+                    get_translation(world_position, child_spatial.World);
+                    let x = Math.round(world_position[0]);
+                    let y = Math.round(world_position[1]);
                     game.World.Grid[y][x].tile_entity = child_entity;
 
                     let render = game.World.Render2D[child_entity];
