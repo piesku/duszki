@@ -30,8 +30,8 @@ export function sys_build_buildings(game: Game, delta: number) {
                 let spatial = game.World.SpatialNode2D[child_entity];
                 let x = Math.round(spatial.World[4]);
                 let y = Math.round(spatial.World[5]);
-                let cell = game.World.Grid[y][x];
-                if (cell.tile_entity === null) {
+                let cell = game.World.Grid[y]?.[x];
+                if (cell && cell.tile_entity === null) {
                     render.Color[0] = 0;
                     render.Color[1] = 1;
                     render.Color[2] = 0;

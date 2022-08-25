@@ -24,7 +24,8 @@ export function sys_build_roads(game: Game, delta: number) {
 
             // Check whether the road can be placed.
             let can_be_placed = true;
-            if (game.World.Grid[y][x].tile_entity !== null) {
+            let cell = game.World.Grid[y]?.[x];
+            if (cell && cell.tile_entity !== null) {
                 can_be_placed = false;
             }
 
@@ -39,8 +40,8 @@ export function sys_build_roads(game: Game, delta: number) {
                 road_placed = true;
 
                 // Populate the world grid.
-                game.World.Grid[y][x].tile_entity = ent;
-                game.World.Grid[y][x].walkable = true;
+                cell.tile_entity = ent;
+                cell.walkable = true;
 
                 // Bring back the original tint.
                 render.Color[0] = 1;
