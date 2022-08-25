@@ -1,18 +1,19 @@
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
+import {NeedType} from "./com_needs.js";
 
 export interface Satisfy {
     Delta: number;
-    Property: "Work" | "Food" | "Sleep";
+    NeedType: NeedType;
     Ocupados: Entity[];
 }
 
-export function satisfy(property: "Work" | "Food" | "Sleep") {
+export function satisfy(type: NeedType) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Satisfy;
         game.World.Satisfy[entity] = {
-            Property: property,
+            NeedType: type,
             Delta: 0.01,
             Ocupados: [],
         };
