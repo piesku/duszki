@@ -7,6 +7,7 @@
  * rendered in a single draw call.
  */
 
+import {map_range} from "../../lib/number.js";
 import {
     GL_ARRAY_BUFFER,
     GL_COLOR_BUFFER_BIT,
@@ -25,9 +26,29 @@ export function sys_render2d(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         // The shader queries the instance data for presence of the following components.
         let signature = game.World.Signature[ent] & (Has.Render2D | Has.SpatialNode2D);
-        let offset = ent * FLOATS_PER_INSTANCE + 7;
-        if (game.InstanceData[offset] !== signature) {
-            game.InstanceData[offset] = signature;
+        let signature_offset = ent * FLOATS_PER_INSTANCE + 7;
+        if (game.InstanceData[signature_offset] !== signature) {
+            game.InstanceData[signature_offset] = signature;
+        }
+
+        if (signature & Has.Render2D) {
+            let render = game.World.Render2D[ent];
+            let shift_offset = ent * FLOATS_PER_INSTANCE + 6;
+            if (signature & Has.SpatialNode2D) {
+                let spatial = game.World.SpatialNode2D[ent];
+                if (spatial.Parent !== undefined) {
+                    let parent_spatial = game.World.SpatialNode2D[spatial.Parent];
+                    let shift = (parent_spatial.World[5] - render.Shift) / game.World.Height;
+                    game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+                } else {
+                    let shift = (spatial.World[5] - render.Shift) / game.World.Height;
+                    game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+                }
+            } else {
+                let local = game.World.LocalTransform2D[ent];
+                let shift = (local.Translation[1] - render.Shift) / game.World.Height;
+                game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+            }
         }
     }
 

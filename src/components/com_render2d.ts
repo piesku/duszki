@@ -5,7 +5,6 @@
  */
 
 import {Vec4} from "../../lib/math.js";
-import {clamp} from "../../lib/number.js";
 import {Entity} from "../../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../../materials/layout2d.js";
 import {spritesheet} from "../../sprites/spritesheet.js";
@@ -16,6 +15,7 @@ export interface Render2D {
     Detail: Float32Array;
     Color: Float32Array;
     Sprite: Float32Array;
+    Shift: number;
 }
 
 /**
@@ -48,24 +48,15 @@ export function render2d(sprite_name: string, color: Vec4 = [1, 1, 1, 1]) {
             Detail: game.InstanceData.subarray(instance_offset + 6, instance_offset + 8),
             Color: game.InstanceData.subarray(instance_offset + 8, instance_offset + 12),
             Sprite: game.InstanceData.subarray(instance_offset + 12, instance_offset + 16),
+            Shift: 0,
         };
     };
 }
 
-/**
- * Set the z-order of an entity.
- *
- * Camera2D's projection is set up with z-order +1 as the near plane and -1 as
- * the far plane. The z-order set by this mixin is clamped to the [-1, 1] range.
- * If you want to skip the sprite while rendering, remove `Has.Render2D` from its
- * signature.
- *
- * @param z The z-order of the sprite, clamped to [-1, 1].
- */
-export function order(z: number) {
+export function shift(z: number) {
     return (game: Game, entity: Entity) => {
-        let instance_offset = entity * FLOATS_PER_INSTANCE;
-        game.InstanceData[instance_offset + 6] = clamp(-1, 1, z);
+        let render = game.World.Render2D[entity];
+        render.Shift = z;
     };
 }
 

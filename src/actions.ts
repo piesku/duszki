@@ -35,7 +35,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
 
             let building_id = payload as number;
             instantiate(game, [
-                ...blueprint_building(game, building_id, 0.2),
+                ...blueprint_building(game, building_id),
                 copy_position(game.PointerPosition),
             ]);
             game.ActiveBuilding = building_id;

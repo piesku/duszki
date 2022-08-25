@@ -47,6 +47,7 @@ export function sys_build_roads(game: Game, delta: number) {
                 render.Color[0] = 1;
                 render.Color[1] = 1;
                 render.Color[2] = 1;
+                render.Shift = 0;
 
                 // Pick a road tile based on the neighbors, and adjust neighbor
                 // tiles, too.

@@ -19,7 +19,6 @@ export function scene_stage(game: Game) {
     instantiate_tiled_layer(
         game,
         new Array(game.World.Width * game.World.Height).fill(1),
-        game.World.Width,
-        0.1
+        game.World.Width
     );
 }

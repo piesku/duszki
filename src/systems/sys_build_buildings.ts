@@ -67,6 +67,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                     render.Color[0] = 1;
                     render.Color[1] = 1;
                     render.Color[2] = 1;
+                    render.Shift = 0;
                 }
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
@@ -77,7 +78,7 @@ export function sys_build_buildings(game: Game, delta: number) {
     if (building_placed && game.ActiveBuilding !== null) {
         // Create a new phantom buildingd entity, ready to be placed again.
         instantiate(game, [
-            ...blueprint_building(game, game.ActiveBuilding, 0.2),
+            ...blueprint_building(game, game.ActiveBuilding),
             set_position(Math.round(game.PointerPosition[0]), Math.round(game.PointerPosition[1])),
         ]);
     }

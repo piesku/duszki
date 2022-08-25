@@ -2,7 +2,7 @@ import {instantiate} from "../../lib/game.js";
 import {element, integer} from "../../lib/random.js";
 import {grid} from "../components/com_grid.js";
 import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
-import {order, render2d} from "../components/com_render2d.js";
+import {render2d, shift} from "../components/com_render2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
@@ -25,11 +25,7 @@ export function scene_editable_dungeon(game: Game) {
     for (let i = 0; i < grass_count; i++) {
         let x = integer(0, game.World.Width - 1);
         let y = integer(0, game.World.Height - 1);
-        instantiate(game, [
-            local_transform2d([x, y]),
-            render2d(element(grass_tiles)),
-            order(-0.99),
-        ]);
+        instantiate(game, [local_transform2d([x, y]), render2d(element(grass_tiles)), shift(-1)]);
     }
 
     // 1 Hell Plaza
@@ -43,13 +39,7 @@ export function scene_editable_dungeon(game: Game) {
             y < center_y + plaza_height / 2;
             y++
         ) {
-            instantiate(game, [
-                local_transform2d([x, y]),
-                render2d("000.png"),
-                order(0.1),
-                grid(true),
-            ]);
-
+            instantiate(game, [local_transform2d([x, y]), render2d("000.png"), grid(true)]);
             make_road(game, x, y);
         }
     }

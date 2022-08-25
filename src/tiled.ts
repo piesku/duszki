@@ -2,7 +2,7 @@ import {instantiate} from "../lib/game.js";
 import {Entity} from "../lib/world.js";
 import {grid} from "./components/com_grid.js";
 import {local_transform2d} from "./components/com_local_transform2d.js";
-import {order, render2d} from "./components/com_render2d.js";
+import {render2d} from "./components/com_render2d.js";
 import {Game} from "./game.js";
 
 const enum TileFlip {
@@ -19,12 +19,7 @@ const enum TileFlip {
     All = TileFlip.Horizontal | TileFlip.Vertical | TileFlip.Diagonal | TileFlip.Ignored,
 }
 
-export function instantiate_tiled_layer(
-    game: Game,
-    layer: Array<number>,
-    width: number,
-    z: number
-) {
+export function instantiate_tiled_layer(game: Game, layer: Array<number>, width: number) {
     let tile_entities: Array<Entity> = [];
     for (let i = 0; i < layer.length; i++) {
         let global_id = layer[i]; // Global ID with flip flags.
@@ -53,13 +48,13 @@ export function instantiate_tiled_layer(
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        tile_entities.push(instantiate(game, [local, render2d(tile_name), order(z), grid(false)]));
+        tile_entities.push(instantiate(game, [local, render2d(tile_name), grid(false)]));
     }
 
     return tile_entities;
 }
 
-export function* tiled_blueprints(layer: Array<number>, width: number, height: number, z: number) {
+export function* tiled_blueprints(layer: Array<number>, width: number, height: number) {
     for (let i = 0; i < layer.length; i++) {
         let global_id = layer[i]; // Global ID with flip flags.
         let tile_id = global_id & ~TileFlip.All; // Remove flip flags.
@@ -68,7 +63,7 @@ export function* tiled_blueprints(layer: Array<number>, width: number, height: n
         }
 
         let x = (i % width) - Math.floor(width / 2);
-        let y = Math.floor(i / width) - Math.floor(height / 2);
+        let y = Math.floor(i / width);
         let local: ReturnType<typeof local_transform2d>;
 
         // Rotate and flip flags are stored in the global ID.
@@ -87,6 +82,6 @@ export function* tiled_blueprints(layer: Array<number>, width: number, height: n
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        yield [local, render2d(tile_name), order(z)];
+        yield [local, render2d(tile_name)];
     }
 }

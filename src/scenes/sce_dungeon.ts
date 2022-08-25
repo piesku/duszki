@@ -17,7 +17,7 @@ export function scene_dungeon(game: Game) {
     ]);
 
     // Terrain.
-    instantiate_tiled_layer(game, map_sample.Layers[0], map_sample.Width, 0.1);
+    instantiate_tiled_layer(game, map_sample.Layers[0], map_sample.Width);
 
     // Objects.
     // instantiate_tiled_layer(game, map_sample.Layers[1], map_sample.Width, 0.6);
