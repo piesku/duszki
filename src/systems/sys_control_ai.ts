@@ -28,11 +28,23 @@ function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
     let needs = game.World.Needs[entity];
 
-    if (needs.Food < 0.001) {
-        console.log("duszek umar z głodu");
+    // if (needs.Food < 0.001) {
+    //     console.log("duszek umar z głodu");
+    //     destroy_all(game.World, entity);
+    //     return;
+    // }
+
+    if (needs.Sleep < 0.001) {
+        console.log("duszek umar z wycieczenia");
         destroy_all(game.World, entity);
         return;
     }
+
+    // if (needs.Work < 0.001) {
+    //     console.log("duszek umar z nudów");
+    //     destroy_all(game.World, entity);
+    //     return;
+    // }
 
     if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
         walk.DestinationTrigger = element(walkables);

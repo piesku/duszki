@@ -11,6 +11,7 @@ export interface Needs {
     DeltaWork: number;
     DeltaFood: number;
     DeltaSleep: number;
+    IsBeingSatisfiedAtThisVeryMoment: boolean;
 }
 
 export function needs() {
@@ -23,6 +24,7 @@ export function needs() {
             DeltaWork: float() / 10,
             DeltaFood: float() / 10,
             DeltaSleep: float() / 10,
+            IsBeingSatisfiedAtThisVeryMoment: false,
         };
     };
 }

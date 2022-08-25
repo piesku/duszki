@@ -22,6 +22,7 @@ import {sys_poll} from "./systems/sys_poll.js";
 import {sys_render2d} from "./systems/sys_render2d.js";
 import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
 import {sys_resize2d} from "./systems/sys_resize2d.js";
+import {sys_satisfy} from "./systems/sys_satisfy.js";
 import {sys_shake2d} from "./systems/sys_shake2d.js";
 import {sys_spawn2d} from "./systems/sys_spawn2d.js";
 import {sys_toggle} from "./systems/sys_toggle.js";
@@ -76,6 +77,7 @@ export class Game extends Game3D {
         sys_needs(this, delta);
         sys_control_ai(this, delta);
         sys_control_always2d(this, delta);
+        sys_satisfy(this, delta);
 
         // Game logic.
         sys_generate(this, delta);
