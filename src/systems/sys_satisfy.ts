@@ -29,6 +29,7 @@ function update(game: Game, entity: number, delta: number) {
 
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
+
         if (need && satisfy.NeedType === "Work") {
             // Duszek works only when fed and rested.
             if (need.Food > SATISFY_THRESHOLD && need.Sleep > SATISFY_THRESHOLD) {
