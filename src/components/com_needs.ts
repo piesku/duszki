@@ -3,14 +3,14 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-export type NeedType = "Work" | "Food" | "Sleep";
+export type NeedType = "work" | "food" | "sleep";
 export interface Needs {
-    Work: number;
-    Food: number;
-    Sleep: number;
-    DeltaWork: number;
-    DeltaFood: number;
-    DeltaSleep: number;
+    work: number;
+    food: number;
+    sleep: number;
+    delta_work: number;
+    delta_food: number;
+    delta_sleep: number;
     IsBeingSatisfiedAtThisVeryMoment: boolean;
 }
 
@@ -18,12 +18,12 @@ export function needs() {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Needs;
         game.World.Needs[entity] = {
-            Work: 0.5,
-            Food: 1,
-            Sleep: 1,
-            DeltaWork: float() / 25,
-            DeltaFood: float() / 25,
-            DeltaSleep: float() / 25,
+            work: 0.5,
+            food: 1,
+            sleep: 1,
+            delta_work: float() / 25,
+            delta_food: float() / 25,
+            delta_sleep: float() / 25,
             IsBeingSatisfiedAtThisVeryMoment: false,
         };
     };

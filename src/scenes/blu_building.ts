@@ -32,16 +32,16 @@ const building_maps = [
 // House satisfies sleep
 // Farm satisfies food
 // Rest defaults to Work
-const needs: NeedType[] = ["Sleep", "Food"];
+const needs: NeedType[] = ["sleep", "food"];
 
 const capacities = {
-    Sleep: 5,
-    Food: 8,
-    Work: 10,
+    sleep: 5,
+    food: 8,
+    work: 10,
 };
 
 export function blueprint_building(game: Game, map_id: number) {
-    let building_type = needs[map_id] || "Work";
+    let building_type = needs[map_id] || "work";
     let child_tiles: Array<Blueprint<Game>> = [];
     let map = building_maps[map_id];
 

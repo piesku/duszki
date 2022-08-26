@@ -30,7 +30,7 @@ function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    if (needs.Food < 0.001) {
+    if (needs.food < 0.001) {
         console.log("duszek umar z głodu");
         dispatch(game, Action.DuszekDied, local.Translation);
 
@@ -38,7 +38,7 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (needs.Sleep < 0.001) {
+    if (needs.sleep < 0.001) {
         console.log("duszek umar z wycieczenia");
         dispatch(game, Action.DuszekDied, local.Translation);
         destroy_all(game.World, entity);
