@@ -1,3 +1,4 @@
+import {get_first_child} from "../components/com_children.js";
 import {ERAS, GENERATORS} from "../config.js";
 import {Game} from "../game.js";
 import {income} from "../generator.js";
@@ -22,15 +23,20 @@ export function sys_generate(game: Game, delta: number) {
     // Then, generate income.
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
-            let entity_generator = game.World.Generator[ent];
-            let gen_id = entity_generator.Id;
+            let satisfy_entity = get_first_child(game.World, ent, Has.Satisfy)!;
+            let satisfy = game.World.Satisfy[satisfy_entity];
 
-            let gen_count = game.GeneratorCounts[gen_id];
-            let gen_config = GENERATORS[gen_id];
-            let gen_income = income(era, gen_config, gen_count);
+            if (satisfy && satisfy.Ocupados && satisfy.Ocupados.length > 0) {
+                let entity_generator = game.World.Generator[ent];
+                let gen_id = entity_generator.Id;
 
-            game.TotalWealth += gen_income * delta;
-            game.IncomePerSecond += gen_income;
+                let gen_count = game.GeneratorCounts[gen_id];
+                let gen_config = GENERATORS[gen_id];
+                let gen_income = income(era, gen_config, gen_count);
+
+                game.TotalWealth += gen_income * delta;
+                game.IncomePerSecond += gen_income;
+            }
         }
     }
 }

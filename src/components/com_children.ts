@@ -62,6 +62,15 @@ export function* query_down(world: World, entity: Entity, mask: Has): IterableIt
     }
 }
 
+export function get_first_child(world: World, entity: Entity, mask: Has): Entity | undefined {
+    if (world.Signature[entity] & Has.Children) {
+        for (let child of world.Children[entity].Children) {
+            if ((world.Signature[child] & mask) === mask) {
+                return child;
+            }
+        }
+    }
+}
 /**
  * Delete the entity with all its descendants.
  *
