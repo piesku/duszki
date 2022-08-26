@@ -14,7 +14,10 @@ export function sys_satisfy(game: Game, delta: number) {
 }
 
 const BEING_SATISFIED_MASK = Has.Render2D | Has.Walk | Has.Needs | Has.ControlAi;
-const SATISFY_THRESHOLD = 0.9;
+// Duszkis are getting tired and hungry while working.
+const WORKING_MASK = Has.Render2D | Has.Walk | Has.ControlAi;
+const SATISFY_THRESHOLD = 0.75;
+const LOW_SATISFY_THRESHOLD = 0.4;
 
 function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
@@ -24,11 +27,18 @@ function update(game: Game, entity: number, delta: number) {
 
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
-        if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
+        if (need && satisfy.NeedType === "Work") {
+            // Duszek works only when fed and rested.
+            if (need.Food > SATISFY_THRESHOLD && need.Sleep > SATISFY_THRESHOLD) {
+                satisfy.Ocupados.push(guest);
+                game.World.Signature[guest] &= ~WORKING_MASK;
+                game.WorkingDuszkiCount++;
+            }
+        } else if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
-                console.log(
-                    `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
-                );
+                // console.log(
+                //     `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
+                // );
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
             }
@@ -36,11 +46,20 @@ function update(game: Game, entity: number, delta: number) {
     }
     for (let guest of satisfy.Ocupados) {
         let need = game.World.Needs[guest];
-        need[satisfy.NeedType] += need[`Delta${satisfy.NeedType}`] * delta * 4;
+        // Duszek stops working when hungry or tired.
+        if (satisfy.NeedType === "Work") {
+            if (need.Food < LOW_SATISFY_THRESHOLD || need.Sleep < LOW_SATISFY_THRESHOLD) {
+                satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
+                game.World.Signature[guest] |= WORKING_MASK;
+                game.WorkingDuszkiCount--;
+            }
+        } else {
+            need[satisfy.NeedType] += need[`Delta${satisfy.NeedType}`] * delta * 4;
 
-        if (need[satisfy.NeedType] >= 1) {
-            satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
-            game.World.Signature[guest] |= BEING_SATISFIED_MASK;
+            if (need[satisfy.NeedType] >= 1) {
+                satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
+                game.World.Signature[guest] |= BEING_SATISFIED_MASK;
+            }
         }
     }
 

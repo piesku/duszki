@@ -20,7 +20,8 @@ export function App(game: Game) {
         ${BuildingButton(game, GeneratorId.Mine5)}
         <hr />
         Income: ${cost_fmt.format(game.IncomePerSecond)}/s Wealth:
-        ${cost_fmt.format(game.TotalWealth)} Duszki: ${game.DuszkiCount}
+        ${cost_fmt.format(game.TotalWealth)} Working duszki: ${game.WorkingDuszkiCount} /
+        ${game.DuszkiCount}
     </div>`;
 }
 

@@ -13,7 +13,7 @@ export function sys_needs(game: Game, delta: number) {
 
 function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
-    needs.Work -= needs.DeltaWork * delta;
+    // needs.Work -= needs.DeltaWork * delta;
     needs.Food -= needs.DeltaFood * delta;
     needs.Sleep -= needs.DeltaSleep * delta;
 }

@@ -42,12 +42,13 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (needs.Work < 0.001) {
-        console.log("duszek umar z nudów");
-        game.DuszkiCount--;
-        destroy_all(game.World, entity);
-        return;
-    }
+    // Can you die from not enough work?
+    // if (needs.Work < 0.001) {
+    //     console.log("duszek umar z nudów");
+    //     game.DuszkiCount--;
+    //     destroy_all(game.World, entity);
+    //     return;
+    // }
 
     if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
         walk.DestinationTrigger = element(walkables);
