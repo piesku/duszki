@@ -23,19 +23,19 @@ function update(game: Game, entity: number, delta: number) {
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
         if (need && need[satisfy.NeedType] < 0.9) {
-            console.log("duszek w domku, poziom odpoczynku: " + need[satisfy.NeedType]);
+            console.log(`duszek w domku, aktualny ${satisfy.NeedType}: ${need[satisfy.NeedType]}`);
             satisfy.Ocupados.push(guest);
             game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
         }
     }
 
     for (let guest of satisfy.Ocupados) {
-        console.log("duszek odpoczywa w domku");
+        console.log(`duszek uzupełnia ${satisfy.NeedType} w domku`);
         let need = game.World.Needs[guest];
         need[satisfy.NeedType] += need[`Delta${satisfy.NeedType}`] * delta * 4;
 
         if (need[satisfy.NeedType] >= 1) {
-            console.log("wypocząłem, wypierdalam");
+            console.log(`${satisfy.NeedType} wymaksowane, wykurwiam w tango`);
             satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
             game.World.Signature[guest] |= BEING_SATISFIED_MASK;
         }

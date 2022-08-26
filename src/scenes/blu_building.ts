@@ -28,6 +28,10 @@ const building_maps = [
     map_mine4,
     map_mine5,
 ];
+
+// House satisfies sleep
+// Farm satisfies food
+// Rest defaults to Work
 const needs: NeedType[] = ["Sleep", "Food"];
 
 export function blueprint_building(game: Game, map_id: number) {

@@ -18,12 +18,12 @@ export function needs() {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Needs;
         game.World.Needs[entity] = {
-            Work: 0.8,
-            Food: 0.8,
-            Sleep: 0.8,
-            DeltaWork: float() / 10,
-            DeltaFood: float() / 10,
-            DeltaSleep: float() / 10,
+            Work: 0.5,
+            Food: 1,
+            Sleep: 1,
+            DeltaWork: float() / 25,
+            DeltaFood: float() / 25,
+            DeltaSleep: float() / 25,
             IsBeingSatisfiedAtThisVeryMoment: false,
         };
     };
