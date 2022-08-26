@@ -30,18 +30,21 @@ function update(game: Game, entity: number, delta: number) {
 
     if (needs.Food < 0.001) {
         console.log("duszek umar z głodu");
+        game.DuszkiCount--;
         destroy_all(game.World, entity);
         return;
     }
 
     if (needs.Sleep < 0.001) {
         console.log("duszek umar z wycieczenia");
+        game.DuszkiCount--;
         destroy_all(game.World, entity);
         return;
     }
 
     if (needs.Work < 0.001) {
         console.log("duszek umar z nudów");
+        game.DuszkiCount--;
         destroy_all(game.World, entity);
         return;
     }

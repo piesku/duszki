@@ -21,7 +21,7 @@ export function App(game: Game) {
         <button onmouseup="$(${Action.SpawnDuszek})">SpawnDuszek</button>
         <hr />
         Income: ${cost_fmt.format(game.IncomePerSecond)}/s Wealth:
-        ${cost_fmt.format(game.TotalWealth)}
+        ${cost_fmt.format(game.TotalWealth)} Duszki: ${game.DuszkiCount}
     </div>`;
 }
 

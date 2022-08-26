@@ -51,6 +51,7 @@ export class Game extends Game3D {
     IncomePerSecond = 0;
     TotalWealth = 100;
     CurrentEra = 0;
+    DuszkiCount = 0;
 
     constructor() {
         super();
