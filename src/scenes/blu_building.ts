@@ -46,7 +46,7 @@ export function blueprint_building(game: Game, map_id: number) {
 
     child_tiles.push([
         spatial_node2d(),
-        local_transform2d([0, -Math.round(map.Width / 2) - 1]),
+        local_transform2d([0, -Math.floor(map.Height / 2) - 1]),
         satisfy(needs[map_id] || "Work"),
     ]);
 
