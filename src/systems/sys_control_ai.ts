@@ -11,7 +11,7 @@ export function sys_control_ai(game: Game, delta: number) {
     walkables = [];
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
-            if (game.World.Grid[y][x].walkable) {
+            if (game.World.Grid[y][x].Walkable) {
                 walkables.push([x, y]);
             }
         }

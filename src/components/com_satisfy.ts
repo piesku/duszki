@@ -4,7 +4,6 @@ import {Has} from "../world.js";
 import {NeedType} from "./com_needs.js";
 
 export interface Satisfy {
-    Delta: number;
     NeedType: NeedType;
     Ocupados: Entity[];
 }
@@ -14,7 +13,6 @@ export function satisfy(type: NeedType) {
         game.World.Signature[entity] |= Has.Satisfy;
         game.World.Satisfy[entity] = {
             NeedType: type,
-            Delta: 0.01,
             Ocupados: [],
         };
     };

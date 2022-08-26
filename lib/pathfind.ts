@@ -50,7 +50,7 @@ export function path_find(world: World, origin: Vec2, goal: Vec2) {
             [current[0], current[1] + 1],
             [current[0], current[1] - 1],
         ].filter(([x, y]) => {
-            return world.Grid[y] && world.Grid[y][x] && world.Grid[y][x].walkable;
+            return world.Grid[y] && world.Grid[y][x] && world.Grid[y][x].Walkable;
         });
 
         for (let i = 0; i < neighbors.length; i++) {

@@ -83,9 +83,9 @@ export const enum Has {
 }
 
 export interface GridCell {
-    tile_entity: Entity | null;
-    walkable: boolean;
-    ocupados: Entity[];
+    TileEntity: Entity | null;
+    Walkable: boolean;
+    Ocupados: Entity[];
 }
 
 export class World extends WorldImpl {
@@ -96,7 +96,7 @@ export class World extends WorldImpl {
         .map(() =>
             Array(this.Width)
                 .fill(0)
-                .map(() => ({tile_entity: null, walkable: false, ocupados: []}))
+                .map(() => ({TileEntity: null, Walkable: false, Ocupados: []}))
         );
 
     AnimateSprite: Array<AnimateSprite> = [];

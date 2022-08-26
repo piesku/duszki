@@ -22,9 +22,9 @@ export function sys_build_erase(game: Game, delta: number) {
                 let y = Math.round(game.PointerPosition[1]);
 
                 let cell = game.World.Grid[y][x];
-                if (cell.tile_entity !== null) {
-                    if (game.World.Signature[cell.tile_entity] & Has.SpatialNode2D) {
-                        let spatial = game.World.SpatialNode2D[cell.tile_entity];
+                if (cell.TileEntity !== null) {
+                    if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
+                        let spatial = game.World.SpatialNode2D[cell.TileEntity];
                         if (spatial.Parent !== undefined) {
                             // Reset the world grid for all the building's tiles.
                             for (let child_entity of query_down(
@@ -36,22 +36,22 @@ export function sys_build_erase(game: Game, delta: number) {
                                 get_translation(world_position, child_spatial.World);
                                 let x = Math.round(world_position[0]);
                                 let y = Math.round(world_position[1]);
-                                game.World.Grid[y][x].tile_entity = null;
-                                game.World.Grid[y][x].walkable = false;
+                                game.World.Grid[y][x].TileEntity = null;
+                                game.World.Grid[y][x].Walkable = false;
                             }
                             // Destroy the building's root entity.
                             destroy_all(game.World, spatial.Parent);
                         } else {
-                            destroy_all(game.World, cell.tile_entity);
+                            destroy_all(game.World, cell.TileEntity);
                         }
                     } else {
                         // It's a road.
-                        destroy_all(game.World, cell.tile_entity);
+                        destroy_all(game.World, cell.TileEntity);
                     }
 
-                    cell.tile_entity = null;
-                    cell.walkable = false;
-                    cell.ocupados = [];
+                    cell.TileEntity = null;
+                    cell.Walkable = false;
+                    cell.Ocupados = [];
                     // Adjust the neighbors if necessary.
                     make_road(game, x, y);
                 }

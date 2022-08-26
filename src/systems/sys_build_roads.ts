@@ -25,7 +25,7 @@ export function sys_build_roads(game: Game, delta: number) {
             // Check whether the road can be placed.
             let can_be_placed = true;
             let cell = game.World.Grid[y]?.[x];
-            if (cell && cell.tile_entity !== null) {
+            if (cell && cell.TileEntity !== null) {
                 can_be_placed = false;
             }
 
@@ -40,8 +40,8 @@ export function sys_build_roads(game: Game, delta: number) {
                 road_placed = true;
 
                 // Populate the world grid.
-                cell.tile_entity = ent;
-                cell.walkable = true;
+                cell.TileEntity = ent;
+                cell.Walkable = true;
 
                 // Bring back the original tint.
                 render.Color[0] = 1;
@@ -67,16 +67,16 @@ export function sys_build_roads(game: Game, delta: number) {
 export function make_road(game: Game, x: number, y: number) {
     choose_road_tile_based_on_neighbors(game, x, y);
 
-    if (game.World.Grid[y + 1][x].walkable) {
+    if (game.World.Grid[y + 1][x].Walkable) {
         choose_road_tile_based_on_neighbors(game, x, y + 1);
     }
-    if (game.World.Grid[y][x + 1].walkable) {
+    if (game.World.Grid[y][x + 1].Walkable) {
         choose_road_tile_based_on_neighbors(game, x + 1, y);
     }
-    if (game.World.Grid[y - 1][x].walkable) {
+    if (game.World.Grid[y - 1][x].Walkable) {
         choose_road_tile_based_on_neighbors(game, x, y - 1);
     }
-    if (game.World.Grid[y][x - 1].walkable) {
+    if (game.World.Grid[y][x - 1].Walkable) {
         choose_road_tile_based_on_neighbors(game, x - 1, y);
     }
 }
@@ -108,23 +108,23 @@ const NeighborSprites = {
 };
 
 function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
-    let tile = game.World.Grid[y][x].tile_entity;
+    let tile = game.World.Grid[y][x].TileEntity;
     if (tile === null) {
         return;
     }
 
     let neighbors = 0;
 
-    if (game.World.Grid[y + 1][x].walkable) {
+    if (game.World.Grid[y + 1][x].Walkable) {
         neighbors |= NeighborMasks.UP;
     }
-    if (game.World.Grid[y][x + 1].walkable) {
+    if (game.World.Grid[y][x + 1].Walkable) {
         neighbors |= NeighborMasks.RIGHT;
     }
-    if (game.World.Grid[y - 1][x].walkable) {
+    if (game.World.Grid[y - 1][x].Walkable) {
         neighbors |= NeighborMasks.DOWN;
     }
-    if (game.World.Grid[y][x - 1].walkable) {
+    if (game.World.Grid[y][x - 1].Walkable) {
         neighbors |= NeighborMasks.LEFT;
     }
 

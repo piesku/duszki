@@ -31,7 +31,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                 let x = Math.round(spatial.World[4]);
                 let y = Math.round(spatial.World[5]);
                 let cell = game.World.Grid[y]?.[x];
-                if (cell && cell.tile_entity === null) {
+                if (cell && cell.TileEntity === null) {
                     render.Color[0] = 0;
                     render.Color[1] = 1;
                     render.Color[2] = 0;
@@ -61,7 +61,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                     get_translation(world_position, child_spatial.World);
                     let x = Math.round(world_position[0]);
                     let y = Math.round(world_position[1]);
-                    game.World.Grid[y][x].tile_entity = child_entity;
+                    game.World.Grid[y][x].TileEntity = child_entity;
 
                     let render = game.World.Render2D[child_entity];
                     render.Color[0] = 1;

@@ -10,7 +10,7 @@ const QUERY = Has.LocalTransform2D | Has.Walk | Has.Move2D;
 export function sys_walk(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
-            game.World.Grid[y][x].ocupados = [];
+            game.World.Grid[y][x].Ocupados = [];
         }
     }
 
@@ -61,7 +61,7 @@ function update(game: Game, entity: Entity) {
             normalize(diff, diff);
             add(move.Direction, move.Direction, diff);
             game.World.Signature[entity] |= Has.Dirty;
-            game.World.Grid[next[1]][next[0]].ocupados.push(entity);
+            game.World.Grid[next[1]][next[0]].Ocupados.push(entity);
         }
     }
 }
