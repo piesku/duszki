@@ -27,7 +27,7 @@ function update(game: Game, entity: number, delta: number) {
         if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
                 console.log(
-                    `duszek w domku, aktualny ${satisfy.NeedType}: ${need[satisfy.NeedType]}`
+                    `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
                 );
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
@@ -35,12 +35,10 @@ function update(game: Game, entity: number, delta: number) {
         }
     }
     for (let guest of satisfy.Ocupados) {
-        console.log(`duszek uzupełnia ${satisfy.NeedType} w domku`);
         let need = game.World.Needs[guest];
         need[satisfy.NeedType] += need[`Delta${satisfy.NeedType}`] * delta * 4;
 
         if (need[satisfy.NeedType] >= 1) {
-            console.log(`${satisfy.NeedType} wymaksowane, wykurwiam w tango`);
             satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
             game.World.Signature[guest] |= BEING_SATISFIED_MASK;
         }

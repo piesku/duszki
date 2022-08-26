@@ -36,7 +36,7 @@ const needs: NeedType[] = ["Sleep", "Food"];
 
 const capacities = {
     Sleep: 5,
-    Food: 6,
+    Food: 8,
     Work: 10,
 };
 
