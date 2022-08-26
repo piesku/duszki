@@ -8,7 +8,6 @@ import {walk} from "../components/com_walk.js";
 import {Game} from "../game.js";
 
 export function blueprint_duszek(game: Game) {
-    game.DuszkiCount++;
     return [
         local_transform2d(),
         render2d("125.png"),

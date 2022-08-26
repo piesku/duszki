@@ -1,5 +1,6 @@
 import {Vec2} from "../../lib/math.js";
 import {element} from "../../lib/random.js";
+import {Action, dispatch} from "../actions.js";
 import {destroy_all} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -27,17 +28,19 @@ export function sys_control_ai(game: Game, delta: number) {
 function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
     let needs = game.World.Needs[entity];
+    let local = game.World.LocalTransform2D[entity];
 
     if (needs.Food < 0.001) {
         console.log("duszek umar z głodu");
-        game.DuszkiCount--;
+        dispatch(game, Action.DuszekDied, local.Translation);
+
         destroy_all(game.World, entity);
         return;
     }
 
     if (needs.Sleep < 0.001) {
         console.log("duszek umar z wycieczenia");
-        game.DuszkiCount--;
+        dispatch(game, Action.DuszekDied, local.Translation);
         destroy_all(game.World, entity);
         return;
     }

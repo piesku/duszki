@@ -23,7 +23,9 @@ function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
     let local = game.World.SpatialNode2D[entity];
     let pos = get_translation([0, 0], local.World);
-    let guests_at_the_door = game.World.Grid[pos[1]][pos[0]].Ocupados;
+    let y = Math.round(pos[1]);
+    let x = Math.round(pos[0]);
+    let guests_at_the_door = game.World.Grid[y][x].Ocupados;
 
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
