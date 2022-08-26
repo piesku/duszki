@@ -34,10 +34,17 @@ const building_maps = [
 // Rest defaults to Work
 const needs: NeedType[] = ["Sleep", "Food"];
 
+const capacities = {
+    Sleep: 5,
+    Food: 6,
+    Work: 10,
+};
+
 export function blueprint_building(game: Game, map_id: number) {
+    let building_type = needs[map_id] || "Work";
     let child_tiles: Array<Blueprint<Game>> = [];
     let map = building_maps[map_id];
-    console.log(map);
+
     for (let layer of map.Layers) {
         for (let tile of tiled_blueprints(layer, map.Width, map.Height)) {
             child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
@@ -47,7 +54,7 @@ export function blueprint_building(game: Game, map_id: number) {
     child_tiles.push([
         spatial_node2d(),
         local_transform2d([0, -Math.floor(map.Height / 2) - 1]),
-        satisfy(needs[map_id] || "Work"),
+        satisfy(building_type, capacities[building_type]),
     ]);
 
     return [

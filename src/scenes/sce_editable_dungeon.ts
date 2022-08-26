@@ -7,7 +7,6 @@ import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
 import {blueprint_camera} from "./blu_camera.js";
-import {blueprint_duszek} from "./blu_duszek.js";
 
 export function scene_editable_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
@@ -43,6 +42,4 @@ export function scene_editable_dungeon(game: Game) {
             make_road(game, x, y);
         }
     }
-
-    instantiate(game, [...blueprint_duszek(game), set_position(center_x, center_y)]);
 }

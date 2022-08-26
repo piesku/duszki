@@ -25,12 +25,15 @@ function update(game: Game, entity: number, delta: number) {
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
         if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
-            console.log(`duszek w domku, aktualny ${satisfy.NeedType}: ${need[satisfy.NeedType]}`);
-            satisfy.Ocupados.push(guest);
-            game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
+            if (satisfy.Ocupados.length < satisfy.Capacity) {
+                console.log(
+                    `duszek w domku, aktualny ${satisfy.NeedType}: ${need[satisfy.NeedType]}`
+                );
+                satisfy.Ocupados.push(guest);
+                game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
+            }
         }
     }
-
     for (let guest of satisfy.Ocupados) {
         console.log(`duszek uzupełnia ${satisfy.NeedType} w domku`);
         let need = game.World.Needs[guest];
