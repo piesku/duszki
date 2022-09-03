@@ -18,6 +18,7 @@ export function App(game: Game) {
         ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
         ${BuildingButton(game, GeneratorId.Mine3)} ${BuildingButton(game, GeneratorId.Mine4)}
         ${BuildingButton(game, GeneratorId.Mine5)}
+        <button onmouseup="$(${Action.ResetGame})">Reset</button>
         <hr />
         Income: ${cost_fmt.format(game.IncomePerSecond)}/s Wealth:
         ${cost_fmt.format(game.TotalWealth)} Working duszki: ${game.WorkingDuszkiCount} /

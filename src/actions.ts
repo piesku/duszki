@@ -9,6 +9,8 @@ import {blueprint_duszek} from "./scenes/blu_duszek.js";
 import {blueprint_eraser} from "./scenes/blu_eraser.js";
 import {blueprint_grave} from "./scenes/blu_grave.js";
 import {blueprint_road} from "./scenes/blu_road.js";
+import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
+import {clear} from "./store.js";
 import {Has} from "./world.js";
 
 export const enum Action {
@@ -17,6 +19,7 @@ export const enum Action {
     EnterErase,
     SpawnDuszek,
     DuszekDied,
+    ResetGame,
 }
 
 export function dispatch(game: Game, action: Action, payload: unknown) {
@@ -67,6 +70,11 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 ...blueprint_grave(game),
                 set_position(Math.round(position[0]), Math.round(position[1])),
             ]);
+            break;
+        }
+        case Action.ResetGame: {
+            clear(game.Store);
+            scene_editable_dungeon(game);
             break;
         }
     }
