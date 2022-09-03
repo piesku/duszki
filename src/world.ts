@@ -90,6 +90,8 @@ export interface GridCell {
 }
 
 export class World extends WorldImpl {
+    id = 0;
+
     Width: number = 120;
     Height: number = 80;
     Grid: GridCell[][] = Array(this.Height)

@@ -23,6 +23,7 @@ import {sys_render2d} from "./systems/sys_render2d.js";
 import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
 import {sys_resize2d} from "./systems/sys_resize2d.js";
 import {sys_satisfy} from "./systems/sys_satisfy.js";
+import {sys_save} from "./systems/sys_save.js";
 import {sys_shake2d} from "./systems/sys_shake2d.js";
 import {sys_spawn2d} from "./systems/sys_spawn2d.js";
 import {sys_toggle} from "./systems/sys_toggle.js";
@@ -35,6 +36,7 @@ import {Has, World} from "./world.js";
 export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
 
 export class Game extends Game3D {
+    Store: IDBDatabase;
     World = new World(WORLD_CAPACITY);
 
     Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img")!);
@@ -52,8 +54,10 @@ export class Game extends Game3D {
     DuszkiCount = 0;
     WorkingDuszkiCount = 0;
 
-    constructor() {
+    constructor(db: IDBDatabase) {
         super();
+
+        this.Store = db;
 
         this.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
         this.Gl.enable(GL_DEPTH_TEST);
@@ -98,6 +102,9 @@ export class Game extends Game3D {
         // Camera.
         sys_resize2d(this, delta);
         sys_camera2d(this, delta);
+
+        // Save the game periodically.
+        sys_save(this, delta);
 
         // Rendering.
         sys_draw2d(this, delta);
