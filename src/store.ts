@@ -18,7 +18,7 @@ export function put(db: IDBDatabase, world: World): Promise<IDBValidKey> {
     });
 }
 
-export function get(db: IDBDatabase, id: number): Promise<IDBRequest<World | undefined>> {
+export function get(db: IDBDatabase, id: number): Promise<World | undefined> {
     return new Promise((resolve, reject) => {
         let store = db.transaction("world", "readonly").objectStore("world");
         let req = store.get(id);
