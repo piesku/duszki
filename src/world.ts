@@ -1,5 +1,6 @@
 import {Vec2} from "../lib/math.js";
 import {Entity, WorldImpl} from "../lib/world.js";
+import {FLOATS_PER_INSTANCE} from "../materials/layout2d.js";
 import {AnimateSprite} from "./components/com_animate_sprite.js";
 import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
@@ -99,6 +100,10 @@ export class World extends WorldImpl {
                 .map(() => ({TileEntity: null, Walkable: false, Ocupados: []}))
         );
 
+    // Raw LocalTransform2D or SpatialNode2D data, and Render2D data, uploaded to the GPU.
+    InstanceData = new Float32Array(this.Capacity * FLOATS_PER_INSTANCE);
+
+    // Component data.
     AnimateSprite: Array<AnimateSprite> = [];
     Camera2D: Array<Camera2D> = [];
     Collide2D: Array<Collide2D> = [];

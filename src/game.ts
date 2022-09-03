@@ -2,7 +2,7 @@ import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
-import {FLOATS_PER_INSTANCE, setup_render2d_buffers} from "../materials/layout2d.js";
+import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
 import {sys_build_erase} from "./systems/sys_build_erase.js";
@@ -32,15 +32,13 @@ import {sys_ui} from "./systems/sys_ui.js";
 import {sys_walk} from "./systems/sys_walk.js";
 import {Has, World} from "./world.js";
 
-export const WORLD_CAPACITY = 65_536 * 4; // = 4MB of InstanceData.
+export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
 
 export class Game extends Game3D {
     World = new World(WORLD_CAPACITY);
 
-    MaterialRender2D = mat_render2d(this.Gl, Has.Render2D, Has.SpatialNode2D);
     Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img")!);
-
-    InstanceData = new Float32Array(this.World.Capacity * FLOATS_PER_INSTANCE);
+    MaterialRender2D = mat_render2d(this.Gl, Has.Render2D, Has.SpatialNode2D);
     InstanceBuffer = this.Gl.createBuffer()!;
 
     UnitSize = 16;

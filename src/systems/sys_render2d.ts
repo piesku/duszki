@@ -27,8 +27,8 @@ export function sys_render2d(game: Game, delta: number) {
         // The shader queries the instance data for presence of the following components.
         let signature = game.World.Signature[ent] & (Has.Render2D | Has.SpatialNode2D);
         let signature_offset = ent * FLOATS_PER_INSTANCE + 7;
-        if (game.InstanceData[signature_offset] !== signature) {
-            game.InstanceData[signature_offset] = signature;
+        if (game.World.InstanceData[signature_offset] !== signature) {
+            game.World.InstanceData[signature_offset] = signature;
         }
 
         if (signature & Has.Render2D) {
@@ -39,15 +39,15 @@ export function sys_render2d(game: Game, delta: number) {
                 if (spatial.Parent !== undefined) {
                     let parent_spatial = game.World.SpatialNode2D[spatial.Parent];
                     let shift = (parent_spatial.World[5] - render.Shift) / game.World.Height;
-                    game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+                    game.World.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
                 } else {
                     let shift = (spatial.World[5] - render.Shift) / game.World.Height;
-                    game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+                    game.World.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
                 }
             } else {
                 let local = game.World.LocalTransform2D[ent];
                 let shift = (local.Translation[1] - render.Shift) / game.World.Height;
-                game.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
+                game.World.InstanceData[shift_offset] = map_range(shift, -1, 1, 0.5, -0.5);
             }
         }
     }
@@ -75,7 +75,7 @@ function render_all(game: Game, eye: Camera2D) {
     game.Gl.uniform2f(material.Locations.SheetSize, sheet.Width, sheet.Height);
 
     game.Gl.bindBuffer(GL_ARRAY_BUFFER, game.InstanceBuffer);
-    game.Gl.bufferData(GL_ARRAY_BUFFER, game.InstanceData, GL_STREAM_DRAW);
+    game.Gl.bufferData(GL_ARRAY_BUFFER, game.World.InstanceData, GL_STREAM_DRAW);
 
     game.Gl.drawArraysInstanced(material.Mode, 0, 4, game.World.Signature.length);
 }
