@@ -120,6 +120,7 @@ function update(game: Game, entity: number, delta: number) {
                 needs.Target[NeedType.WORK] = undefined;
             }
         } else {
+            console.log("z jakiegoś powodu duszek is wandering around without a purpose");
             walk.DestinationTrigger = element(walkables);
         }
     }

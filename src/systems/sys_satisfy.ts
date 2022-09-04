@@ -41,9 +41,17 @@ function update(game: Game, entity: number, delta: number) {
                 need.Value[NeedType.FOOD] > SATISFY_THRESHOLD &&
                 need.Value[NeedType.SLEEP] > SATISFY_THRESHOLD
             ) {
-                satisfy.Ocupados.push(guest);
-                game.World.Signature[guest] &= ~WORKING_MASK;
-                game.World.DuszkiWorking++;
+                if (satisfy.Ocupados.length < satisfy.Capacity) {
+                    satisfy.Ocupados.push(guest);
+                    game.World.Signature[guest] &= ~WORKING_MASK;
+                    game.World.DuszkiWorking++;
+                    need.Target[NeedType.WORK] = entity;
+                    // } else if (guests_at_the_door.length > 1) {
+                } else {
+                    console.log("long queue, rozładowanko");
+                    // more than one duszek at the door, so redirect all but one to another target
+                    need.Target[satisfy.NeedType] = undefined;
+                }
             }
         } else if (need && need.Value[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
@@ -52,6 +60,12 @@ function update(game: Game, entity: number, delta: number) {
                 // );
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
+                need.Target[satisfy.NeedType] = entity;
+                // } else if (guests_at_the_door.length > 1) {
+            } else {
+                console.log("long queue, rozładowanko");
+                // more than one duszek at the door, so redirect all but one to another target
+                need.Target[satisfy.NeedType] = undefined;
             }
         }
     }
