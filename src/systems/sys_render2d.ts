@@ -64,7 +64,7 @@ export function sys_render2d(game: Game, delta: number) {
         // Main camera.
         let camera_entity = game.Cameras[0];
         let camera = game.World.Camera2D[camera_entity];
-        game.Gl.viewport(0, 0, game.ViewportWidth, game.ViewportHeight);
+        game.Gl.viewport(0, 0, camera.ViewportWidth, camera.ViewportHeight);
         render_all(game, camera);
     }
 

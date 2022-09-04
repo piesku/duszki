@@ -7,6 +7,7 @@
 
 import {from_ortho, invert} from "../../lib/mat2d.js";
 import {Entity} from "../../lib/world.js";
+import {CameraTarget} from "../components/com_camera2d.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -40,11 +41,13 @@ export function sys_resize2d(game: Game, delta: number) {
 function update(game: Game, entity: Entity) {
     let camera = game.World.Camera2D[entity];
 
-    camera.ViewportWidth = game.ViewportWidth;
-    camera.ViewportHeight = game.ViewportHeight;
+    if (camera.Target === CameraTarget.Main) {
+        camera.ViewportWidth = game.ViewportWidth;
+        camera.ViewportHeight = game.ViewportHeight;
+    }
 
     let projection = camera.Projection;
-    let aspect = game.ViewportWidth / game.ViewportHeight;
+    let aspect = camera.ViewportWidth / camera.ViewportHeight;
     if (projection.Radius[0] === 0 && projection.Radius[1] === 0) {
         // A special case for projections which dynamically resize to keep the
         // unit size in pixels constant. Ignore projection.Radius and instead
