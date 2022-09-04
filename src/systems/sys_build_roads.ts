@@ -67,16 +67,16 @@ export function sys_build_roads(game: Game, delta: number) {
 export function make_road(game: Game, x: number, y: number) {
     choose_road_tile_based_on_neighbors(game, x, y);
 
-    if (game.World.Grid[y + 1][x].Walkable) {
+    if (game.World.Grid[y + 1]?.[x].Walkable) {
         choose_road_tile_based_on_neighbors(game, x, y + 1);
     }
-    if (game.World.Grid[y][x + 1].Walkable) {
+    if (game.World.Grid[y][x + 1]?.Walkable) {
         choose_road_tile_based_on_neighbors(game, x + 1, y);
     }
-    if (game.World.Grid[y - 1][x].Walkable) {
+    if (game.World.Grid[y - 1]?.[x].Walkable) {
         choose_road_tile_based_on_neighbors(game, x, y - 1);
     }
-    if (game.World.Grid[y][x - 1].Walkable) {
+    if (game.World.Grid[y][x - 1]?.Walkable) {
         choose_road_tile_based_on_neighbors(game, x - 1, y);
     }
 }
@@ -115,16 +115,16 @@ function choose_road_tile_based_on_neighbors(game: Game, x: number, y: number) {
 
     let neighbors = 0;
 
-    if (game.World.Grid[y + 1][x].Walkable) {
+    if (game.World.Grid[y + 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.UP;
     }
-    if (game.World.Grid[y][x + 1].Walkable) {
+    if (game.World.Grid[y][x + 1]?.Walkable) {
         neighbors |= NeighborMasks.RIGHT;
     }
-    if (game.World.Grid[y - 1][x].Walkable) {
+    if (game.World.Grid[y - 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.DOWN;
     }
-    if (game.World.Grid[y][x - 1].Walkable) {
+    if (game.World.Grid[y][x - 1]?.Walkable) {
         neighbors |= NeighborMasks.LEFT;
     }
 

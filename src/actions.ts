@@ -58,9 +58,10 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         }
         case Action.SpawnDuszek: {
             game.World.DuszkiAlive++;
-            let center_x = Math.round(game.World.Width / 2);
-            let center_y = Math.round(game.World.Height / 2);
-            instantiate(game, [...blueprint_duszek(game), set_position(center_x, center_y)]);
+            instantiate(game, [
+                ...blueprint_duszek(game),
+                set_position(0, Math.round(game.World.Height / 2)),
+            ]);
             break;
         }
         case Action.DuszekDied: {

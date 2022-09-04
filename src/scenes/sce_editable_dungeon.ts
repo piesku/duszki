@@ -38,19 +38,10 @@ export function scene_editable_dungeon(game: Game) {
         instantiate(game, [local_transform2d([x, y]), render2d(element(grass_tiles)), shift(-1)]);
     }
 
-    // 1 Hell Plaza
-    let center_x = Math.round(game.World.Width / 2);
-    let center_y = Math.round(game.World.Height / 2);
-    let plaza_width = 8;
-    let plaza_height = 4;
-    for (let x = Math.round(center_x - plaza_width / 2); x < center_x + plaza_width / 2; x++) {
-        for (
-            let y = Math.round(center_y - plaza_height / 2);
-            y < center_y + plaza_height / 2;
-            y++
-        ) {
-            instantiate(game, [local_transform2d([x, y]), render2d("000.png"), grid(true)]);
-            make_road(game, x, y);
-        }
+    // Highway to Hell
+    let y = Math.round(game.World.Height / 2);
+    for (let x = 0; x < game.World.Width; x++) {
+        instantiate(game, [local_transform2d([x, y]), render2d("000.png"), grid(true)]);
+        make_road(game, x, y);
     }
 }
