@@ -89,6 +89,7 @@ export const enum Has {
 export interface GridCell {
     TileEntity: Entity | null;
     Walkable: boolean;
+    Pleasant: boolean;
     Ocupados: Entity[];
 }
 
@@ -111,7 +112,7 @@ export class World extends WorldImpl {
         .map(() =>
             Array(this.Width)
                 .fill(0)
-                .map(() => ({TileEntity: null, Walkable: false, Ocupados: []}))
+                .map(() => ({TileEntity: null, Walkable: false, Pleasant: false, Ocupados: []}))
         );
 
     // Raw LocalTransform2D or SpatialNode2D data, and Render2D data, uploaded to the GPU.

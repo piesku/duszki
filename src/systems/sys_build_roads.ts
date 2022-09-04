@@ -43,6 +43,7 @@ export function sys_build_roads(game: Game, delta: number) {
                 // Populate the world grid.
                 cell.TileEntity = ent;
                 cell.Walkable = true;
+                cell.Pleasant = false;
 
                 // Bring back the original tint.
                 render.Color[0] = 1;

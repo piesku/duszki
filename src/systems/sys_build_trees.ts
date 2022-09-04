@@ -42,6 +42,7 @@ export function sys_build_trees(game: Game, delta: number) {
                 // Populate the world grid.
                 cell.TileEntity = ent;
                 cell.Walkable = false;
+                cell.Pleasant = true;
 
                 // Bring back the original tint.
                 render.Color[0] = 1;

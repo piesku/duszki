@@ -64,7 +64,11 @@ export function sys_build_buildings(game: Game, delta: number) {
                     get_translation(world_position, child_spatial.World);
                     let x = Math.round(world_position[0]);
                     let y = Math.round(world_position[1]);
-                    game.World.Grid[y][x].TileEntity = child_entity;
+
+                    let cell = game.World.Grid[y]?.[x];
+                    cell.TileEntity = child_entity;
+                    cell.Walkable = false;
+                    cell.Pleasant = false;
 
                     let render = game.World.Render2D[child_entity];
                     render.Color[0] = 1;

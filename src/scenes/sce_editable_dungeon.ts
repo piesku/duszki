@@ -1,7 +1,7 @@
 import {instantiate} from "../../lib/game.js";
 import {element, integer} from "../../lib/random.js";
 import {DrawContext, draw_rect} from "../components/com_draw.js";
-import {grid} from "../components/com_grid.js";
+import {grid, GridFlag} from "../components/com_grid.js";
 import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
 import {render2d, shift} from "../components/com_render2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
@@ -50,7 +50,11 @@ export function scene_editable_dungeon(game: Game) {
     // Highway to Hell
     let highway_y = Math.round(game.World.Height / 2);
     for (let x = 0; x < game.World.Width; x++) {
-        instantiate(game, [...blueprint_road(game), set_position(x, highway_y), grid(true)]);
+        instantiate(game, [
+            ...blueprint_road(game),
+            set_position(x, highway_y),
+            grid(GridFlag.Walkable),
+        ]);
         make_road(game, x, highway_y);
     }
 
@@ -59,7 +63,11 @@ export function scene_editable_dungeon(game: Game) {
         let x = integer(1, game.World.Width - 2);
         let y = integer(1, game.World.Height - 2);
         if (y !== highway_y) {
-            instantiate(game, [...blueprint_tree(game), set_position(x, y), grid(false)]);
+            instantiate(game, [
+                ...blueprint_tree(game),
+                set_position(x, y),
+                grid(GridFlag.Pleasant),
+            ]);
         }
     }
 }

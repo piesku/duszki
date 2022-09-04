@@ -37,7 +37,9 @@ export function sys_build_erase(game: Game, delta: number) {
                                 get_translation(world_position, child_spatial.World);
                                 let x = Math.round(world_position[0]);
                                 let y = Math.round(world_position[1]);
-                                game.World.Grid[y][x].TileEntity = null;
+
+                                let cell = game.World.Grid[y][x];
+                                cell.TileEntity = null;
 
                                 let satisfy = game.World.Satisfy[child_entity];
                                 if (satisfy) {
@@ -63,6 +65,7 @@ export function sys_build_erase(game: Game, delta: number) {
 
                     cell.TileEntity = null;
                     cell.Walkable = false;
+                    cell.Pleasant = false;
                     cell.Ocupados = [];
                     // Adjust the neighbors if necessary.
                     make_road(game, x, y);

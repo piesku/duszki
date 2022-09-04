@@ -5,7 +5,7 @@ import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-const QUERY = Has.Needs;
+const QUERY = Has.Needs | Has.LocalTransform2D;
 const SATISFY_QUERY = Has.Satisfy;
 
 let food_destination: Entity[] = [];
@@ -36,6 +36,7 @@ export function sys_needs(game: Game, delta: number) {
 }
 
 function update(game: Game, entity: number, delta: number) {
+    let local = game.World.LocalTransform2D[entity];
     let needs = game.World.Needs[entity];
 
     if (!needs.Target[NeedType.FOOD]) {
@@ -51,4 +52,21 @@ function update(game: Game, entity: number, delta: number) {
     // needs.Work -= needs.DeltaWork * delta;
     needs.Value[NeedType.FOOD] -= needs.Delta[NeedType.FOOD] * delta;
     needs.Value[NeedType.SLEEP] -= needs.Delta[NeedType.SLEEP] * delta;
+
+    let x = Math.round(local.Translation[0]);
+    let y = Math.round(local.Translation[1]);
+
+    needs.Value[NeedType.HAPPY] -= needs.Delta[NeedType.HAPPY] * delta;
+    if (game.World.Grid[y + 1]?.[x].Pleasant) {
+        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+    }
+    if (game.World.Grid[y][x + 1]?.Pleasant) {
+        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+    }
+    if (game.World.Grid[y - 1]?.[x].Pleasant) {
+        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+    }
+    if (game.World.Grid[y][x - 1]?.Pleasant) {
+        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+    }
 }

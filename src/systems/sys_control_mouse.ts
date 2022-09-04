@@ -1,5 +1,7 @@
 import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
+import {Entity} from "../../lib/world.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
+import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -28,13 +30,14 @@ export function sys_control_mouse(game: Game, delta: number) {
             game.World.Signature[follow_camera_entity] |= Has.Follow;
 
             if (DEBUG) {
-                let duszki = [];
+                let duszki: Record<Entity, object> = {};
                 for (let ent of cell.Ocupados) {
                     let needs = game.World.Needs[ent];
-                    duszki.push({
-                        Entity: ent,
-                        ...needs,
-                    });
+                    duszki[ent] = {
+                        Happy: needs.Value[NeedType.HAPPY],
+                        Food: needs.Value[NeedType.FOOD],
+                        Sleep: needs.Value[NeedType.SLEEP],
+                    };
                 }
                 console.table(duszki);
             }

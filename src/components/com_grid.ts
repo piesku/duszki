@@ -1,7 +1,13 @@
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 
-export function grid(walkable: boolean) {
+export const enum GridFlag {
+    None = 0,
+    Walkable = 1 << 0,
+    Pleasant = 1 << 1,
+}
+
+export function grid(mask: GridFlag) {
     return (game: Game, entity: Entity) => {
         let transform = game.World.LocalTransform2D[entity];
         let x = Math.round(transform.Translation[0]);
@@ -9,7 +15,8 @@ export function grid(walkable: boolean) {
 
         game.World.Grid[y][x] = {
             TileEntity: entity,
-            Walkable: walkable,
+            Walkable: !!(mask & GridFlag.Walkable),
+            Pleasant: !!(mask & GridFlag.Pleasant),
             Ocupados: [],
         };
     };

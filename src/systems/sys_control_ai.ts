@@ -41,6 +41,7 @@ export function sys_control_ai(game: Game, delta: number) {
     if (time_since_last_check > mortality_check_interval) {
         game.World.Age += time_since_last_check;
         game.World.Mortality += (deaths_since_last_check - game.World.Mortality) / game.World.Age;
+
         deaths_since_last_check = 0;
         time_since_last_check = 0;
     }
@@ -50,6 +51,18 @@ function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
+
+    if (needs.Value[NeedType.HAPPY] < 0) {
+        needs.Value[NeedType.HAPPY] = 0;
+        console.log("duszek nieszczęśliwek");
+    } else if (needs.Value[NeedType.HAPPY] > 1) {
+        needs.Value[NeedType.HAPPY] = 1;
+    }
+
+    if (DEBUG) {
+        let render = game.World.Render2D[entity];
+        render.Color[3] = needs.Value[NeedType.HAPPY];
+    }
 
     if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
