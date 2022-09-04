@@ -14,6 +14,7 @@ import {sys_control_always2d} from "./systems/sys_control_always2d.js";
 import {sys_control_camera} from "./systems/sys_control_camera.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
+import {sys_follow} from "./systems/sys_follow2d.js";
 import {sys_generate} from "./systems/sys_generate.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
@@ -82,6 +83,7 @@ export class Game extends Game3D {
         sys_generate(this, delta);
         sys_walk(this, delta);
         sys_move2d(this, delta);
+        sys_follow(this, delta);
         sys_lifespan(this, delta);
         sys_shake2d(this, delta);
         sys_toggle(this, delta);

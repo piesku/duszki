@@ -13,7 +13,13 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
+export const enum CameraTarget {
+    Main,
+    Follow,
+}
+
 export interface Camera2D {
+    Target: CameraTarget;
     Projection: Projection2D;
     Pv: Mat2D;
     World: Mat2D;
@@ -35,10 +41,11 @@ export interface Camera2D {
  *
  * @param radius The radius of the projection: [left, top].
  */
-export function camera2d(radius: Vec2) {
+export function camera2d(target: CameraTarget, radius: Vec2) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Camera2D;
         game.World.Camera2D[entity] = {
+            Target: target,
             Projection: {
                 Radius: radius,
                 Projection: [1 / radius[0], 0, 0, 1 / radius[1], 0, 0],

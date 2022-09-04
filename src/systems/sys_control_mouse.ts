@@ -1,4 +1,4 @@
-import {pointer_viewport} from "../../lib/input.js";
+import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -11,14 +11,35 @@ export function sys_control_mouse(game: Game, delta: number) {
         return;
     }
 
-    let camera_entity = game.Cameras[0];
-    if (camera_entity === undefined) {
-        // This system requires the main camera to exist.
-        return;
+    let main_camera_entity = game.Cameras[0];
+    if (main_camera_entity !== undefined) {
+        let camera = game.World.Camera2D[main_camera_entity];
+        viewport_to_world(game.PointerPosition, camera, game.PointerPosition);
     }
 
-    let camera = game.World.Camera2D[camera_entity];
-    viewport_to_world(game.PointerPosition, camera, game.PointerPosition);
+    let follow_camera_entity = game.Cameras[1];
+    if (follow_camera_entity !== undefined && pointer_clicked(game, 0)) {
+        let x = Math.round(game.PointerPosition[0]);
+        let y = Math.round(game.PointerPosition[1]);
+        let cell = game.World.Grid[y]?.[x];
+        if (cell && cell.Ocupados.length > 0) {
+            let camera_follow = game.World.Follow[follow_camera_entity];
+            camera_follow.Target = cell.Ocupados[0];
+            game.World.Signature[follow_camera_entity] |= Has.Follow;
+
+            if (DEBUG) {
+                let duszki = [];
+                for (let ent of cell.Ocupados) {
+                    let needs = game.World.Needs[ent];
+                    duszki.push({
+                        Entity: ent,
+                        ...needs,
+                    });
+                }
+                console.table(duszki);
+            }
+        }
+    }
 
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {

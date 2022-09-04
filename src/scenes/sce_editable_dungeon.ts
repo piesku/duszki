@@ -8,15 +8,22 @@ import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
-import {blueprint_camera} from "./blu_camera.js";
+import {blueprint_camera_follow} from "./blu_camera_follow.js";
+import {blueprint_camera_main} from "./blu_camera_main.js";
 
 export function scene_editable_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
     game.ViewportResized = true;
 
-    // Camera.
+    // Main camera.
     instantiate(game, [
-        ...blueprint_camera(game),
+        ...blueprint_camera_main(game),
+        set_position(game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5),
+    ]);
+
+    // Follow camera.
+    instantiate(game, [
+        ...blueprint_camera_follow(game),
         set_position(game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5),
     ]);
 

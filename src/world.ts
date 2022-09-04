@@ -9,6 +9,7 @@ import {ControlAi} from "./components/com_control_ai.js";
 import {ControlAlways2D} from "./components/com_control_always2d.js";
 import {ControlPlayer} from "./components/com_control_player.js";
 import {Draw} from "./components/com_draw.js";
+import {Follow} from "./components/com_follow.js";
 import {Generator} from "./components/com_generator.js";
 import {Lifespan} from "./components/com_lifespan.js";
 import {LocalTransform2D} from "./components/com_local_transform2d.js";
@@ -37,6 +38,7 @@ const enum Component {
     Dirty,
     Draw,
     Generator,
+    Follow,
     Lifespan,
     LocalTransform2D,
     Move2D,
@@ -66,6 +68,7 @@ export const enum Has {
     Dirty = 1 << Component.Dirty,
     Draw = 1 << Component.Draw,
     Generator = 1 << Component.Generator,
+    Follow = 1 << Component.Follow,
     Lifespan = 1 << Component.Lifespan,
     LocalTransform2D = 1 << Component.LocalTransform2D,
     Move2D = 1 << Component.Move2D,
@@ -124,6 +127,7 @@ export class World extends WorldImpl {
     Children: Array<Children> = [];
     Draw: Array<Draw> = [];
     Generator: Array<Generator> = [];
+    Follow: Array<Follow> = [];
     Lifespan: Array<Lifespan> = [];
     LocalTransform2D: Array<LocalTransform2D> = [];
     Move2D: Array<Move2D> = [];

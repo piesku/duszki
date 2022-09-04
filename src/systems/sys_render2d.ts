@@ -13,6 +13,7 @@ import {
     GL_COLOR_BUFFER_BIT,
     GL_DEPTH_BUFFER_BIT,
     GL_FRAMEBUFFER,
+    GL_SCISSOR_TEST,
     GL_STREAM_DRAW,
     GL_TEXTURE0,
     GL_TEXTURE_2D,
@@ -52,13 +53,36 @@ export function sys_render2d(game: Game, delta: number) {
         }
     }
 
-    for (let camera_entity of game.Cameras) {
-        let camera = game.World.Camera2D[camera_entity];
-        game.Gl.bindFramebuffer(GL_FRAMEBUFFER, null);
-        game.Gl.viewport(0, 0, game.ViewportWidth, game.ViewportHeight);
+    game.Gl.bindFramebuffer(GL_FRAMEBUFFER, null);
+    game.Gl.bindBuffer(GL_ARRAY_BUFFER, game.InstanceBuffer);
+    game.Gl.bufferData(GL_ARRAY_BUFFER, game.World.InstanceData, GL_STREAM_DRAW);
+
+    {
+        game.Gl.clearColor(0, 0, 0, 0);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Main camera.
+        let camera_entity = game.Cameras[0];
+        let camera = game.World.Camera2D[camera_entity];
+        game.Gl.viewport(0, 0, game.ViewportWidth, game.ViewportHeight);
         render_all(game, camera);
-        break;
+    }
+
+    {
+        game.Gl.enable(GL_SCISSOR_TEST);
+        game.Gl.scissor(90, 90, 120, 120);
+        game.Gl.clearColor(0, 0, 0, 1);
+        game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        game.Gl.scissor(100, 100, 100, 100);
+        game.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
+        game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        game.Gl.disable(GL_SCISSOR_TEST);
+
+        // Follow camera.
+        let camera_entity = game.Cameras[1];
+        let camera = game.World.Camera2D[camera_entity];
+        game.Gl.viewport(100, 100, 100, 100);
+        render_all(game, camera);
     }
 }
 
@@ -73,9 +97,6 @@ function render_all(game: Game, eye: Camera2D) {
     game.Gl.bindTexture(GL_TEXTURE_2D, sheet.Texture);
     game.Gl.uniform1i(material.Locations.SheetTexture, 0);
     game.Gl.uniform2f(material.Locations.SheetSize, sheet.Width, sheet.Height);
-
-    game.Gl.bindBuffer(GL_ARRAY_BUFFER, game.InstanceBuffer);
-    game.Gl.bufferData(GL_ARRAY_BUFFER, game.World.InstanceData, GL_STREAM_DRAW);
 
     game.Gl.drawArraysInstanced(material.Mode, 0, 4, game.World.Signature.length);
 }
