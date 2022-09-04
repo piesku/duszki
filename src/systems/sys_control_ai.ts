@@ -8,6 +8,12 @@ import {Has} from "../world.js";
 const QUERY = Has.ControlAi | Has.Walk | Has.Needs;
 
 let walkables: Vec2[] = [];
+
+let mortality_check_interval = 1;
+let time_since_beginning = 0;
+let time_since_last_check = 0;
+let deaths_since_last_check = 0;
+
 export function sys_control_ai(game: Game, delta: number) {
     walkables = [];
     for (let y = 0; y < game.World.Grid.length; y++) {
@@ -18,10 +24,23 @@ export function sys_control_ai(game: Game, delta: number) {
         }
     }
 
+    let duszki_count = game.DuszkiCount;
+
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             update(game, ent, delta);
         }
+    }
+
+    deaths_since_last_check += duszki_count - game.DuszkiCount;
+
+    // Compute mortality CMA.
+    time_since_last_check += delta;
+    if (time_since_last_check > mortality_check_interval) {
+        time_since_beginning += time_since_last_check;
+        game.Mortality += (deaths_since_last_check - game.Mortality) / time_since_beginning;
+        deaths_since_last_check = 0;
+        time_since_last_check = 0;
     }
 }
 
