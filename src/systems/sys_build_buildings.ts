@@ -74,7 +74,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                 }
 
                 if (generator.Id === DUSZEK_SPAWNING_BUILDING_INDEX) {
-                    let i = 5;
+                    let i = 30;
                     while (i--) {
                         dispatch(game, Action.SpawnDuszek, {});
                     }

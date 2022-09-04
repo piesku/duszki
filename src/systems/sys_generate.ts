@@ -33,8 +33,9 @@ export function sys_generate(game: Game, delta: number) {
                     let gen_config = GENERATORS[gen_id];
                     let gen_income = income(era, gen_config, gen_count);
 
-                    game.World.TotalWealth += gen_income * delta;
-                    game.IncomePerSecond += gen_income;
+                    game.World.TotalWealth +=
+                        gen_income + gen_income * satisfy.Ocupados.length * 0.1;
+                    game.IncomePerSecond += gen_income + gen_income * satisfy.Ocupados.length * 0.1;
                 }
                 break;
             }

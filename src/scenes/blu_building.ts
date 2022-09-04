@@ -35,9 +35,9 @@ const building_maps = [
 const needs: NeedType[] = [NeedType.SLEEP, NeedType.FOOD];
 
 const capacities = {
-    [NeedType.SLEEP]: 5,
-    [NeedType.FOOD]: 8,
-    [NeedType.WORK]: 10,
+    [NeedType.SLEEP]: 50,
+    [NeedType.FOOD]: 80,
+    [NeedType.WORK]: 40,
 };
 
 export function blueprint_building(game: Game, map_id: number) {
