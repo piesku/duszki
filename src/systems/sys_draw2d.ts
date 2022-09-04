@@ -18,11 +18,10 @@ export function sys_draw2d(game: Game, delta: number) {
 
     let camera = game.World.Camera2D[camera_entity];
 
-    let ctx = game.ForegroundContext;
-    ctx.resetTransform();
-    ctx.clearRect(0, 0, game.ViewportWidth, game.ViewportHeight);
-
-    ctx.transform(
+    game.BackgroundContext.resetTransform();
+    game.BackgroundContext.fillStyle = "#000";
+    game.BackgroundContext.fillRect(0, 0, game.ViewportWidth, game.ViewportHeight);
+    game.BackgroundContext.transform(
         (camera.Pv[0] * game.ViewportWidth) / 2,
         (-camera.Pv[1] * game.ViewportHeight) / 2,
         (-camera.Pv[2] * game.ViewportWidth) / 2,
@@ -31,9 +30,23 @@ export function sys_draw2d(game: Game, delta: number) {
         ((1 - camera.Pv[5]) * game.ViewportHeight) / 2
     );
 
+    game.ForegroundContext.resetTransform();
+    game.ForegroundContext.clearRect(0, 0, game.ViewportWidth, game.ViewportHeight);
+    game.ForegroundContext.transform(
+        (camera.Pv[0] * game.ViewportWidth) / 2,
+        (-camera.Pv[1] * game.ViewportHeight) / 2,
+        (-camera.Pv[2] * game.ViewportWidth) / 2,
+        (camera.Pv[3] * game.ViewportHeight) / 2,
+        ((1 + camera.Pv[4]) * game.ViewportWidth) / 2,
+        ((1 - camera.Pv[5]) * game.ViewportHeight) / 2
+    );
+
+    let contexts = [game.BackgroundContext, game.ForegroundContext];
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let node = game.World.SpatialNode2D[ent];
+            let draw = game.World.Draw[ent];
+            let ctx = contexts[draw.Context];
 
             ctx.save();
             ctx.transform(
@@ -45,7 +58,6 @@ export function sys_draw2d(game: Game, delta: number) {
                 -node.World[5]
             );
 
-            let draw = game.World.Draw[ent];
             switch (draw.Kind) {
                 case DrawKind.Rect: {
                     ctx.fillStyle = draw.Color;

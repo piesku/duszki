@@ -15,17 +15,22 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-export type Draw = DrawText | DrawRect | DrawArc | DrawSelection;
+export type Draw = DrawText | DrawRect | DrawArc;
 
 export const enum DrawKind {
     Text,
     Rect,
     Arc,
-    Selection,
+}
+
+export const enum DrawContext {
+    Background,
+    Foreground,
 }
 
 export interface DrawText {
     Kind: DrawKind.Text;
+    Context: DrawContext;
     Text: string;
     Font: string;
     FillStyle: string;
@@ -38,11 +43,12 @@ export interface DrawText {
  * @param font CSS font style.
  * @param fill_style CSS fill style.
  */
-export function draw_text(text: string, font: string, fill_style: string) {
+export function draw_text(context: DrawContext, text: string, font: string, fill_style: string) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Draw;
         game.World.Draw[entity] = {
             Kind: DrawKind.Text,
+            Context: context,
             Text: text,
             Font: font,
             FillStyle: fill_style,
@@ -52,6 +58,7 @@ export function draw_text(text: string, font: string, fill_style: string) {
 
 export interface DrawRect {
     Kind: DrawKind.Rect;
+    Context: DrawContext;
     Color: string;
     Width: number;
     Height: number;
@@ -64,11 +71,12 @@ export interface DrawRect {
  * @param width Width of the rectangle.
  * @param height Height of the rectangle.
  */
-export function draw_rect(color: string, width = 1, height = 1) {
+export function draw_rect(context: DrawContext, color: string, width = 1, height = 1) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Draw;
         game.World.Draw[entity] = {
             Kind: DrawKind.Rect,
+            Context: context,
             Color: color,
             Width: width,
             Height: height,
@@ -78,6 +86,7 @@ export function draw_rect(color: string, width = 1, height = 1) {
 
 export interface DrawArc {
     Kind: DrawKind.Arc;
+    Context: DrawContext;
     Color: string;
     Radius: number;
     StartAngle: number;
@@ -92,40 +101,22 @@ export interface DrawArc {
  * @param start_angle Start angle of the arc.
  * @param end_angle End angle of the arc.
  */
-export function draw_arc(color: string, radius: number, start_angle = 0, end_angle = Math.PI * 2) {
+export function draw_arc(
+    context: DrawContext,
+    color: string,
+    radius: number,
+    start_angle = 0,
+    end_angle = Math.PI * 2
+) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Draw;
         game.World.Draw[entity] = {
             Kind: DrawKind.Arc,
+            Context: context,
             Color: color,
             Radius: radius,
             StartAngle: start_angle,
             EndAngle: end_angle,
-        };
-    };
-}
-
-export interface DrawSelection {
-    Kind: DrawKind.Selection;
-    Color: string;
-    Size: number;
-}
-
-/**
- * Add `DrawSelection` to an entity.
- *
- * Currently, `sys_draw` draws a square outline around the entity.
- *
- * @param color CSS fill style.
- */
-export function draw_selection(color: string) {
-    return (game: Game, entity: Entity) => {
-        game.World.Signature[entity] |= Has.Draw;
-        game.World.Draw[entity] = {
-            Kind: DrawKind.Selection,
-            Color: color,
-            // Set in sys_highlight.
-            Size: 0,
         };
     };
 }

@@ -1,8 +1,10 @@
 import {instantiate} from "../../lib/game.js";
 import {element, integer} from "../../lib/random.js";
+import {DrawContext, draw_rect} from "../components/com_draw.js";
 import {grid} from "../components/com_grid.js";
 import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
 import {render2d, shift} from "../components/com_render2d.js";
+import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
@@ -16,6 +18,15 @@ export function scene_editable_dungeon(game: Game) {
     instantiate(game, [
         ...blueprint_camera(game),
         set_position(game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5),
+    ]);
+
+    instantiate(game, [
+        spatial_node2d(),
+        local_transform2d([game.World.Width / 2, game.World.Height / 2], 0, [
+            game.World.Width + 1,
+            game.World.Height + 1,
+        ]),
+        draw_rect(DrawContext.Background, "rgb(181, 176, 222)"),
     ]);
 
     // Grass tiles in the background.

@@ -55,7 +55,6 @@ export class Game extends Game3D {
 
         this.Store = db;
 
-        this.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
         this.Gl.enable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);
         this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
