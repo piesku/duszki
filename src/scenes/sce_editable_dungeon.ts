@@ -22,9 +22,9 @@ export function scene_editable_dungeon(game: Game) {
 
     instantiate(game, [
         spatial_node2d(),
-        local_transform2d([game.World.Width / 2, game.World.Height / 2], 0, [
-            game.World.Width + 1,
-            game.World.Height + 1,
+        local_transform2d([game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5], 0, [
+            game.World.Width,
+            game.World.Height,
         ]),
         draw_rect(DrawContext.Background, "rgb(181, 176, 222)"),
     ]);
@@ -33,8 +33,8 @@ export function scene_editable_dungeon(game: Game) {
     let grass_tiles = ["000.png", "017.png", "019.png", "034.png", "051.png"];
     let grass_count = (game.World.Width * game.World.Height) / 10;
     for (let i = 0; i < grass_count; i++) {
-        let x = integer(0, game.World.Width - 1);
-        let y = integer(0, game.World.Height - 1);
+        let x = integer(1, game.World.Width - 2);
+        let y = integer(1, game.World.Height - 2);
         instantiate(game, [local_transform2d([x, y]), render2d(element(grass_tiles)), shift(-1)]);
     }
 
