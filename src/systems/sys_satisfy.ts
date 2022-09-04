@@ -38,14 +38,14 @@ function update(game: Game, entity: number, delta: number) {
         if (need && satisfy.NeedType === NeedType.WORK) {
             // Duszek works only when fed and rested.
             if (
-                need.value[NeedType.FOOD] > SATISFY_THRESHOLD &&
-                need.value[NeedType.SLEEP] > SATISFY_THRESHOLD
+                need.Value[NeedType.FOOD] > SATISFY_THRESHOLD &&
+                need.Value[NeedType.SLEEP] > SATISFY_THRESHOLD
             ) {
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~WORKING_MASK;
                 game.World.DuszkiWorking++;
             }
-        } else if (need && need.value[satisfy.NeedType] < SATISFY_THRESHOLD) {
+        } else if (need && need.Value[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
                 // console.log(
                 //     `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
@@ -60,17 +60,17 @@ function update(game: Game, entity: number, delta: number) {
         // Duszek stops working when hungry or tired.
         if (satisfy.NeedType === NeedType.WORK) {
             if (
-                need.value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD ||
-                need.value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
+                need.Value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD ||
+                need.Value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
             ) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= WORKING_MASK;
                 game.World.DuszkiWorking--;
             }
         } else {
-            need.value[satisfy.NeedType] += need.delta[satisfy.NeedType] * delta * 4;
+            need.Value[satisfy.NeedType] += need.Delta[satisfy.NeedType] * delta * 4;
 
-            if (need.value[satisfy.NeedType] >= 1) {
+            if (need.Value[satisfy.NeedType] >= 1) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= BEING_SATISFIED_MASK;
             }

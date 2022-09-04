@@ -51,7 +51,7 @@ function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    if (needs.value[NeedType.FOOD] < 0.001) {
+    if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
         dispatch(game, Action.DuszekDied, local.Translation);
 
@@ -59,7 +59,7 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (needs.value[NeedType.SLEEP] < 0.001) {
+    if (needs.Value[NeedType.SLEEP] < 0.001) {
         console.log("duszek umar z wycieczenia");
         dispatch(game, Action.DuszekDied, local.Translation);
         destroy_all(game.World, entity);
@@ -67,14 +67,14 @@ function update(game: Game, entity: number, delta: number) {
     }
 
     if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
-        let food_target = needs.targets[NeedType.FOOD];
-        let sleep_target = needs.targets[NeedType.SLEEP];
-        let work_target = needs.targets[NeedType.WORK];
+        let food_target = needs.Target[NeedType.FOOD];
+        let sleep_target = needs.Target[NeedType.SLEEP];
+        let work_target = needs.Target[NeedType.WORK];
 
         if (
-            needs.value[NeedType.FOOD] < SATISFY_THRESHOLD &&
+            needs.Value[NeedType.FOOD] < SATISFY_THRESHOLD &&
             food_target &&
-            needs.value[NeedType.FOOD] < needs.value[NeedType.SLEEP]
+            needs.Value[NeedType.FOOD] < needs.Value[NeedType.SLEEP]
         ) {
             let destination_satisfier_mask = game.World.Signature[food_target];
             let destination_satisfier = game.World.Satisfy[food_target];
@@ -85,12 +85,12 @@ function update(game: Game, entity: number, delta: number) {
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.targets[NeedType.FOOD] = undefined;
+                needs.Target[NeedType.FOOD] = undefined;
             }
         } else if (
-            needs.value[NeedType.SLEEP] < SATISFY_THRESHOLD &&
+            needs.Value[NeedType.SLEEP] < SATISFY_THRESHOLD &&
             sleep_target &&
-            needs.value[NeedType.SLEEP] < needs.value[NeedType.FOOD]
+            needs.Value[NeedType.SLEEP] < needs.Value[NeedType.FOOD]
         ) {
             let destination_satisfier_mask = game.World.Signature[sleep_target];
             let destination_satisfier = game.World.Satisfy[sleep_target];
@@ -101,11 +101,11 @@ function update(game: Game, entity: number, delta: number) {
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.targets[NeedType.SLEEP] = undefined;
+                needs.Target[NeedType.SLEEP] = undefined;
             }
         } else if (
-            needs.value[NeedType.FOOD] > SATISFY_THRESHOLD &&
-            needs.value[NeedType.SLEEP] > SATISFY_THRESHOLD &&
+            needs.Value[NeedType.FOOD] > SATISFY_THRESHOLD &&
+            needs.Value[NeedType.SLEEP] > SATISFY_THRESHOLD &&
             work_target
         ) {
             let destination_satisfier_mask = game.World.Signature[work_target];
@@ -117,7 +117,7 @@ function update(game: Game, entity: number, delta: number) {
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.targets[NeedType.WORK] = undefined;
+                needs.Target[NeedType.WORK] = undefined;
             }
         } else {
             walk.DestinationTrigger = element(walkables);

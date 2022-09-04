@@ -38,17 +38,17 @@ export function sys_needs(game: Game, delta: number) {
 function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
 
-    if (!needs.targets[NeedType.FOOD]) {
-        needs.targets[NeedType.FOOD] = element(food_destination);
+    if (!needs.Target[NeedType.FOOD]) {
+        needs.Target[NeedType.FOOD] = element(food_destination);
     }
-    if (!needs.targets[NeedType.WORK]) {
-        needs.targets[NeedType.WORK] = element(work_destination);
+    if (!needs.Target[NeedType.WORK]) {
+        needs.Target[NeedType.WORK] = element(work_destination);
     }
-    if (!needs.targets[NeedType.SLEEP]) {
-        needs.targets[NeedType.SLEEP] = element(sleep_destination);
+    if (!needs.Target[NeedType.SLEEP]) {
+        needs.Target[NeedType.SLEEP] = element(sleep_destination);
     }
 
     // needs.Work -= needs.DeltaWork * delta;
-    needs.value[NeedType.FOOD] -= needs.delta[NeedType.FOOD] * delta;
-    needs.value[NeedType.SLEEP] -= needs.delta[NeedType.SLEEP] * delta;
+    needs.Value[NeedType.FOOD] -= needs.Delta[NeedType.FOOD] * delta;
+    needs.Value[NeedType.SLEEP] -= needs.Delta[NeedType.SLEEP] * delta;
 }
