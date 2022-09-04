@@ -1,5 +1,6 @@
 import {get_translation} from "../../lib/mat2d.js";
 import {query_down} from "../components/com_children.js";
+import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -34,14 +35,17 @@ function update(game: Game, entity: number, delta: number) {
     for (let guest of guests_at_the_door) {
         let need = game.World.Needs[guest];
 
-        if (need && satisfy.NeedType === "work") {
+        if (need && satisfy.NeedType === NeedType.WORK) {
             // Duszek works only when fed and rested.
-            if (need.food > SATISFY_THRESHOLD && need.sleep > SATISFY_THRESHOLD) {
+            if (
+                need.value[NeedType.FOOD] > SATISFY_THRESHOLD &&
+                need.value[NeedType.SLEEP] > SATISFY_THRESHOLD
+            ) {
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~WORKING_MASK;
                 game.World.DuszkiWorking++;
             }
-        } else if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
+        } else if (need && need.value[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
                 // console.log(
                 //     `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
@@ -54,16 +58,19 @@ function update(game: Game, entity: number, delta: number) {
     for (let guest of satisfy.Ocupados) {
         let need = game.World.Needs[guest];
         // Duszek stops working when hungry or tired.
-        if (satisfy.NeedType === "work") {
-            if (need.food < LOW_SATISFY_THRESHOLD || need.sleep < LOW_SATISFY_THRESHOLD) {
+        if (satisfy.NeedType === NeedType.WORK) {
+            if (
+                need.value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD ||
+                need.value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
+            ) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= WORKING_MASK;
                 game.World.DuszkiWorking--;
             }
         } else {
-            need[satisfy.NeedType] += need[`delta_${satisfy.NeedType}`] * delta * 4;
+            need.value[satisfy.NeedType] += need.delta[satisfy.NeedType] * delta * 4;
 
-            if (need[satisfy.NeedType] >= 1) {
+            if (need.value[satisfy.NeedType] >= 1) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= BEING_SATISFIED_MASK;
             }

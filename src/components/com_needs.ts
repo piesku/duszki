@@ -3,29 +3,37 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-export type NeedType = "work" | "food" | "sleep";
+export const enum NeedType {
+    WORK,
+    FOOD,
+    SLEEP,
+}
+
 export interface Needs {
-    work: number;
-    food: number;
-    sleep: number;
-    delta_work: number;
-    delta_food: number;
-    delta_sleep: number;
-    WorkTargetCoords?: Entity;
-    FoodTargetCoords?: Entity;
-    SleepTargetCoords?: Entity;
+    value: Record<NeedType, number>;
+    delta: Record<NeedType, number>;
+    targets: Record<NeedType, Entity | undefined>;
 }
 
 export function needs() {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.Needs;
         game.World.Needs[entity] = {
-            work: 0.5,
-            food: 1,
-            sleep: 1,
-            delta_work: float() / 25,
-            delta_food: float() / 25,
-            delta_sleep: float() / 25,
+            value: {
+                [NeedType.FOOD]: 1,
+                [NeedType.SLEEP]: 0.7,
+                [NeedType.WORK]: 1,
+            },
+            delta: {
+                [NeedType.FOOD]: float() / 25,
+                [NeedType.SLEEP]: float() / 25,
+                [NeedType.WORK]: float() / 25,
+            },
+            targets: {
+                [NeedType.FOOD]: undefined,
+                [NeedType.SLEEP]: undefined,
+                [NeedType.WORK]: undefined,
+            },
         };
     };
 }

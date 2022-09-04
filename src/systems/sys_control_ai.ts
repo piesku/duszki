@@ -3,6 +3,7 @@ import {Vec2} from "../../lib/math.js";
 import {element} from "../../lib/random.js";
 import {Action, dispatch} from "../actions.js";
 import {destroy_all} from "../components/com_children.js";
+import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {SATISFY_THRESHOLD} from "./sys_satisfy.js";
@@ -50,7 +51,7 @@ function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    if (needs.food < 0.001) {
+    if (needs.value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
         dispatch(game, Action.DuszekDied, local.Translation);
 
@@ -58,7 +59,7 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (needs.sleep < 0.001) {
+    if (needs.value[NeedType.SLEEP] < 0.001) {
         console.log("duszek umar z wycieczenia");
         dispatch(game, Action.DuszekDied, local.Translation);
         destroy_all(game.World, entity);
@@ -66,49 +67,57 @@ function update(game: Game, entity: number, delta: number) {
     }
 
     if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
-        if (needs.food < SATISFY_THRESHOLD && needs.FoodTargetCoords && needs.food < needs.sleep) {
-            let destination_satisfier_mask = game.World.Signature[needs.FoodTargetCoords];
-            let destination_satisfier = game.World.Satisfy[needs.FoodTargetCoords];
-            let spiatial = game.World.SpatialNode2D[needs.FoodTargetCoords];
+        let food_target = needs.targets[NeedType.FOOD];
+        let sleep_target = needs.targets[NeedType.SLEEP];
+        let work_target = needs.targets[NeedType.WORK];
+
+        if (
+            needs.value[NeedType.FOOD] < SATISFY_THRESHOLD &&
+            food_target &&
+            needs.value[NeedType.FOOD] < needs.value[NeedType.SLEEP]
+        ) {
+            let destination_satisfier_mask = game.World.Signature[food_target];
+            let destination_satisfier = game.World.Satisfy[food_target];
+            let spiatial = game.World.SpatialNode2D[food_target];
             if (
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
-                destination_satisfier?.NeedType === "food"
+                destination_satisfier?.NeedType === NeedType.FOOD
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.FoodTargetCoords = undefined;
+                needs.targets[NeedType.FOOD] = undefined;
             }
         } else if (
-            needs.sleep < SATISFY_THRESHOLD &&
-            needs.SleepTargetCoords &&
-            needs.sleep < needs.food
+            needs.value[NeedType.SLEEP] < SATISFY_THRESHOLD &&
+            sleep_target &&
+            needs.value[NeedType.SLEEP] < needs.value[NeedType.FOOD]
         ) {
-            let destination_satisfier_mask = game.World.Signature[needs.SleepTargetCoords];
-            let destination_satisfier = game.World.Satisfy[needs.SleepTargetCoords];
-            let spiatial = game.World.SpatialNode2D[needs.SleepTargetCoords];
+            let destination_satisfier_mask = game.World.Signature[sleep_target];
+            let destination_satisfier = game.World.Satisfy[sleep_target];
+            let spiatial = game.World.SpatialNode2D[sleep_target];
             if (
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
-                destination_satisfier?.NeedType === "sleep"
+                destination_satisfier?.NeedType === NeedType.SLEEP
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.SleepTargetCoords = undefined;
+                needs.targets[NeedType.SLEEP] = undefined;
             }
         } else if (
-            needs.food > SATISFY_THRESHOLD &&
-            needs.sleep > SATISFY_THRESHOLD &&
-            needs.WorkTargetCoords
+            needs.value[NeedType.FOOD] > SATISFY_THRESHOLD &&
+            needs.value[NeedType.SLEEP] > SATISFY_THRESHOLD &&
+            work_target
         ) {
-            let destination_satisfier_mask = game.World.Signature[needs.WorkTargetCoords];
-            let destination_satisfier = game.World.Satisfy[needs.WorkTargetCoords];
-            let spiatial = game.World.SpatialNode2D[needs.WorkTargetCoords];
+            let destination_satisfier_mask = game.World.Signature[work_target];
+            let destination_satisfier = game.World.Satisfy[work_target];
+            let spiatial = game.World.SpatialNode2D[work_target];
             if (
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
-                destination_satisfier?.NeedType === "work"
+                destination_satisfier?.NeedType === NeedType.WORK
             ) {
                 walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
             } else {
-                needs.WorkTargetCoords = undefined;
+                needs.targets[NeedType.WORK] = undefined;
             }
         } else {
             walk.DestinationTrigger = element(walkables);
