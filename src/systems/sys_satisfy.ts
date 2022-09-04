@@ -35,7 +35,7 @@ function update(game: Game, entity: number, delta: number) {
             if (need.food > SATISFY_THRESHOLD && need.sleep > SATISFY_THRESHOLD) {
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~WORKING_MASK;
-                game.WorkingDuszkiCount++;
+                game.World.DuszkiWorking++;
             }
         } else if (need && need[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
@@ -54,7 +54,7 @@ function update(game: Game, entity: number, delta: number) {
             if (need.food < LOW_SATISFY_THRESHOLD || need.sleep < LOW_SATISFY_THRESHOLD) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= WORKING_MASK;
-                game.WorkingDuszkiCount--;
+                game.World.DuszkiWorking--;
             }
         } else {
             need[satisfy.NeedType] += need[`delta_${satisfy.NeedType}`] * delta * 4;

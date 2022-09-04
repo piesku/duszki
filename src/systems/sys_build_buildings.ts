@@ -51,8 +51,8 @@ export function sys_build_buildings(game: Game, delta: number) {
             let gen_count = game.GeneratorCounts[generator.Id];
             let cost = total_cost(gen_config, gen_count, 1);
 
-            if (can_be_placed && cost <= game.TotalWealth && pointer_clicked(game, 0)) {
-                game.TotalWealth -= cost;
+            if (can_be_placed && cost <= game.World.TotalWealth && pointer_clicked(game, 0)) {
+                game.World.TotalWealth -= cost;
                 game.World.Signature[ent] &= ~Has.ControlPlayer;
                 game.World.Signature[ent] |= Has.Generator;
                 building_placed = true;

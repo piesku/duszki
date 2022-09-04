@@ -49,11 +49,6 @@ export class Game extends Game3D {
 
     GeneratorCounts: Array<number> = [];
     IncomePerSecond = 0;
-    TotalWealth = 100;
-    CurrentEra = 0;
-    Mortality = 0;
-    DuszkiCount = 0;
-    WorkingDuszkiCount = 0;
 
     constructor(db: IDBDatabase) {
         super();

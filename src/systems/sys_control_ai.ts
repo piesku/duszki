@@ -10,7 +10,6 @@ const QUERY = Has.ControlAi | Has.Walk | Has.Needs;
 let walkables: Vec2[] = [];
 
 let mortality_check_interval = 1;
-let time_since_beginning = 0;
 let time_since_last_check = 0;
 let deaths_since_last_check = 0;
 
@@ -24,7 +23,7 @@ export function sys_control_ai(game: Game, delta: number) {
         }
     }
 
-    let duszki_count = game.DuszkiCount;
+    let duszki_count = game.World.DuszkiAlive;
 
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
@@ -32,13 +31,13 @@ export function sys_control_ai(game: Game, delta: number) {
         }
     }
 
-    deaths_since_last_check += duszki_count - game.DuszkiCount;
+    deaths_since_last_check += duszki_count - game.World.DuszkiAlive;
 
     // Compute mortality CMA.
     time_since_last_check += delta;
     if (time_since_last_check > mortality_check_interval) {
-        time_since_beginning += time_since_last_check;
-        game.Mortality += (deaths_since_last_check - game.Mortality) / time_since_beginning;
+        game.World.Age += time_since_last_check;
+        game.World.Mortality += (deaths_since_last_check - game.World.Mortality) / game.World.Age;
         deaths_since_last_check = 0;
         time_since_last_check = 0;
     }

@@ -17,7 +17,7 @@ export function sys_generate(game: Game, delta: number) {
         }
     }
 
-    let era = ERAS[game.CurrentEra];
+    let era = ERAS[game.World.CurrentEra];
     game.IncomePerSecond = 0;
 
     // Then, generate income.
@@ -33,7 +33,7 @@ export function sys_generate(game: Game, delta: number) {
                     let gen_config = GENERATORS[gen_id];
                     let gen_income = income(era, gen_config, gen_count);
 
-                    game.TotalWealth += gen_income * delta;
+                    game.World.TotalWealth += gen_income * delta;
                     game.IncomePerSecond += gen_income;
                 }
                 break;

@@ -92,6 +92,15 @@ export interface GridCell {
 export class World extends WorldImpl {
     id = 0;
 
+    // Persistent game state.
+    TotalWealth = 100;
+    CurrentEra = 0;
+    Age = 0;
+    Mortality = 0;
+    DuszkiAlive = 0;
+    DuszkiWorking = 0;
+
+    // Grid of the world.
     Width: number = 120;
     Height: number = 80;
     Grid: GridCell[][] = Array(this.Height)
