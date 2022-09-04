@@ -10,7 +10,7 @@ import {Game} from "../game.js";
 export function blueprint_duszek(game: Game) {
     return [
         local_transform2d(),
-        render2d("125.png"),
+        render2d("125.png", [float(), float(), float(), 1]),
         shift(1),
         control_ai(),
         walk(),

@@ -53,6 +53,7 @@ export function blueprint_building(game: Game, map_id: number) {
     let modifier = map.Height === 5 ? 2 : 1;
 
     child_tiles.push([
+        // draw_rect(DrawContext.Foreground, "blue"),
         spatial_node2d(),
         local_transform2d([0, -Math.round(map.Height / 2) + modifier]),
         satisfy(building_type, capacities[building_type]),
