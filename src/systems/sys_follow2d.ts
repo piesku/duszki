@@ -31,8 +31,8 @@ function update(game: Game, entity: Entity) {
     if (game.World.Signature[target_entity] & Has.SpatialNode2D) {
         let target_spatial = game.World.SpatialNode2D[target_entity];
         get_translation(target_position, target_spatial.World);
-    } else {
-        let target_local = game.World.LocalTransform2D[entity_follow.Target];
+    } else if (game.World.Signature[target_entity] & Has.LocalTransform2D) {
+        let target_local = game.World.LocalTransform2D[target_entity];
         copy(target_position, target_local.Translation);
     }
 
