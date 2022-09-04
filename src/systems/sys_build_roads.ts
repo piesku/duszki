@@ -1,9 +1,10 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_down} from "../../lib/input.js";
 import {destroy_all} from "../components/com_children.js";
+import {set_position} from "../components/com_local_transform2d.js";
 import {set_sprite} from "../components/com_render2d.js";
 import {Game} from "../game.js";
-import {blueprint_road} from "../scenes/blu_road.js";
+import {blueprint_road_phantom} from "../scenes/blu_road.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
@@ -59,8 +60,10 @@ export function sys_build_roads(game: Game, delta: number) {
     }
 
     if (road_placed) {
-        // Create a new phantom road entity, ready to be placed again.
-        instantiate(game, blueprint_road(game));
+        // Create a new phantom entity, ready to be placed again.
+        let x = Math.round(game.PointerPosition[0]);
+        let y = Math.round(game.PointerPosition[1]);
+        instantiate(game, [...blueprint_road_phantom(game), set_position(x, y)]);
     }
 }
 

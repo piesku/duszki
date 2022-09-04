@@ -10,6 +10,8 @@ import {make_road} from "../systems/sys_build_roads.js";
 import {World} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
+import {blueprint_road} from "./blu_road.js";
+import {blueprint_tree} from "./blu_tree.js";
 
 export function scene_editable_dungeon(game: Game) {
     game.World = new World(WORLD_CAPACITY);
@@ -46,9 +48,18 @@ export function scene_editable_dungeon(game: Game) {
     }
 
     // Highway to Hell
-    let y = Math.round(game.World.Height / 2);
+    let highway_y = Math.round(game.World.Height / 2);
     for (let x = 0; x < game.World.Width; x++) {
-        instantiate(game, [local_transform2d([x, y]), render2d("000.png"), grid(true)]);
-        make_road(game, x, y);
+        instantiate(game, [...blueprint_road(game), set_position(x, highway_y), grid(true)]);
+        make_road(game, x, highway_y);
+    }
+
+    let tree_count = (game.World.Width * game.World.Height) / 100;
+    for (let i = 0; i < tree_count; i++) {
+        let x = integer(1, game.World.Width - 2);
+        let y = integer(1, game.World.Height - 2);
+        if (y !== highway_y) {
+            instantiate(game, [...blueprint_tree(game), set_position(x, y), grid(false)]);
+        }
     }
 }

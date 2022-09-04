@@ -8,13 +8,15 @@ import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
 import {blueprint_eraser} from "./scenes/blu_eraser.js";
 import {blueprint_grave} from "./scenes/blu_grave.js";
-import {blueprint_road} from "./scenes/blu_road.js";
+import {blueprint_road_phantom} from "./scenes/blu_road.js";
+import {blueprint_tree_phantom} from "./scenes/blu_tree.js";
 import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
 import {clear} from "./store.js";
 import {Has} from "./world.js";
 
 export const enum Action {
     EnterPlaceRoad,
+    EnterPlaceTree,
     EnterPlaceBuilding,
     EnterErase,
     SpawnDuszek,
@@ -30,7 +32,22 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
-            instantiate(game, [...blueprint_road(game), copy_position(game.PointerPosition)]);
+            instantiate(game, [
+                ...blueprint_road_phantom(game),
+                copy_position(game.PointerPosition),
+            ]);
+            break;
+        }
+        case Action.EnterPlaceTree: {
+            let previous_phantom = first_having(game.World, Has.ControlPlayer);
+            if (previous_phantom !== undefined) {
+                destroy_all(game.World, previous_phantom);
+            }
+
+            instantiate(game, [
+                ...blueprint_tree_phantom(game),
+                copy_position(game.PointerPosition),
+            ]);
             break;
         }
         case Action.EnterPlaceBuilding: {

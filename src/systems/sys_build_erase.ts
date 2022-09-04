@@ -57,7 +57,7 @@ export function sys_build_erase(game: Game, delta: number) {
                             destroy_all(game.World, cell.TileEntity);
                         }
                     } else {
-                        // It's a road.
+                        // It's a road or a tree.
                         destroy_all(game.World, cell.TileEntity);
                     }
 

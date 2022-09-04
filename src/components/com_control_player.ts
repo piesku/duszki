@@ -7,7 +7,7 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 
 export interface ControlPlayer {
-    Kind: "road" | "building" | "eraser";
+    Kind: "road" | "tree" | "building" | "eraser";
 }
 
 export function control_player(kind: ControlPlayer["Kind"]) {

@@ -7,6 +7,7 @@ import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
 import {sys_build_erase} from "./systems/sys_build_erase.js";
 import {sys_build_roads} from "./systems/sys_build_roads.js";
+import {sys_build_trees} from "./systems/sys_build_trees.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
@@ -71,6 +72,7 @@ export class Game extends Game3D {
         sys_control_mouse(this, delta);
         sys_build_buildings(this, delta);
         sys_build_roads(this, delta);
+        sys_build_trees(this, delta);
         sys_build_erase(this, delta);
 
         // AI.
