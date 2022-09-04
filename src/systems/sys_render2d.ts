@@ -58,30 +58,32 @@ export function sys_render2d(game: Game, delta: number) {
     game.Gl.bufferData(GL_ARRAY_BUFFER, game.World.InstanceData, GL_STREAM_DRAW);
 
     {
-        game.Gl.clearColor(0, 0, 0, 0);
-        game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         // Main camera.
         let camera_entity = game.Cameras[0];
         let camera = game.World.Camera2D[camera_entity];
+
+        game.Gl.clearColor(0, 0, 0, 0);
+        game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         game.Gl.viewport(0, 0, camera.ViewportWidth, camera.ViewportHeight);
         render_all(game, camera);
     }
 
     {
+        // Follow camera.
+        let camera_entity = game.Cameras[1];
+        let camera = game.World.Camera2D[camera_entity];
+
         game.Gl.enable(GL_SCISSOR_TEST);
-        game.Gl.scissor(90, 90, 120, 120);
+        game.Gl.scissor(95, 95, camera.ViewportWidth + 10, camera.ViewportHeight + 10);
         game.Gl.clearColor(0, 0, 0, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        game.Gl.scissor(100, 100, 100, 100);
+        game.Gl.scissor(100, 100, camera.ViewportWidth, camera.ViewportHeight);
         game.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Gl.disable(GL_SCISSOR_TEST);
 
-        // Follow camera.
-        let camera_entity = game.Cameras[1];
-        let camera = game.World.Camera2D[camera_entity];
-        game.Gl.viewport(100, 100, 100, 100);
+        game.Gl.viewport(100, 100, camera.ViewportWidth, camera.ViewportHeight);
         render_all(game, camera);
     }
 }

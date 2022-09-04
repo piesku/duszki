@@ -53,8 +53,8 @@ export function camera2d(target: CameraTarget, radius: Vec2) {
             },
             Pv: create(),
             World: create(),
-            ViewportWidth: 100,
-            ViewportHeight: 100,
+            ViewportWidth: 200,
+            ViewportHeight: 200,
         };
     };
 }

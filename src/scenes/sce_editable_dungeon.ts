@@ -24,7 +24,7 @@ export function scene_editable_dungeon(game: Game) {
     // Follow camera.
     instantiate(game, [
         ...blueprint_camera_follow(game),
-        set_position(game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5),
+        set_position(game.World.Width / 2, game.World.Height / 2),
     ]);
 
     instantiate(game, [
