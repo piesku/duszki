@@ -5,6 +5,7 @@ import {destroy_all, query_down} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {make_road} from "./sys_build_roads.js";
+import {BEING_SATISFIED_MASK} from "./sys_satisfy.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 const world_position: Vec2 = [0, 0];
@@ -30,14 +31,25 @@ export function sys_build_erase(game: Game, delta: number) {
                             for (let child_entity of query_down(
                                 game.World,
                                 spatial.Parent,
-                                Has.Render2D
+                                Has.SpatialNode2D
                             )) {
                                 let child_spatial = game.World.SpatialNode2D[child_entity];
                                 get_translation(world_position, child_spatial.World);
                                 let x = Math.round(world_position[0]);
                                 let y = Math.round(world_position[1]);
                                 game.World.Grid[y][x].TileEntity = null;
-                                game.World.Grid[y][x].Walkable = false;
+
+                                let satisfy = game.World.Satisfy[child_entity];
+                                if (satisfy) {
+                                    let ocupados = satisfy.Ocupados;
+                                    for (let i = 0; i < ocupados.length; i++) {
+                                        let ocupado = ocupados[i];
+                                        game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
+                                    }
+                                    satisfy.Ocupados = [];
+                                } else {
+                                    game.World.Grid[y][x].Walkable = false;
+                                }
                             }
                             // Destroy the building's root entity.
                             destroy_all(game.World, spatial.Parent);
