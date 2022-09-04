@@ -25,14 +25,16 @@ function update(game: Game, entity: Entity) {
     let walk = game.World.Walk[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    let current_cell: Vec2 = [Math.round(local.Translation[0]), Math.round(local.Translation[1])];
+    let x = Math.round(local.Translation[0]);
+    let y = Math.round(local.Translation[1]);
+    game.World.Grid[y][x].Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
-        //console.time("path_find");
         // Search FROM the goal TO the origin, so that the waypoints are ordered
         // from the one closest to the origin.
-        let path = path_find(game.World, walk.DestinationTrigger, current_cell);
-        //console.timeEnd("path_find");
+        //console.time("path_find");
+        let path = path_find(game.World, walk.DestinationTrigger, [x, y]);
+        //console.timeEnd("path_find")
         if (path) {
             // Discard the first waypoint, which is always the origin node.
             walk.Path = path.slice(1);
@@ -61,7 +63,6 @@ function update(game: Game, entity: Entity) {
             normalize(diff, diff);
             add(move.Direction, move.Direction, diff);
             game.World.Signature[entity] |= Has.Dirty;
-            game.World.Grid[next[1]][next[0]].Ocupados.push(entity);
         }
     }
 }

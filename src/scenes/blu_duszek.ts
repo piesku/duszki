@@ -14,7 +14,7 @@ export function blueprint_duszek(game: Game) {
         shift(1),
         control_ai(),
         walk(),
-        move2d(float(2, 4), 0),
+        move2d(2, 0),
         needs(),
     ];
 }
