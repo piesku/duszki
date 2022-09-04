@@ -11,7 +11,9 @@ export interface Needs {
     delta_work: number;
     delta_food: number;
     delta_sleep: number;
-    IsBeingSatisfiedAtThisVeryMoment: boolean;
+    WorkTargetCoords?: Entity;
+    FoodTargetCoords?: Entity;
+    SleepTargetCoords?: Entity;
 }
 
 export function needs() {
@@ -24,7 +26,6 @@ export function needs() {
             delta_work: float() / 25,
             delta_food: float() / 25,
             delta_sleep: float() / 25,
-            IsBeingSatisfiedAtThisVeryMoment: false,
         };
     };
 }
