@@ -21,19 +21,22 @@ export function sys_walk(game: Game, delta: number) {
     }
 }
 
+const diff: Vec2 = [0, 0];
+
 function update(game: Game, entity: Entity) {
     let walk = game.World.Walk[entity];
     let local = game.World.LocalTransform2D[entity];
 
     let x = Math.round(local.Translation[0]);
     let y = Math.round(local.Translation[1]);
-    game.World.Grid[y][x].Ocupados.push(entity);
+    let cell = game.World.Grid[y][x];
+    cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
         // Search FROM the goal TO the origin, so that the waypoints are ordered
         // from the one closest to the origin.
         //console.time("path_find");
-        let path = path_find(game.World, walk.DestinationTrigger, [x, y]);
+        let path = path_find(game.World, walk.DestinationTrigger, cell);
         //console.timeEnd("path_find")
         if (path) {
             // Discard the first waypoint, which is always the origin node.
@@ -45,10 +48,9 @@ function update(game: Game, entity: Entity) {
 
     if (walk.Path.length > 0) {
         let local = game.World.LocalTransform2D[entity];
-        let next = walk.Path[0];
+        let next_cell = walk.Path[0];
 
-        let diff: Vec2 = [0, 0];
-        subtract(diff, next, local.Translation);
+        subtract(diff, next_cell.Position, local.Translation);
         if (length(diff) < 0.1) {
             // We are close enough to the next waypoint.
             walk.Path.shift();

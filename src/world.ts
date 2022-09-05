@@ -87,6 +87,8 @@ export const enum Has {
 }
 
 export interface GridCell {
+    Index: number;
+    Position: Vec2;
     TileEntity: Entity | null;
     Walkable: boolean;
     Pleasant: boolean;
@@ -109,10 +111,17 @@ export class World extends WorldImpl {
     Height: number = 80;
     Grid: GridCell[][] = Array(this.Height)
         .fill(0)
-        .map(() =>
+        .map((_, y) =>
             Array(this.Width)
                 .fill(0)
-                .map(() => ({TileEntity: null, Walkable: false, Pleasant: false, Ocupados: []}))
+                .map((_, x) => ({
+                    Index: x + y * this.Width,
+                    Position: [x, y],
+                    TileEntity: null,
+                    Walkable: false,
+                    Pleasant: false,
+                    Ocupados: [],
+                }))
         );
 
     // Raw LocalTransform2D or SpatialNode2D data, and Render2D data, uploaded to the GPU.
@@ -144,12 +153,4 @@ export class World extends WorldImpl {
     Toggle: Array<Toggle> = [];
     Trigger: Array<Trigger> = [];
     Walk: Array<Walk> = [];
-}
-
-export function node_to_position(world: World, node: number): Vec2 {
-    return [node % world.Width, Math.floor(node / world.Width)];
-}
-
-export function position_to_node(world: World, position: Vec2) {
-    return position[1] * world.Width + position[0];
 }

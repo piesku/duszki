@@ -9,15 +9,14 @@ export const enum GridFlag {
 
 export function grid(mask: GridFlag) {
     return (game: Game, entity: Entity) => {
-        let transform = game.World.LocalTransform2D[entity];
-        let x = Math.round(transform.Translation[0]);
-        let y = Math.round(transform.Translation[1]);
-
-        game.World.Grid[y][x] = {
-            TileEntity: entity,
-            Walkable: !!(mask & GridFlag.Walkable),
-            Pleasant: !!(mask & GridFlag.Pleasant),
-            Ocupados: [],
-        };
+        let local = game.World.LocalTransform2D[entity];
+        let x = Math.round(local.Translation[0]);
+        let y = Math.round(local.Translation[1]);
+        let cell = game.World.Grid[y]?.[x];
+        if (cell) {
+            cell.TileEntity = entity;
+            cell.Walkable = (mask & GridFlag.Walkable) != 0;
+            cell.Pleasant = (mask & GridFlag.Pleasant) != 0;
+        }
     };
 }

@@ -1,11 +1,10 @@
-import {Vec2} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
-import {Has} from "../world.js";
+import {GridCell, Has} from "../world.js";
 
 export interface Walk {
-    DestinationTrigger: Vec2 | null;
-    Path: Array<Vec2>;
+    DestinationTrigger: GridCell | null;
+    Path: Array<GridCell>;
 }
 
 export function walk() {

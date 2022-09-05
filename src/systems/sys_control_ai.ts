@@ -5,12 +5,12 @@ import {Action, dispatch} from "../actions.js";
 import {destroy_all} from "../components/com_children.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
-import {Has} from "../world.js";
+import {GridCell, Has} from "../world.js";
 import {SATISFY_THRESHOLD} from "./sys_satisfy.js";
 
 const QUERY = Has.ControlAi | Has.Walk | Has.Needs;
 
-let walkables: Vec2[] = [];
+let walkables: GridCell[] = [];
 
 let mortality_check_interval = 1;
 let time_since_last_check = 0;
@@ -21,7 +21,7 @@ export function sys_control_ai(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
             if (game.World.Grid[y][x].Walkable) {
-                walkables.push([x, y]);
+                walkables.push(game.World.Grid[y][x]);
             }
         }
     }
@@ -46,6 +46,8 @@ export function sys_control_ai(game: Game, delta: number) {
         time_since_last_check = 0;
     }
 }
+
+const destination_position: Vec2 = [0, 0];
 
 function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
@@ -96,7 +98,10 @@ function update(game: Game, entity: number, delta: number) {
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.FOOD
             ) {
-                walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
+                get_translation(destination_position, spiatial.World);
+                let x = Math.round(destination_position[0]);
+                let y = Math.round(destination_position[1]);
+                walk.DestinationTrigger = game.World.Grid[y][x];
             } else {
                 needs.Target[NeedType.FOOD] = undefined;
             }
@@ -112,7 +117,10 @@ function update(game: Game, entity: number, delta: number) {
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.SLEEP
             ) {
-                walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
+                get_translation(destination_position, spiatial.World);
+                let x = Math.round(destination_position[0]);
+                let y = Math.round(destination_position[1]);
+                walk.DestinationTrigger = game.World.Grid[y][x];
             } else {
                 needs.Target[NeedType.SLEEP] = undefined;
             }
@@ -128,7 +136,10 @@ function update(game: Game, entity: number, delta: number) {
                 (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.WORK
             ) {
-                walk.DestinationTrigger = get_translation([0, 0], spiatial.World);
+                get_translation(destination_position, spiatial.World);
+                let x = Math.round(destination_position[0]);
+                let y = Math.round(destination_position[1]);
+                walk.DestinationTrigger = game.World.Grid[y][x];
             } else {
                 needs.Target[NeedType.WORK] = undefined;
             }
