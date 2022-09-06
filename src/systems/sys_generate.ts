@@ -31,11 +31,12 @@ export function sys_generate(game: Game, delta: number) {
 
                     let gen_count = game.GeneratorCounts[gen_id];
                     let gen_config = GENERATORS[gen_id];
-                    let gen_income = income(era, gen_config, gen_count);
+                    let gen_income_max = income(era, gen_config, gen_count);
+                    let gen_income_actual =
+                        (gen_income_max * satisfy.Ocupados.length) / satisfy.Capacity;
 
-                    game.World.TotalWealth +=
-                        gen_income + gen_income * satisfy.Ocupados.length * 0.1;
-                    game.IncomePerSecond += gen_income + gen_income * satisfy.Ocupados.length * 0.1;
+                    game.IncomePerSecond += gen_income_actual;
+                    game.World.TotalWealth += gen_income_actual * delta;
                 }
                 break;
             }
