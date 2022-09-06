@@ -21,8 +21,7 @@ export function App(game: Game) {
         <button onmouseup="$(${Action.EnterPlaceTree})">🌳 Tree</button>
         ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
         ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
-        ${BuildingButton(game, GeneratorId.Mine3)} ${BuildingButton(game, GeneratorId.Mine4)}
-        ${BuildingButton(game, GeneratorId.Mine5)}
+        ${BuildingButton(game, GeneratorId.Mine3)}
         <button onmouseup="$(${Action.ResetGame})">Reset</button>
         <hr />
         Income: ${cost_fmt.format(game.IncomePerSecond)}/s — Wealth:
