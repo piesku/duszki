@@ -44,6 +44,15 @@ export function sys_control_mouse(game: Game, delta: number) {
         }
     }
 
+    if (DEBUG && pointer_clicked(game, 1)) {
+        let x = Math.round(game.PointerPosition[0]);
+        let y = Math.round(game.PointerPosition[1]);
+        let cell = game.World.Grid[y]?.[x];
+        if (cell) {
+            console.table(cell);
+        }
+    }
+
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let local = game.World.LocalTransform2D[ent];
