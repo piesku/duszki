@@ -93,6 +93,7 @@ export interface GridCell {
     Walkable: boolean;
     Pleasant: boolean;
     Ocupados: Entity[];
+    TrafficHistory: number;
     TrafficIntensity: number;
 }
 
@@ -122,6 +123,7 @@ export class World extends WorldImpl {
                     Walkable: false,
                     Pleasant: false,
                     Ocupados: [],
+                    TrafficHistory: 0,
                     TrafficIntensity: 0,
                 }))
         );

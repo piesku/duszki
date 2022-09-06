@@ -10,7 +10,9 @@ const QUERY = Has.LocalTransform2D | Has.Walk | Has.Move2D;
 export function sys_walk(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
-            game.World.Grid[y][x].Ocupados = [];
+            let cell = game.World.Grid[y][x];
+            cell.TrafficIntensity = cell.TrafficHistory / game.World.Age;
+            cell.Ocupados = [];
         }
     }
 
@@ -30,7 +32,7 @@ function update(game: Game, entity: Entity) {
     let x = Math.round(local.Translation[0]);
     let y = Math.round(local.Translation[1]);
     let cell = game.World.Grid[y][x];
-    cell.TrafficIntensity++;
+    cell.TrafficHistory++;
     cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
