@@ -54,12 +54,10 @@ export function path_find(world: World, origin: GridCell, goal: GridCell) {
                 continue;
             }
 
-            let neighbor_cost = 1;
-
             // The G cost of getting from the origin to `next` is the G cost of
             // the current node plus the cost of getting from the current node
             // to `next`.
-            let g_next = g[current.Index] + neighbor_cost;
+            let g_next = g[current.Index] + 1 + neighbor.TrafficIntensity;
             if (g[neighbor.Index] === undefined) {
                 // We've never visited this neighboring node before. Update the
                 // G cost, compute the H cost, compute the F cost.
