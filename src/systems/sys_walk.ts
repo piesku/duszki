@@ -11,7 +11,11 @@ export function sys_walk(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
             let cell = game.World.Grid[y][x];
-            cell.TrafficIntensity = cell.TrafficHistory / game.World.Age;
+            let traffic = cell.Ocupados.length;
+            // 10-second moving average of duszkis per frame.
+            cell.TrafficAverage += (traffic - cell.TrafficAverage) / (10 / delta);
+            // 10-second moving average of duszkis per second.
+            cell.TrafficIntensity = cell.TrafficAverage / delta;
             cell.Ocupados = [];
         }
     }
@@ -32,7 +36,6 @@ function update(game: Game, entity: Entity) {
     let x = Math.round(local.Translation[0]);
     let y = Math.round(local.Translation[1]);
     let cell = game.World.Grid[y][x];
-    cell.TrafficHistory++;
     cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {

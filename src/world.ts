@@ -93,7 +93,7 @@ export interface GridCell {
     Walkable: boolean;
     Pleasant: boolean;
     Ocupados: Entity[];
-    TrafficHistory: number;
+    TrafficAverage: number;
     TrafficIntensity: number;
 }
 
@@ -116,16 +116,18 @@ export class World extends WorldImpl {
         .map((_, y) =>
             Array(this.Width)
                 .fill(0)
-                .map((_, x) => ({
-                    Index: x + y * this.Width,
-                    Position: [x, y],
-                    TileEntity: null,
-                    Walkable: false,
-                    Pleasant: false,
-                    Ocupados: [],
-                    TrafficHistory: 0,
-                    TrafficIntensity: 0,
-                }))
+                .map(
+                    (_, x): GridCell => ({
+                        Index: x + y * this.Width,
+                        Position: [x, y],
+                        TileEntity: null,
+                        Walkable: false,
+                        Pleasant: false,
+                        Ocupados: [],
+                        TrafficAverage: 0,
+                        TrafficIntensity: 0,
+                    })
+                )
         );
 
     // Raw LocalTransform2D or SpatialNode2D data, and Render2D data, uploaded to the GPU.
