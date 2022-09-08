@@ -6,16 +6,15 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.LocalTransform2D | Has.Walk | Has.Move2D;
+const TRAFFIC_DIFFICULTY = 100;
 
 export function sys_walk(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {
         for (let x = 0; x < game.World.Grid[y].length; x++) {
             let cell = game.World.Grid[y][x];
-            let traffic = cell.Ocupados.length;
-            // 10-second moving average of duszkis per frame.
-            cell.TrafficAverage += (traffic - cell.TrafficAverage) / (10 / delta);
             // 10-second moving average of duszkis per second.
-            cell.TrafficIntensity = cell.TrafficAverage / delta;
+            cell.TrafficAverage += (cell.Ocupados.length - cell.TrafficAverage) / (10 / delta);
+            cell.TrafficIntensity = cell.TrafficAverage * TRAFFIC_DIFFICULTY;
             cell.Ocupados = [];
         }
     }
