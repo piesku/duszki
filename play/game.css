@@ -21,6 +21,7 @@ canvas#minimap {
     top: 10px;
     left: 10px;
     width: 200px;
+    pointer-events: none;
 }
 canvas#follow {
     position: absolute;

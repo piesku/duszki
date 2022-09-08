@@ -22,6 +22,7 @@ export const enum Action {
     SpawnDuszek,
     DuszekDied,
     ResetGame,
+    MinimapNavigation,
 }
 
 export function dispatch(game: Game, action: Action, payload: unknown) {
@@ -93,6 +94,29 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         case Action.ResetGame: {
             clear(game.Store);
             scene_editable_dungeon(game);
+            break;
+        }
+        case Action.MinimapNavigation: {
+            let event = payload as MouseEvent;
+            let rect = game.MinimapCanvas.getBoundingClientRect();
+            let scale = game.World.Width / rect.width;
+            if (
+                event.clientX > rect.left &&
+                event.clientX < rect.right &&
+                event.clientY > rect.top &&
+                event.clientY < rect.bottom
+            ) {
+                let x = Math.floor(event.clientX - rect.left) * scale;
+                let y = Math.floor(event.clientY - rect.top) * scale;
+
+                let camera_entity = game.Cameras[0];
+                if (camera_entity !== undefined) {
+                    let camera_local = game.World.LocalTransform2D[camera_entity];
+                    camera_local.Translation[0] = x;
+                    camera_local.Translation[1] = game.World.Height - y;
+                    game.World.Signature[camera_entity] |= Has.Dirty;
+                }
+            }
             break;
         }
     }
