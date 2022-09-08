@@ -41,6 +41,12 @@ export class Game extends Game3D {
     Store: IDBDatabase;
     World = new World(WORLD_CAPACITY);
 
+    MinimapCanvas = document.querySelector("canvas#minimap") as HTMLCanvasElement;
+    MinimapContext = this.MinimapCanvas.getContext("2d")!;
+
+    FollowCanvas = document.querySelector("canvas#follow") as HTMLCanvasElement;
+    FollowContext = this.FollowCanvas.getContext("2d")!;
+
     Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img")!);
     MaterialRender2D = mat_render2d(this.Gl, Has.Render2D, Has.SpatialNode2D);
     InstanceBuffer = this.Gl.createBuffer()!;
@@ -56,6 +62,9 @@ export class Game extends Game3D {
         super();
 
         this.Store = db;
+
+        this.MinimapCanvas.width = this.World.Width;
+        this.MinimapCanvas.height = this.World.Height;
 
         this.Gl.enable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);

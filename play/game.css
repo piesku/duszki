@@ -3,7 +3,9 @@ body {
     overflow: hidden;
     margin: 0;
 }
-canvas,
+canvas#background,
+canvas#scene,
+canvas#foreground,
 main {
     position: absolute;
     width: 100vw;
@@ -13,6 +15,18 @@ main {
     user-select: none;
     touch-action: none;
     image-rendering: pixelated;
+}
+canvas#minimap {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 200px;
+}
+canvas#follow {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 200px;
 }
 [hidden] {
     display: none;

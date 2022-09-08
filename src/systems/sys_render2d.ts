@@ -75,15 +75,12 @@ export function sys_render2d(game: Game, delta: number) {
         let camera = game.World.Camera2D[camera_entity];
 
         game.Gl.enable(GL_SCISSOR_TEST);
-        game.Gl.scissor(5, 5, camera.ViewportWidth + 10, camera.ViewportHeight + 10);
-        game.Gl.clearColor(0, 0, 0, 1);
-        game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        game.Gl.scissor(10, 10, camera.ViewportWidth, camera.ViewportHeight);
+        game.Gl.scissor(0, 0, camera.ViewportWidth, camera.ViewportHeight);
         game.Gl.clearColor(1, 1, 1, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Gl.disable(GL_SCISSOR_TEST);
 
-        game.Gl.viewport(10, 10, camera.ViewportWidth, camera.ViewportHeight);
+        game.Gl.viewport(0, 0, camera.ViewportWidth, camera.ViewportHeight);
         render_all(game, camera);
     }
 }

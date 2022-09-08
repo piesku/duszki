@@ -44,6 +44,9 @@ function update(game: Game, entity: Entity) {
     if (camera.Target === CameraTarget.Main) {
         camera.ViewportWidth = game.ViewportWidth;
         camera.ViewportHeight = game.ViewportHeight;
+    } else if (camera.Target === CameraTarget.Follow) {
+        game.FollowCanvas.width = camera.ViewportWidth;
+        game.FollowCanvas.height = camera.ViewportHeight;
     }
 
     let projection = camera.Projection;

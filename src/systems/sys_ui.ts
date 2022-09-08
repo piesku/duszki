@@ -20,4 +20,53 @@ export function sys_ui(game: Game, delta: number) {
     if (next !== prev) {
         game.Ui.innerHTML = prev = next;
     }
+
+    game.FollowContext.drawImage(
+        game.SceneCanvas,
+        0,
+        game.ViewportHeight - 200,
+        200,
+        200,
+        0,
+        0,
+        200,
+        200
+    );
+
+    let minimap_image_data = game.MinimapContext.getImageData(
+        0,
+        0,
+        game.World.Width,
+        game.World.Height
+    );
+
+    for (let y = 0; y < game.World.Height; y++) {
+        for (let x = 0; x < game.World.Width; x++) {
+            let index = ((game.World.Height - y - 1) * game.World.Width + x) * 4;
+            let cell = game.World.Grid[y][x];
+            if (cell.Walkable) {
+                minimap_image_data.data[index + 0] = 0;
+                minimap_image_data.data[index + 1] = 0;
+                minimap_image_data.data[index + 2] = 0;
+                minimap_image_data.data[index + 3] = 255;
+            } else if (cell.Pleasant) {
+                minimap_image_data.data[index + 0] = 0;
+                minimap_image_data.data[index + 1] = 255;
+                minimap_image_data.data[index + 2] = 0;
+                minimap_image_data.data[index + 3] = 255;
+            } else if (cell.TileEntity) {
+                minimap_image_data.data[index + 0] = 255;
+                minimap_image_data.data[index + 1] = 0;
+                minimap_image_data.data[index + 2] = 0;
+                minimap_image_data.data[index + 3] = 255;
+            } else {
+                minimap_image_data.data[index + 0] = 255;
+                minimap_image_data.data[index + 1] = 255;
+                minimap_image_data.data[index + 2] = 255;
+                minimap_image_data.data[index + 3] = 255;
+            }
+        }
+    }
+
+    game.MinimapContext.putImageData(minimap_image_data, 0, 0);
 }

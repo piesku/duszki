@@ -14,7 +14,15 @@ export function App(game: Game) {
     return html`<div
         onmousedown="event.stopPropagation();"
         onmouseup="event.stopPropagation();"
-        style="background: #00000099; color: white; padding: 10px 100px 10px 10px;"
+        style="
+            position: absolute;
+            inset: 0;
+            width: 200px;
+            padding: 220px 10px;
+            background: #9999;
+            backdrop-filter: blur(10px);
+            color: white;
+        "
     >
         <button onmouseup="$(${Action.EnterErase})">❌ Remove</button>
         <button onmouseup="$(${Action.EnterPlaceRoad})">🛣 Road</button>
