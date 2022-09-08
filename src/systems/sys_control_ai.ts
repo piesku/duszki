@@ -56,7 +56,7 @@ function update(game: Game, entity: number, delta: number) {
 
     if (needs.Value[NeedType.HAPPY] < 0) {
         needs.Value[NeedType.HAPPY] = 0;
-        console.log("duszek nieszczęśliwek");
+        //console.log("duszek nieszczęśliwek");
     } else if (needs.Value[NeedType.HAPPY] > 1) {
         needs.Value[NeedType.HAPPY] = 1;
     }
