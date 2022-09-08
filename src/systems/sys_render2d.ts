@@ -79,7 +79,7 @@ export function sys_render2d(game: Game, delta: number) {
         game.Gl.clearColor(0, 0, 0, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Gl.scissor(10, 10, camera.ViewportWidth, camera.ViewportHeight);
-        game.Gl.clearColor(181 / 255, 176 / 255, 222 / 255, 1);
+        game.Gl.clearColor(1, 1, 1, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Gl.disable(GL_SCISSOR_TEST);
 

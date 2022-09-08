@@ -29,13 +29,14 @@ export function scene_editable_dungeon(game: Game) {
         set_position(game.World.Width / 2, game.World.Height / 2),
     ]);
 
+    // Solid background.
     instantiate(game, [
         spatial_node2d(),
         local_transform2d([game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5], 0, [
             game.World.Width,
             game.World.Height,
         ]),
-        draw_rect(DrawContext.Background, "rgb(181, 176, 222)"),
+        draw_rect(DrawContext.Background, "#fff"),
     ]);
 
     // Grass tiles in the background.
