@@ -8,7 +8,7 @@ import {Game} from "../game.js";
 import {GridCell, Has} from "../world.js";
 import {SATISFY_THRESHOLD} from "./sys_satisfy.js";
 
-const QUERY = Has.ControlAi | Has.Walk | Has.Needs;
+const QUERY = Has.ControlAi | Has.Walk | Has.Needs | Has.Move2D;
 
 let walkables: GridCell[] = [];
 
@@ -33,6 +33,7 @@ const destination_position: Vec2 = [0, 0];
 
 function update(game: Game, entity: number, delta: number) {
     let walk = game.World.Walk[entity];
+    let move = game.World.Move2D[entity];
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
 
@@ -40,6 +41,8 @@ function update(game: Game, entity: number, delta: number) {
         let render = game.World.Render2D[entity];
         render.Color[3] = needs.Value[NeedType.HAPPY];
     }
+
+    move.MoveSpeed = walk.Speed * needs.Value[NeedType.HAPPY];
 
     if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");

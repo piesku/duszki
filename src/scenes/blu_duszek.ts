@@ -13,8 +13,8 @@ export function blueprint_duszek(game: Game) {
         render2d("125.png", [float(), float(), float(), 1]),
         shift(1),
         control_ai(),
-        walk(),
-        move2d(float(2, 2.2), 0),
+        walk(float(2, 2.5)),
+        move2d(1, 0),
         needs(),
     ];
 }
