@@ -68,7 +68,7 @@ function update(game: Game, entity: number, delta: number) {
 
     if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
-        dispatch(game, Action.DuszekDied, local.Translation);
+        dispatch(game, Action.DuszekDied, [entity, local.Translation]);
 
         destroy_all(game.World, entity);
         return;
@@ -76,7 +76,7 @@ function update(game: Game, entity: number, delta: number) {
 
     if (needs.Value[NeedType.SLEEP] < 0.001) {
         console.log("duszek umar z wycieczenia");
-        dispatch(game, Action.DuszekDied, local.Translation);
+        dispatch(game, Action.DuszekDied, [entity, local.Translation]);
         destroy_all(game.World, entity);
         return;
     }

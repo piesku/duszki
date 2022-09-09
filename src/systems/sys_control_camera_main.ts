@@ -9,7 +9,7 @@ import {Has} from "../world.js";
 const pointer_position: Vec2 = [0, 0];
 let wheel_y_clamped = 0;
 
-export function sys_control_camera(game: Game, delta: number) {
+export function sys_control_camera_main(game: Game, delta: number) {
     let camera_entity = game.Cameras[0];
     if (camera_entity === undefined) {
         // This system requires the main camera to exist.

@@ -2,6 +2,7 @@ import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
+import {Entity} from "../lib/world.js";
 import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
@@ -12,7 +13,8 @@ import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_always2d} from "./systems/sys_control_always2d.js";
-import {sys_control_camera} from "./systems/sys_control_camera.js";
+import {sys_control_camera_follow} from "./systems/sys_control_camera_follow.js";
+import {sys_control_camera_main} from "./systems/sys_control_camera_main.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_draw2d} from "./systems/sys_draw2d.js";
 import {sys_follow} from "./systems/sys_follow2d.js";
@@ -54,6 +56,7 @@ export class Game extends Game3D {
     UnitSize = 16;
     PointerPosition: Vec2 = [0, 0];
     ActiveBuilding: null | number = null;
+    SelectedEntity: null | Entity = null;
 
     GeneratorCounts: Array<number> = [];
     IncomePerSecond = 0;
@@ -77,7 +80,8 @@ export class Game extends Game3D {
         sys_poll(this, delta);
 
         // Player input.
-        sys_control_camera(this, delta);
+        sys_control_camera_main(this, delta);
+        sys_control_camera_follow(this, delta);
         sys_control_mouse(this, delta);
         sys_build_buildings(this, delta);
         sys_build_roads(this, delta);

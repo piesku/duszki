@@ -38,3 +38,9 @@ canvas#follow {
 .grabbing {
     cursor: grabbing;
 }
+label {
+    display: block;
+}
+meter {
+    width: 100%;
+}

@@ -19,15 +19,12 @@ export function sys_control_mouse(game: Game, delta: number) {
         viewport_to_world(game.PointerPosition, camera, game.PointerPosition);
     }
 
-    let follow_camera_entity = game.Cameras[1];
-    if (follow_camera_entity !== undefined && pointer_clicked(game, 0)) {
+    if (pointer_clicked(game, 0)) {
         let x = Math.round(game.PointerPosition[0]);
         let y = Math.round(game.PointerPosition[1]);
         let cell = game.World.Grid[y]?.[x];
         if (cell && cell.Ocupados.length > 0) {
-            let camera_follow = game.World.Follow[follow_camera_entity];
-            camera_follow.Target = cell.Ocupados[0];
-            game.World.Signature[follow_camera_entity] |= Has.Follow;
+            game.SelectedEntity = cell.Ocupados[0];
 
             if (DEBUG) {
                 let duszki: Record<Entity, object> = {};

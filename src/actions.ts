@@ -1,6 +1,6 @@
 import {instantiate} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
-import {first_having} from "../lib/world.js";
+import {Entity, first_having} from "../lib/world.js";
 import {destroy_all} from "./components/com_children.js";
 import {copy_position, set_position} from "./components/com_local_transform2d.js";
 import {Game} from "./game.js";
@@ -83,12 +83,15 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.DuszekDied: {
-            let position = payload as Vec2;
+            let [entity, position] = payload as [Entity, Vec2];
             game.World.DuszkiAlive--;
-            instantiate(game, [
+            let tombstone = instantiate(game, [
                 ...blueprint_grave(game),
                 set_position(Math.round(position[0]), Math.round(position[1])),
             ]);
+            if (entity === game.SelectedEntity) {
+                game.SelectedEntity = tombstone;
+            }
             break;
         }
         case Action.ResetGame: {
