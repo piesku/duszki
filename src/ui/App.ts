@@ -67,8 +67,8 @@ function BuildingButton(game: Game, id: number) {
 
 function WorldStats(game: Game) {
     return html`
-        <label>Population: ${game.World.DuszkiAlive}</label>
-        <label>At work: ${game.World.DuszkiWorking}</label>
+        <label>Population: ${game.World.Population.toFixed(0)}</label>
+        <label>At work/Total: ${game.World.DuszkiWorking}/${game.World.DuszkiAlive}</label>
         <label>Mortality: ${game.World.Mortality.toFixed(3)}</label>
         <label>Happiness <meter value="${game.World.Happiness}"></meter></label>
         <label>Nutrition <meter value="${game.World.Nutrition}"></meter></label>

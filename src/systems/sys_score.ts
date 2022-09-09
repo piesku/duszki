@@ -4,19 +4,20 @@ import {Game} from "../game.js";
 export function sys_score(game: Game, delta: number) {
     game.World.Age += delta;
 
-    // Compute the 10-second EMAs.
-    let weight = Math.min(1, delta / 10);
+    // Compute the 60-second EMAs.
+    let weight = Math.min(1, delta / 60);
 
+    game.World.Population += (game.World.DuszkiAlive - game.World.Population) * weight;
     game.World.Mortality += (game.FrameStats.Deaths - game.World.Mortality) * weight;
 
-    if (game.World.DuszkiAlive > 0) {
-        let happy_percent = game.FrameStats[NeedType.HAPPY] / game.World.DuszkiAlive;
+    if (game.World.Population > 0) {
+        let happy_percent = game.FrameStats[NeedType.HAPPY] / game.World.Population;
         game.World.Happiness += (happy_percent - game.World.Happiness) * weight;
 
-        let food_percent = game.FrameStats[NeedType.FOOD] / game.World.DuszkiAlive;
+        let food_percent = game.FrameStats[NeedType.FOOD] / game.World.Population;
         game.World.Nutrition += (food_percent - game.World.Nutrition) * weight;
 
-        let sleep_percent = game.FrameStats[NeedType.SLEEP] / game.World.DuszkiAlive;
+        let sleep_percent = game.FrameStats[NeedType.SLEEP] / game.World.Population;
         game.World.Restedness += (sleep_percent - game.World.Restedness) * weight;
     } else {
         game.World.Happiness = 0;

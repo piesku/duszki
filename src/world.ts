@@ -103,6 +103,7 @@ export class World extends WorldImpl {
     TotalWealth = 100;
     CurrentEra = 0;
     Age = 0;
+    Population = 0;
     Mortality = 0;
     Happiness = 0;
     Nutrition = 0;
