@@ -54,16 +54,14 @@ function update(game: Game, entity: Entity) {
         let local = game.World.LocalTransform2D[entity];
         let next_cell = walk.Path[0];
 
+        if (!next_cell.Walkable) {
+            walk.Path = [];
+        }
+
         subtract(diff, next_cell.Position, local.Translation);
         if (length(diff) < 0.1) {
             // We are close enough to the next waypoint.
             walk.Path.shift();
-
-            if (walk.Path.length == 0) {
-                // We have reached the destination.
-                // walk.CurrentNode = next;
-                walk.DestinationTrigger = null;
-            }
         } else {
             let move = game.World.Move2D[entity];
             normalize(diff, diff);
