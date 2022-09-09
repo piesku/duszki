@@ -11,13 +11,15 @@ export function sys_score(game: Game, delta: number) {
     game.World.Mortality += (game.FrameStats.Deaths - game.World.Mortality) * weight;
 
     if (game.World.Population > 0) {
-        let happy_percent = game.FrameStats[NeedType.HAPPY] / game.World.Population;
+        let out_of = Math.max(game.World.DuszkiAlive, game.World.Population);
+
+        let happy_percent = game.FrameStats[NeedType.HAPPY] / out_of;
         game.World.Happiness += (happy_percent - game.World.Happiness) * weight;
 
-        let food_percent = game.FrameStats[NeedType.FOOD] / game.World.Population;
+        let food_percent = game.FrameStats[NeedType.FOOD] / out_of;
         game.World.Nutrition += (food_percent - game.World.Nutrition) * weight;
 
-        let sleep_percent = game.FrameStats[NeedType.SLEEP] / game.World.Population;
+        let sleep_percent = game.FrameStats[NeedType.SLEEP] / out_of;
         game.World.Restedness += (sleep_percent - game.World.Restedness) * weight;
     } else {
         game.World.Happiness = 0;
