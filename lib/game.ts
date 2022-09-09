@@ -263,7 +263,7 @@ export abstract class Game3D extends GameImpl {
     ForegroundContext = this.ForegroundCanvas.getContext("2d")!;
 
     SceneCanvas = document.querySelector("#scene")! as HTMLCanvasElement;
-    Gl = this.SceneCanvas.getContext("webgl2")!;
+    Gl = this.SceneCanvas.getContext("webgl2", {antialias: false})!;
 
     Audio = new AudioContext();
     Cameras: Array<Entity> = [];
