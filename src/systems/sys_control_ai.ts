@@ -36,6 +36,7 @@ function update(game: Game, entity: number, delta: number) {
     let move = game.World.Move2D[entity];
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
+    let control = game.World.ControlAi[entity];
 
     if (DEBUG) {
         let render = game.World.Render2D[entity];
@@ -79,6 +80,7 @@ function update(game: Game, entity: number, delta: number) {
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
                 walk.DestinationTrigger = game.World.Grid[y][x];
+                control.Says = "I'm hungry!";
             } else {
                 needs.Target[NeedType.FOOD] = undefined;
             }
@@ -98,6 +100,7 @@ function update(game: Game, entity: number, delta: number) {
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
                 walk.DestinationTrigger = game.World.Grid[y][x];
+                control.Says = "I'm tired!";
             } else {
                 needs.Target[NeedType.SLEEP] = undefined;
             }
@@ -117,12 +120,14 @@ function update(game: Game, entity: number, delta: number) {
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
                 walk.DestinationTrigger = game.World.Grid[y][x];
+                control.Says = "Looking for work...";
             } else {
                 needs.Target[NeedType.WORK] = undefined;
             }
         } else {
             console.log("z jakiegoś powodu duszek is wandering around without a purpose");
             walk.DestinationTrigger = element(walkables);
+            control.Says = "I'm bored!";
         }
     }
 }
