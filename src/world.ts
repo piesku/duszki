@@ -104,6 +104,9 @@ export class World extends WorldImpl {
     CurrentEra = 0;
     Age = 0;
     Mortality = 0;
+    Happiness = 0;
+    Nutrition = 0;
+    Restedness = 0;
     DuszkiAlive = 0;
     DuszkiWorking = 0;
 

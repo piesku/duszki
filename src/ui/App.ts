@@ -33,6 +33,8 @@ export function App(game: Game) {
         "
     >
         <div>
+            <label>Wealth: ${cost_fmt.format(game.World.TotalWealth)}</label>
+            <label>Income: ${cost_fmt.format(game.IncomePerSecond)}/s</label>
             <button onclick="$(${Action.EnterErase})">❌ Remove</button>
             <button onclick="$(${Action.EnterPlaceRoad})">🛣 Road</button>
             <button onclick="$(${Action.EnterPlaceTree})">🌳 Tree</button>
@@ -43,9 +45,7 @@ export function App(game: Game) {
             <hr />
         </div>
         <div>
-            Income: ${cost_fmt.format(game.IncomePerSecond)}/s — Wealth:
-            ${cost_fmt.format(game.World.TotalWealth)} — Working duszki: ${game.World.DuszkiWorking}
-            / ${game.World.DuszkiAlive} — Mortality: ${game.World.Mortality} duszki/s
+            ${WorldStats(game)}
             <hr />
         </div>
         <div>${game.SelectedEntity !== null && DuszekDetails(game, game.SelectedEntity)}</div>
@@ -62,6 +62,17 @@ function BuildingButton(game: Game, id: number) {
         >
             ${gen_config.Name} (${cost_fmt.format(gen_cost)})
         </button>
+    `;
+}
+
+function WorldStats(game: Game) {
+    return html`
+        <label>Population: ${game.World.DuszkiAlive}</label>
+        <label>At work: ${game.World.DuszkiWorking}</label>
+        <label>Mortality: ${game.World.Mortality.toFixed(3)}</label>
+        <label>Happiness <meter value="${game.World.Happiness}"></meter></label>
+        <label>Nutrition <meter value="${game.World.Nutrition}"></meter></label>
+        <label>Restedness <meter value="${game.World.Restedness}"></meter></label>
     `;
 }
 

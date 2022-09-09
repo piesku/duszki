@@ -36,13 +36,6 @@ function update(game: Game, entity: number, delta: number) {
     let needs = game.World.Needs[entity];
     let local = game.World.LocalTransform2D[entity];
 
-    if (needs.Value[NeedType.HAPPY] < 0) {
-        needs.Value[NeedType.HAPPY] = 0;
-        //console.log("duszek nieszczęśliwek");
-    } else if (needs.Value[NeedType.HAPPY] > 1) {
-        needs.Value[NeedType.HAPPY] = 1;
-    }
-
     if (DEBUG) {
         let render = game.World.Render2D[entity];
         render.Color[3] = needs.Value[NeedType.HAPPY];

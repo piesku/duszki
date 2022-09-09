@@ -1,4 +1,4 @@
-import {get_translation} from "../../lib/mat2d.js";
+import {clamp} from "../../lib/number.js";
 import {element} from "../../lib/random.js";
 import {Entity} from "../../lib/world.js";
 import {NeedType} from "../components/com_needs.js";
@@ -69,4 +69,9 @@ function update(game: Game, entity: number, delta: number) {
     if (game.World.Grid[y][x - 1]?.Pleasant) {
         needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
     }
+    needs.Value[NeedType.HAPPY] = clamp(0, 1, needs.Value[NeedType.HAPPY]);
+
+    game.FrameStats[NeedType.HAPPY] += needs.Value[NeedType.HAPPY];
+    game.FrameStats[NeedType.FOOD] += needs.Value[NeedType.FOOD];
+    game.FrameStats[NeedType.SLEEP] += needs.Value[NeedType.SLEEP];
 }

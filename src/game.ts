@@ -5,6 +5,7 @@ import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../
 import {Entity} from "../lib/world.js";
 import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
+import {NeedType} from "./components/com_needs.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
 import {sys_build_erase} from "./systems/sys_build_erase.js";
 import {sys_build_roads} from "./systems/sys_build_roads.js";
@@ -62,8 +63,11 @@ export class Game extends Game3D {
     GeneratorCounts: Array<number> = [];
     IncomePerSecond = 0;
 
-    FrameStats = {
+    FrameStats: Record<string | number, number> = {
         Deaths: 0,
+        [NeedType.HAPPY]: 0,
+        [NeedType.FOOD]: 0,
+        [NeedType.SLEEP]: 0,
     };
 
     constructor(db: IDBDatabase) {
