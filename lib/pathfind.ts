@@ -4,6 +4,7 @@ import {distance_squared} from "./vec2.js";
 
 type VectorField = Array<GridCell>;
 
+const TRAFFIC_FACTOR = 100;
 const neighbor_offsets = [
     [1, 0],
     [0, 1],
@@ -57,7 +58,7 @@ export function path_find(world: World, origin: GridCell, goal: GridCell) {
             // The G cost of getting from the origin to `next` is the G cost of
             // the current node plus the cost of getting from the current node
             // to `next`.
-            let g_next = g[current.Index] + 1 + neighbor.TrafficIntensity;
+            let g_next = g[current.Index] + 1 + neighbor.TrafficIntensity * TRAFFIC_FACTOR;
             if (g[neighbor.Index] === undefined) {
                 // We've never visited this neighboring node before. Update the
                 // G cost, compute the H cost, compute the F cost.
