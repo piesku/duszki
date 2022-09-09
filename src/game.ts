@@ -62,6 +62,10 @@ export class Game extends Game3D {
     GeneratorCounts: Array<number> = [];
     IncomePerSecond = 0;
 
+    FrameStats = {
+        Deaths: 0,
+    };
+
     constructor(db: IDBDatabase) {
         super();
 

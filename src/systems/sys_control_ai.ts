@@ -22,17 +22,11 @@ export function sys_control_ai(game: Game, delta: number) {
         }
     }
 
-    let duszki_count = game.World.DuszkiAlive;
-
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             update(game, ent, delta);
         }
     }
-
-    let deaths_this_frame = duszki_count - game.World.DuszkiAlive;
-    // Compute the 10-second mortality EMA.
-    game.World.Mortality += (deaths_this_frame - game.World.Mortality) / (10 / delta);
 }
 
 const destination_position: Vec2 = [0, 0];

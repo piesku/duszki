@@ -85,6 +85,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         case Action.DuszekDied: {
             let [entity, position] = payload as [Entity, Vec2];
             game.World.DuszkiAlive--;
+            game.FrameStats.Deaths++;
             let tombstone = instantiate(game, [
                 ...blueprint_grave(game),
                 set_position(Math.round(position[0]), Math.round(position[1])),
