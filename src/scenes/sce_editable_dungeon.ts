@@ -36,7 +36,7 @@ export function scene_editable_dungeon(game: Game) {
             game.World.Width,
             game.World.Height,
         ]),
-        draw_rect(DrawContext.Background, "#fff"),
+        draw_rect(DrawContext.Background, "#589740"),
     ]);
 
     // Grass tiles in the background.
