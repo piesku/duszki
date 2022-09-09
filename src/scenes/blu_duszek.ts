@@ -1,3 +1,4 @@
+import {hsva_to_vec4} from "../../lib/color.js";
 import {float} from "../../lib/random.js";
 import {control_ai} from "../components/com_control_ai.js";
 import {local_transform2d} from "../components/com_local_transform2d.js";
@@ -10,7 +11,7 @@ import {Game} from "../game.js";
 export function blueprint_duszek(game: Game) {
     return [
         local_transform2d(),
-        render2d("125.png", [float(), float(), float(), 1]),
+        render2d("125.png", hsva_to_vec4(float(0, 1), float(0.6, 0.8), float(0.6, 0.8), 1)),
         shift(1),
         control_ai(),
         walk(float(2, 2.5)),
