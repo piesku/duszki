@@ -69,7 +69,7 @@ function update(game: Game, entity: number, delta: number) {
             let destination_satisfier = game.World.Satisfy[food_target];
             let spiatial = game.World.SpatialNode2D[food_target];
             if (
-                (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
+                destination_satisfier_mask & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.FOOD
             ) {
                 get_translation(destination_position, spiatial.World);
@@ -88,7 +88,7 @@ function update(game: Game, entity: number, delta: number) {
             let destination_satisfier = game.World.Satisfy[sleep_target];
             let spiatial = game.World.SpatialNode2D[sleep_target];
             if (
-                (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
+                destination_satisfier_mask & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.SLEEP
             ) {
                 get_translation(destination_position, spiatial.World);
@@ -107,7 +107,7 @@ function update(game: Game, entity: number, delta: number) {
             let destination_satisfier = game.World.Satisfy[work_target];
             let spiatial = game.World.SpatialNode2D[work_target];
             if (
-                (destination_satisfier_mask & Has.Satisfy) == Has.Satisfy &&
+                destination_satisfier_mask & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.WORK
             ) {
                 get_translation(destination_position, spiatial.World);

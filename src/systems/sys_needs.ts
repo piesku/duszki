@@ -13,11 +13,13 @@ let work_destination: Entity[] = [];
 let sleep_destination: Entity[] = [];
 
 export function sys_needs(game: Game, delta: number) {
+    food_destination = [];
+    work_destination = [];
+    sleep_destination = [];
+
     for (let i = 0; i < game.World.Signature.length; i++) {
         if ((game.World.Signature[i] & SATISFY_QUERY) == SATISFY_QUERY) {
             let satisfy = game.World.Satisfy[i];
-            let local = game.World.SpatialNode2D[i];
-            let coords = get_translation([0, 0], local.World);
             if (satisfy.NeedType == NeedType.FOOD) {
                 food_destination.push(i);
             } else if (satisfy.NeedType == NeedType.WORK) {

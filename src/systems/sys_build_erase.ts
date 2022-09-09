@@ -27,7 +27,6 @@ export function sys_build_erase(game: Game, delta: number) {
                     if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
                         let spatial = game.World.SpatialNode2D[cell.TileEntity];
                         if (spatial.Parent !== undefined) {
-                            // Reset the world grid for all the building's tiles.
                             for (let child_entity of query_down(
                                 game.World,
                                 spatial.Parent,
@@ -37,20 +36,20 @@ export function sys_build_erase(game: Game, delta: number) {
                                 get_translation(world_position, child_spatial.World);
                                 let x = Math.round(world_position[0]);
                                 let y = Math.round(world_position[1]);
-
                                 let cell = game.World.Grid[y][x];
-                                cell.TileEntity = null;
 
-                                let satisfy = game.World.Satisfy[child_entity];
-                                if (satisfy) {
+                                if (game.World.Signature[child_entity] & Has.Satisfy) {
+                                    // Release all the duszki from the building.
+                                    let satisfy = game.World.Satisfy[child_entity];
                                     let ocupados = satisfy.Ocupados;
                                     for (let i = 0; i < ocupados.length; i++) {
                                         let ocupado = ocupados[i];
                                         game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
                                     }
-                                    satisfy.Ocupados = [];
                                 } else {
-                                    game.World.Grid[y][x].Walkable = false;
+                                    // Reset the world grid for the building's tiles.
+                                    cell.Walkable = false;
+                                    cell.TileEntity = null;
                                 }
                             }
                             // Destroy the building's root entity.
