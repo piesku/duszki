@@ -28,8 +28,8 @@ export function sys_ui(game: Game, delta: number) {
 
     game.FollowContext.drawImage(
         game.SceneCanvas,
-        0,
-        game.ViewportHeight - 200,
+        10,
+        game.ViewportHeight - 210,
         200,
         200,
         0,
