@@ -79,7 +79,10 @@ function WorldStats(game: Game) {
 function DuszekDetails(game: Game, entity: Entity) {
     if (game.World.Signature[entity] & Has.Needs) {
         let needs = game.World.Needs[entity];
+        let control = game.World.ControlAi[entity];
         return html`
+            <label>${control.Name}</label>
+            <label><em>${control.Says}</em></label>
             <label
                 >Happy
                 <meter value="${needs.Value[NeedType.HAPPY]}" low="${LOW_SATISFY_THRESHOLD}"></meter
