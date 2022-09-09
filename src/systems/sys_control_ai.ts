@@ -12,10 +12,6 @@ const QUERY = Has.ControlAi | Has.Walk | Has.Needs;
 
 let walkables: GridCell[] = [];
 
-let mortality_check_interval = 1;
-let time_since_last_check = 0;
-let deaths_since_last_check = 0;
-
 export function sys_control_ai(game: Game, delta: number) {
     walkables = [];
     for (let y = 0; y < game.World.Grid.length; y++) {
@@ -34,17 +30,9 @@ export function sys_control_ai(game: Game, delta: number) {
         }
     }
 
-    deaths_since_last_check += duszki_count - game.World.DuszkiAlive;
-
-    // Compute mortality CMA.
-    time_since_last_check += delta;
-    if (time_since_last_check > mortality_check_interval) {
-        game.World.Age += time_since_last_check;
-        game.World.Mortality += (deaths_since_last_check - game.World.Mortality) / game.World.Age;
-
-        deaths_since_last_check = 0;
-        time_since_last_check = 0;
-    }
+    let deaths_this_frame = duszki_count - game.World.DuszkiAlive;
+    // Compute the 10-second mortality EMA.
+    game.World.Mortality += (deaths_this_frame - game.World.Mortality) / (10 / delta);
 }
 
 const destination_position: Vec2 = [0, 0];
@@ -69,7 +57,6 @@ function update(game: Game, entity: number, delta: number) {
     if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
         dispatch(game, Action.DuszekDied, [entity, local.Translation]);
-
         destroy_all(game.World, entity);
         return;
     }

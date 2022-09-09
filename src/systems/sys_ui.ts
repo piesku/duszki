@@ -14,11 +14,16 @@ import {Game} from "../game.js";
 import {App} from "../ui/App.js";
 
 let prev: string;
+let time_since_last_update = 1;
 
 export function sys_ui(game: Game, delta: number) {
-    let next = App(game);
-    if (next !== prev) {
-        game.Ui.innerHTML = prev = next;
+    time_since_last_update += delta;
+    if (time_since_last_update > 1) {
+        time_since_last_update = 0;
+        let next = App(game);
+        if (next !== prev) {
+            game.Ui.innerHTML = prev = next;
+        }
     }
 
     game.FollowContext.drawImage(
