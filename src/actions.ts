@@ -6,7 +6,6 @@ import {copy_position, set_position} from "./components/com_local_transform2d.js
 import {Game} from "./game.js";
 import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
-import {blueprint_eraser} from "./scenes/blu_eraser.js";
 import {blueprint_grave} from "./scenes/blu_grave.js";
 import {blueprint_road_phantom} from "./scenes/blu_road.js";
 import {blueprint_tree_phantom} from "./scenes/blu_tree.js";
@@ -28,6 +27,7 @@ export const enum Action {
 export function dispatch(game: Game, action: Action, payload: unknown) {
     switch (action) {
         case Action.EnterPlaceRoad: {
+            document.body.classList.remove("erasing");
             let previous_phantom = first_having(game.World, Has.ControlPlayer);
             if (previous_phantom !== undefined) {
                 destroy_all(game.World, previous_phantom);
@@ -40,6 +40,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.EnterPlaceTree: {
+            document.body.classList.remove("erasing");
             let previous_phantom = first_having(game.World, Has.ControlPlayer);
             if (previous_phantom !== undefined) {
                 destroy_all(game.World, previous_phantom);
@@ -52,6 +53,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.EnterPlaceBuilding: {
+            document.body.classList.remove("erasing");
             let previous_phantom = first_having(game.World, Has.ControlPlayer);
             if (previous_phantom !== undefined) {
                 destroy_all(game.World, previous_phantom);
@@ -71,7 +73,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
-            instantiate(game, [...blueprint_eraser(game), copy_position(game.PointerPosition)]);
+            document.body.classList.add("erasing");
             break;
         }
         case Action.SpawnDuszek: {

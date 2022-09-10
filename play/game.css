@@ -38,6 +38,9 @@ canvas#follow {
 .grabbing {
     cursor: grabbing;
 }
+.erasing {
+    cursor: not-allowed;
+}
 label {
     display: block;
 }

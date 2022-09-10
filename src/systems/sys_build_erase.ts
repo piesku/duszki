@@ -7,72 +7,64 @@ import {GridType, Has} from "../world.js";
 import {make_tiled_surface} from "./sys_build_roads.js";
 import {BEING_SATISFIED_MASK} from "./sys_satisfy.js";
 
-const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 const world_position: Vec2 = [0, 0];
 
 export function sys_build_erase(game: Game, delta: number) {
-    for (let ent = 0; ent < game.World.Signature.length; ent++) {
-        if ((game.World.Signature[ent] & QUERY) == QUERY) {
-            let control = game.World.ControlPlayer[ent];
-            if (control.Kind !== "eraser") {
-                continue;
-            }
+    if (document.body.classList.contains("erasing")) {
+        if (pointer_down(game, 0)) {
+            let x = Math.round(game.PointerPosition[0]);
+            let y = Math.round(game.PointerPosition[1]);
 
-            if (pointer_down(game, 0)) {
-                let x = Math.round(game.PointerPosition[0]);
-                let y = Math.round(game.PointerPosition[1]);
+            let cell = game.World.Grid[y][x];
+            if (cell.TileEntity !== null) {
+                if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
+                    let spatial = game.World.SpatialNode2D[cell.TileEntity];
+                    if (spatial.Parent !== undefined) {
+                        for (let child_entity of query_down(
+                            game.World,
+                            spatial.Parent,
+                            Has.SpatialNode2D
+                        )) {
+                            let child_spatial = game.World.SpatialNode2D[child_entity];
+                            get_translation(world_position, child_spatial.World);
+                            let x = Math.round(world_position[0]);
+                            let y = Math.round(world_position[1]);
+                            let cell = game.World.Grid[y][x];
 
-                let cell = game.World.Grid[y][x];
-                if (cell.TileEntity !== null) {
-                    if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
-                        let spatial = game.World.SpatialNode2D[cell.TileEntity];
-                        if (spatial.Parent !== undefined) {
-                            for (let child_entity of query_down(
-                                game.World,
-                                spatial.Parent,
-                                Has.SpatialNode2D
-                            )) {
-                                let child_spatial = game.World.SpatialNode2D[child_entity];
-                                get_translation(world_position, child_spatial.World);
-                                let x = Math.round(world_position[0]);
-                                let y = Math.round(world_position[1]);
-                                let cell = game.World.Grid[y][x];
-
-                                if (game.World.Signature[child_entity] & Has.Satisfy) {
-                                    // Release all the duszki from the building.
-                                    let satisfy = game.World.Satisfy[child_entity];
-                                    let ocupados = satisfy.Ocupados;
-                                    for (let i = 0; i < ocupados.length; i++) {
-                                        let ocupado = ocupados[i];
-                                        game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
-                                    }
-                                } else {
-                                    // Reset the world grid for the building's tiles.
-                                    cell.Walkable = false;
-                                    cell.TileEntity = null;
+                            if (game.World.Signature[child_entity] & Has.Satisfy) {
+                                // Release all the duszki from the building.
+                                let satisfy = game.World.Satisfy[child_entity];
+                                let ocupados = satisfy.Ocupados;
+                                for (let i = 0; i < ocupados.length; i++) {
+                                    let ocupado = ocupados[i];
+                                    game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
                                 }
+                            } else {
+                                // Reset the world grid for the building's tiles.
+                                cell.Walkable = false;
+                                cell.TileEntity = null;
                             }
-                            // Destroy the building's root entity.
-                            destroy_all(game.World, spatial.Parent);
-                        } else {
-                            destroy_all(game.World, cell.TileEntity);
                         }
+                        // Destroy the building's root entity.
+                        destroy_all(game.World, spatial.Parent);
                     } else {
-                        // It's a road or a tree.
                         destroy_all(game.World, cell.TileEntity);
                     }
-
-                    cell.TileEntity = null;
-                    cell.Walkable = false;
-                    cell.Pleasant = false;
-                    cell.Ocupados = [];
-                    cell.Type = GridType.Other;
-                    // Adjust the neighbors if necessary.
-                    make_tiled_surface(game, x, y);
+                } else {
+                    // It's a road or a tree.
+                    destroy_all(game.World, cell.TileEntity);
                 }
-            } else if (pointer_clicked(game, 2)) {
-                destroy_all(game.World, ent);
+
+                cell.TileEntity = null;
+                cell.Walkable = false;
+                cell.Pleasant = false;
+                cell.Ocupados = [];
+                cell.Type = GridType.Other;
+                // Adjust the neighbors if necessary.
+                make_tiled_surface(game, x, y);
             }
+        } else if (pointer_clicked(game, 2)) {
+            document.body.classList.remove("erasing");
         }
     }
 }
