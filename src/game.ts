@@ -24,6 +24,7 @@ import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
 import {sys_needs} from "./systems/sys_needs.js";
 import {sys_poll} from "./systems/sys_poll.js";
+import {sys_populate} from "./systems/sys_populate.js";
 import {sys_render2d} from "./systems/sys_render2d.js";
 import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
 import {sys_resize2d} from "./systems/sys_resize2d.js";
@@ -63,11 +64,16 @@ export class Game extends Game3D {
     GeneratorCounts: Array<number> = [];
     IncomePerSecond = 0;
 
+    PopulationSituation = "";
+
     FrameStats: Record<string | number, number> = {
         Deaths: 0,
         [NeedType.HAPPY]: 0,
         [NeedType.FOOD]: 0,
         [NeedType.SLEEP]: 0,
+        Beds: 0,
+        RestaurantSeats: 0,
+        Workplaces: 0,
     };
 
     constructor(db: IDBDatabase) {
@@ -102,6 +108,7 @@ export class Game extends Game3D {
         sys_control_ai(this, delta);
         sys_control_always2d(this, delta);
         sys_satisfy(this, delta);
+        sys_populate(this, delta);
         sys_score(this, delta);
 
         // Game logic.

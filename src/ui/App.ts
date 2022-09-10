@@ -23,7 +23,7 @@ export function App(game: Game) {
             position: absolute;
             inset: 0;
             width: 200px;
-            padding: 220px 10px;
+            padding: 150px 10px;
             background: #9999;
             backdrop-filter: blur(10px);
             color: white;
@@ -33,6 +33,7 @@ export function App(game: Game) {
         "
     >
         <div>
+            <h3>${game.PopulationSituation}</h3>
             <label>Wealth: ${cost_fmt.format(game.World.TotalWealth)}</label>
             <label>Income: ${cost_fmt.format(game.IncomePerSecond)}/s</label>
             <button onclick="$(${Action.EnterErase})">❌ Remove</button>

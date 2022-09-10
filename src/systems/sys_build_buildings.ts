@@ -2,7 +2,6 @@ import {instantiate} from "../../lib/game.js";
 import {pointer_clicked} from "../../lib/input.js";
 import {get_translation} from "../../lib/mat2d.js";
 import {Vec2} from "../../lib/math.js";
-import {Action, dispatch} from "../actions.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {GENERATORS} from "../config.js";
@@ -77,12 +76,12 @@ export function sys_build_buildings(game: Game, delta: number) {
                     render.Shift = 0;
                 }
 
-                if (generator.Id === DUSZEK_SPAWNING_BUILDING_INDEX) {
-                    let i = 30;
-                    while (i--) {
-                        dispatch(game, Action.SpawnDuszek, {});
-                    }
-                }
+                // if (generator.Id === DUSZEK_SPAWNING_BUILDING_INDEX) {
+                //     let i = 30;
+                //     while (i--) {
+                //         dispatch(game, Action.SpawnDuszek, {});
+                //     }
+                // }
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
             }
