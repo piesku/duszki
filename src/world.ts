@@ -114,6 +114,7 @@ export class World extends WorldImpl {
     Happiness = 0;
     Nutrition = 0;
     Restedness = 0;
+    Employment = 0;
     DuszkiAlive = 0;
     DuszkiWorking = 0;
 

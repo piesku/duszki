@@ -21,14 +21,12 @@ export function sys_score(game: Game, delta: number) {
 
         let sleep_percent = game.FrameStats[NeedType.SLEEP] / out_of;
         game.World.Restedness += (sleep_percent - game.World.Restedness) * weight;
+
+        let working_percent = game.World.DuszkiWorking / out_of;
+        game.World.Employment += (working_percent - game.World.Employment) * weight;
     } else {
         game.World.Happiness = 0;
         game.World.Nutrition = 0;
         game.World.Restedness = 0;
-    }
-
-    // Reset all frame stats.
-    for (let stat_name in game.FrameStats) {
-        game.FrameStats[stat_name] = 0;
     }
 }

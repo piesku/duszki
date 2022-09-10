@@ -66,6 +66,7 @@ export class Game extends Game3D {
 
     PopulationSituation = "";
 
+    // Reset every frame in FrameReset().
     FrameStats: Record<string | number, number> = {
         Deaths: 0,
         [NeedType.HAPPY]: 0,
@@ -74,6 +75,9 @@ export class Game extends Game3D {
         Beds: 0,
         RestaurantSeats: 0,
         Workplaces: 0,
+        DuszkiUnhappy: 0,
+        DuszkiHungry: 0,
+        DuszkiTired: 0,
     };
 
     constructor(db: IDBDatabase) {
@@ -140,6 +144,15 @@ export class Game extends Game3D {
         sys_render2d_animate(this, delta);
         sys_render2d(this, delta);
         sys_ui(this, delta);
+    }
+
+    override FrameReset(delta: number): void {
+        super.FrameReset(delta);
+
+        // Reset all frame stats.
+        for (let stat_name in this.FrameStats) {
+            this.FrameStats[stat_name] = 0;
+        }
     }
 }
 
