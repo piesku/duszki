@@ -86,6 +86,11 @@ export const enum Has {
     Walk = 1 << Component.Walk,
 }
 
+export const enum GridType {
+    Other,
+    Road,
+    Trees,
+}
 export interface GridCell {
     Index: number;
     Position: Vec2;
@@ -94,6 +99,7 @@ export interface GridCell {
     Pleasant: boolean;
     Ocupados: Entity[];
     TrafficIntensity: number;
+    Type: GridType;
 }
 
 export class World extends WorldImpl {
@@ -128,6 +134,7 @@ export class World extends WorldImpl {
                         Pleasant: false,
                         Ocupados: [],
                         TrafficIntensity: 0,
+                        Type: GridType.Other,
                     })
                 )
         );

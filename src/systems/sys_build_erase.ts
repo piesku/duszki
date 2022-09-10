@@ -3,8 +3,8 @@ import {get_translation} from "../../lib/mat2d.js";
 import {Vec2} from "../../lib/math.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {Game} from "../game.js";
-import {Has} from "../world.js";
-import {make_road} from "./sys_build_roads.js";
+import {GridType, Has} from "../world.js";
+import {make_tiled_surface} from "./sys_build_roads.js";
 import {BEING_SATISFIED_MASK} from "./sys_satisfy.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
@@ -66,8 +66,9 @@ export function sys_build_erase(game: Game, delta: number) {
                     cell.Walkable = false;
                     cell.Pleasant = false;
                     cell.Ocupados = [];
+                    cell.Type = GridType.Other;
                     // Adjust the neighbors if necessary.
-                    make_road(game, x, y);
+                    make_tiled_surface(game, x, y);
                 }
             } else if (pointer_clicked(game, 2)) {
                 destroy_all(game.World, ent);
