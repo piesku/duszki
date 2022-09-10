@@ -50,6 +50,7 @@ export function sys_build_trees(game: Game, delta: number) {
                 render.Color[2] = 1;
                 render.Shift = 0;
             } else if (pointer_down(game, 2)) {
+                document.body.classList.remove("building");
                 destroy_all(game.World, ent);
             }
         }

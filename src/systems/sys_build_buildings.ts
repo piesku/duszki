@@ -83,6 +83,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                 //     }
                 // }
             } else if (pointer_clicked(game, 2)) {
+                document.body.classList.remove("building");
                 destroy_all(game.World, ent);
             }
         }

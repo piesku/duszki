@@ -33,6 +33,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
+            document.body.classList.add("building");
             instantiate(game, [
                 ...blueprint_road_phantom(game),
                 copy_position(game.PointerPosition),
@@ -46,6 +47,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
+            document.body.classList.add("building");
             instantiate(game, [
                 ...blueprint_tree_phantom(game),
                 copy_position(game.PointerPosition),
@@ -59,6 +61,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                 destroy_all(game.World, previous_phantom);
             }
 
+            document.body.classList.add("building");
             let building_id = payload as number;
             instantiate(game, [
                 ...blueprint_building(game, building_id),
@@ -68,6 +71,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.EnterErase: {
+            document.body.classList.remove("building");
             let previous_phantom = first_having(game.World, Has.ControlPlayer);
             if (previous_phantom !== undefined) {
                 destroy_all(game.World, previous_phantom);

@@ -56,6 +56,7 @@ export function sys_build_roads(game: Game, delta: number) {
                 game.World.Grid[y][x].Type = GridType.Road;
                 make_tiled_surface(game, x, y);
             } else if (pointer_down(game, 2)) {
+                document.body.classList.remove("building");
                 destroy_all(game.World, ent);
             }
         }
