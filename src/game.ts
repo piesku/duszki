@@ -61,7 +61,10 @@ export class Game extends Game3D {
     ActiveBuilding: null | number = null;
     SelectedEntity: null | Entity = null;
 
+    // Number of buildings of each type.
     GeneratorCounts: Array<number> = [];
+    // Number of duszki inside buildings of each type.
+    GeneratorOccupancy: Array<number> = [];
     IncomePerSecond = 0;
 
     PopulationSituation = "";

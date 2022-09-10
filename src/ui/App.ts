@@ -23,7 +23,7 @@ export function App(game: Game) {
             position: absolute;
             inset: 0;
             width: 200px;
-            padding: 150px 10px;
+            padding: 150px 10px 220px;
             background: #9999;
             backdrop-filter: blur(10px);
             color: white;
