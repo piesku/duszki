@@ -4,7 +4,8 @@ import {Vec2} from "../../lib/math.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {GridType, Has} from "../world.js";
-import {make_tiled_surface} from "./sys_build_roads.js";
+import {make_tiled_road} from "./sys_build_roads.js";
+import {make_tiled_park} from "./sys_build_trees.js";
 import {BEING_SATISFIED_MASK} from "./sys_satisfy.js";
 
 const world_position: Vec2 = [0, 0];
@@ -61,7 +62,8 @@ export function sys_build_erase(game: Game, delta: number) {
                 cell.Ocupados = [];
                 cell.Type = GridType.Other;
                 // Adjust the neighbors if necessary.
-                make_tiled_surface(game, x, y);
+                make_tiled_road(game, x, y);
+                make_tiled_park(game, x, y);
             }
         } else if (pointer_clicked(game, 2)) {
             document.body.classList.remove("erasing");

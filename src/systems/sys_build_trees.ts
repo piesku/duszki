@@ -2,9 +2,10 @@ import {instantiate} from "../../lib/game.js";
 import {pointer_down} from "../../lib/input.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
+import {set_sprite} from "../components/com_render2d.js";
 import {Game} from "../game.js";
 import {blueprint_tree_phantom} from "../scenes/blu_tree.js";
-import {Has} from "../world.js";
+import {GridType, Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
@@ -43,6 +44,8 @@ export function sys_build_trees(game: Game, delta: number) {
                 cell.TileEntity = ent;
                 cell.Walkable = false;
                 cell.Pleasant = true;
+                cell.Type = GridType.Tree;
+                make_tiled_park(game, x, y);
 
                 // Bring back the original tint.
                 render.Color[0] = 1;
@@ -62,4 +65,76 @@ export function sys_build_trees(game: Game, delta: number) {
         let y = Math.round(game.PointerPosition[1]);
         instantiate(game, [...blueprint_tree_phantom(game), set_position(x, y)]);
     }
+}
+
+export function make_tiled_park(game: Game, x: number, y: number) {
+    choose_tile_based_on_neighbors(game, x, y);
+
+    if (game.World.Grid[y + 1]?.[x].Pleasant) {
+        choose_tile_based_on_neighbors(game, x, y + 1);
+    }
+    if (game.World.Grid[y][x + 1]?.Pleasant) {
+        choose_tile_based_on_neighbors(game, x + 1, y);
+    }
+    if (game.World.Grid[y - 1]?.[x].Pleasant) {
+        choose_tile_based_on_neighbors(game, x, y - 1);
+    }
+    if (game.World.Grid[y][x - 1]?.Pleasant) {
+        choose_tile_based_on_neighbors(game, x - 1, y);
+    }
+}
+
+const enum NeighborMasks {
+    UP = 8,
+    RIGHT = 4,
+    DOWN = 2,
+    LEFT = 1,
+}
+
+type NeighborSprites = {
+    [x: number]: string;
+};
+
+let TreesNeighborSprites: NeighborSprites = {
+    [0]: "013.png", // TODO: Randomize for each new tile
+    [NeighborMasks.UP]: "045.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: "044.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "124.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "028.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "121.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT]: "046.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "122.png",
+    [NeighborMasks.UP | NeighborMasks.DOWN]: "120.png",
+    [NeighborMasks.RIGHT]: "027.png",
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "119.png",
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "123.png",
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "010.png",
+    [NeighborMasks.DOWN]: "011.png",
+    [NeighborMasks.LEFT]: "029.png",
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "012.png",
+};
+
+function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
+    let tile = game.World.Grid[y][x].TileEntity;
+    let type = game.World.Grid[y][x].Type;
+    if (!tile || type == GridType.Other) {
+        return;
+    }
+
+    let neighbors = 0;
+
+    if (game.World.Grid[y + 1]?.[x].Pleasant) {
+        neighbors |= NeighborMasks.UP;
+    }
+    if (game.World.Grid[y][x + 1]?.Pleasant) {
+        neighbors |= NeighborMasks.RIGHT;
+    }
+    if (game.World.Grid[y - 1]?.[x].Pleasant) {
+        neighbors |= NeighborMasks.DOWN;
+    }
+    if (game.World.Grid[y][x - 1]?.Pleasant) {
+        neighbors |= NeighborMasks.LEFT;
+    }
+
+    set_sprite(game, tile, TreesNeighborSprites[neighbors]);
 }

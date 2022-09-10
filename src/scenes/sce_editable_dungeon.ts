@@ -6,7 +6,7 @@ import {local_transform2d, set_position} from "../components/com_local_transform
 import {render2d, shift} from "../components/com_render2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
-import {make_tiled_surface} from "../systems/sys_build_roads.js";
+import {make_tiled_road} from "../systems/sys_build_roads.js";
 import {GridType, World} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
@@ -54,10 +54,9 @@ export function scene_editable_dungeon(game: Game) {
         instantiate(game, [
             ...blueprint_road(game),
             set_position(x, highway_y),
-            grid(GridFlag.Walkable),
+            grid(GridFlag.Walkable, GridType.Road),
         ]);
-        game.World.Grid[highway_y][x].Type = GridType.Road;
-        make_tiled_surface(game, x, highway_y);
+        make_tiled_road(game, x, highway_y);
     }
 
     let tree_count = (game.World.Width * game.World.Height) / 100;
@@ -68,7 +67,7 @@ export function scene_editable_dungeon(game: Game) {
             instantiate(game, [
                 ...blueprint_tree(game),
                 set_position(x, y),
-                grid(GridFlag.Pleasant),
+                grid(GridFlag.Pleasant, GridType.Tree),
             ]);
         }
     }

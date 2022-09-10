@@ -89,7 +89,7 @@ export const enum Has {
 export const enum GridType {
     Other,
     Road,
-    Trees,
+    Tree,
 }
 export interface GridCell {
     Index: number;

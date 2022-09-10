@@ -1,1 +1,2 @@
 $ convert Colored/tilemap_packed.png -crop 16x16 ../../sprites/%03d.png
+

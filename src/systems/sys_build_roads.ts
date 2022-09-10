@@ -44,17 +44,14 @@ export function sys_build_roads(game: Game, delta: number) {
                 cell.TileEntity = ent;
                 cell.Walkable = true;
                 cell.Pleasant = false;
+                cell.Type = GridType.Road;
+                make_tiled_road(game, x, y);
 
                 // Bring back the original tint.
                 render.Color[0] = 1;
                 render.Color[1] = 1;
                 render.Color[2] = 1;
                 render.Shift = 0;
-
-                // Pick a road tile based on the neighbors, and adjust neighbor
-                // tiles, too.
-                game.World.Grid[y][x].Type = GridType.Road;
-                make_tiled_surface(game, x, y);
             } else if (pointer_down(game, 2)) {
                 document.body.classList.remove("building");
                 destroy_all(game.World, ent);
@@ -70,7 +67,7 @@ export function sys_build_roads(game: Game, delta: number) {
     }
 }
 
-export function make_tiled_surface(game: Game, x: number, y: number) {
+export function make_tiled_road(game: Game, x: number, y: number) {
     choose_tile_based_on_neighbors(game, x, y);
 
     if (game.World.Grid[y + 1]?.[x].Walkable) {
@@ -94,13 +91,8 @@ const enum NeighborMasks {
     LEFT = 1,
 }
 
-export type NeighborSprites = {
+type NeighborSprites = {
     [x: number]: string;
-    0: string;
-    8: string;
-    4: string;
-    2: string;
-    1: string;
 };
 
 let RoadNeighborSprites: NeighborSprites = {
@@ -122,57 +114,27 @@ let RoadNeighborSprites: NeighborSprites = {
     [NeighborMasks.LEFT | NeighborMasks.DOWN]: "086.png",
 };
 
-let TreesNeighborSprites: NeighborSprites = {
-    [0]: "028.png",
-    [NeighborMasks.UP]: "014.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: "044.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "106.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "090.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "088.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "103.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "105.png",
-    [NeighborMasks.UP | NeighborMasks.DOWN]: "104.png",
-    [NeighborMasks.RIGHT]: "087.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "087.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "089.png",
-    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "085.png",
-    [NeighborMasks.DOWN]: "104.png",
-    [NeighborMasks.LEFT]: "087.png",
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "086.png",
-};
-
-let Sprites = {
-    [GridType.Road]: RoadNeighborSprites,
-    [GridType.Trees]: RoadNeighborSprites,
-};
-
-function choose_tile_based_on_neighbors(
-    game: Game,
-    x: number,
-    y: number
-    // type: GridType
-) {
+function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
     let tile = game.World.Grid[y][x].TileEntity;
     let type = game.World.Grid[y][x].Type;
     if (!tile || type == GridType.Other) {
         return;
     }
 
-    let sprites = Sprites[type] || RoadNeighborSprites;
     let neighbors = 0;
 
-    if (game.World.Grid[y + 1]?.[x].Type == type) {
+    if (game.World.Grid[y + 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.UP;
     }
-    if (game.World.Grid[y][x + 1]?.Type == type) {
+    if (game.World.Grid[y][x + 1]?.Walkable) {
         neighbors |= NeighborMasks.RIGHT;
     }
-    if (game.World.Grid[y - 1]?.[x].Type == type) {
+    if (game.World.Grid[y - 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.DOWN;
     }
-    if (game.World.Grid[y][x - 1]?.Type == type) {
+    if (game.World.Grid[y][x - 1]?.Walkable) {
         neighbors |= NeighborMasks.LEFT;
     }
 
-    set_sprite(game, tile, sprites[neighbors]);
+    set_sprite(game, tile, RoadNeighborSprites[neighbors]);
 }
