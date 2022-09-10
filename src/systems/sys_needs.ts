@@ -75,17 +75,13 @@ function update(game: Game, entity: number, delta: number) {
     let y = Math.round(local.Translation[1]);
 
     needs.Value[NeedType.HAPPY] -= needs.Delta[NeedType.HAPPY] * delta;
-    if (game.World.Grid[y + 1]?.[x].Pleasant) {
-        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
-    }
-    if (game.World.Grid[y][x + 1]?.Pleasant) {
-        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
-    }
-    if (game.World.Grid[y - 1]?.[x].Pleasant) {
-        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
-    }
-    if (game.World.Grid[y][x - 1]?.Pleasant) {
-        needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+    // check 8 neighbours
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (game.World.Grid[y + i]?.[x + j]?.Pleasant) {
+                needs.Value[NeedType.HAPPY] += needs.Delta[NeedType.HAPPY] * delta;
+            }
+        }
     }
     needs.Value[NeedType.HAPPY] = clamp(0, 1, needs.Value[NeedType.HAPPY]);
 

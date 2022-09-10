@@ -23,7 +23,7 @@ export function sys_populate(game: Game, delta: number) {
     let enough_food = game.FrameStats.RestaurantSeats > total_duszki;
     let enough_work = game.FrameStats.Workplaces > total_duszki;
     let low_mortality = game.World.Mortality < 0.3;
-    let high_happiness = game.FrameStats[NeedType.HAPPY] / total_duszki > 0.7;
+    let high_happiness = game.FrameStats[NeedType.HAPPY] / total_duszki > 0.5;
 
     if (
         total_duszki < initial_population &&
