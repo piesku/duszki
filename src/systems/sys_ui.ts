@@ -51,24 +51,24 @@ export function sys_ui(game: Game, delta: number) {
             let index = ((game.World.Height - y - 1) * game.World.Width + x) * 4;
             let cell = game.World.Grid[y][x];
             if (cell.Walkable) {
-                minimap_image_data.data[index + 0] = 0;
-                minimap_image_data.data[index + 1] = 0;
-                minimap_image_data.data[index + 2] = 0;
+                minimap_image_data.data[index + 0] = 182;
+                minimap_image_data.data[index + 1] = 172;
+                minimap_image_data.data[index + 2] = 82;
                 minimap_image_data.data[index + 3] = 255;
             } else if (cell.Pleasant) {
-                minimap_image_data.data[index + 0] = 0;
-                minimap_image_data.data[index + 1] = 255;
-                minimap_image_data.data[index + 2] = 0;
+                minimap_image_data.data[index + 0] = 54;
+                minimap_image_data.data[index + 1] = 126;
+                minimap_image_data.data[index + 2] = 81;
                 minimap_image_data.data[index + 3] = 255;
             } else if (cell.TileEntity) {
-                minimap_image_data.data[index + 0] = 255;
-                minimap_image_data.data[index + 1] = 0;
+                minimap_image_data.data[index + 0] = 163;
+                minimap_image_data.data[index + 1] = 57;
                 minimap_image_data.data[index + 2] = 0;
                 minimap_image_data.data[index + 3] = 255;
             } else {
-                minimap_image_data.data[index + 0] = 255;
-                minimap_image_data.data[index + 1] = 255;
-                minimap_image_data.data[index + 2] = 255;
+                minimap_image_data.data[index + 0] = 88;
+                minimap_image_data.data[index + 1] = 151;
+                minimap_image_data.data[index + 2] = 64;
                 minimap_image_data.data[index + 3] = 255;
             }
         }
