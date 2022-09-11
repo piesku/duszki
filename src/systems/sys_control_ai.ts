@@ -2,7 +2,6 @@ import {get_translation} from "../../lib/mat2d.js";
 import {Vec2} from "../../lib/math.js";
 import {element} from "../../lib/random.js";
 import {Action, dispatch} from "../actions.js";
-import {destroy_all} from "../components/com_children.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {GridCell, Has} from "../world.js";
@@ -47,15 +46,13 @@ function update(game: Game, entity: number, delta: number) {
 
     if (needs.Value[NeedType.FOOD] < 0.001) {
         console.log("duszek umar z głodu");
-        dispatch(game, Action.DuszekDied, [entity, local.Translation]);
-        destroy_all(game.World, entity);
+        dispatch(game, Action.DuszekDied, [entity]);
         return;
     }
 
     if (needs.Value[NeedType.SLEEP] < 0.001) {
         console.log("duszek umar z wycieczenia");
-        dispatch(game, Action.DuszekDied, [entity, local.Translation]);
-        destroy_all(game.World, entity);
+        dispatch(game, Action.DuszekDied, [entity]);
         return;
     }
 

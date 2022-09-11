@@ -6,7 +6,7 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {LOW_SATISFY_THRESHOLD} from "./sys_satisfy.js";
 
-const QUERY = Has.Needs | Has.LocalTransform2D;
+const QUERY = Has.Needs | Has.Alive | Has.LocalTransform2D;
 const SATISFY_QUERY = Has.Satisfy;
 
 let food_destination: Entity[] = [];

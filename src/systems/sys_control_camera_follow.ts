@@ -13,7 +13,7 @@ export function sys_control_camera_follow(game: Game, delta: number) {
         camera_follow.Target = game.SelectedEntity;
         game.World.Signature[camera_entity] |= Has.Follow;
 
-        if (game.World.Signature[game.SelectedEntity] & Has.ControlAi) {
+        if (game.World.Signature[game.SelectedEntity] & Has.Needs) {
             // Show the duszek's details panel in the sidebar.
         } else if (game.World.Signature[game.SelectedEntity] & Has.Generator) {
             // Show the building's details panel in the sidebar.

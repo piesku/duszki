@@ -28,6 +28,7 @@ import {Trigger} from "./components/com_trigger.js";
 import {Walk} from "./components/com_walk.js";
 
 const enum Component {
+    Alive,
     AnimateSprite,
     Camera2D,
     Collide2D,
@@ -58,6 +59,7 @@ const enum Component {
 
 export const enum Has {
     None = 0,
+    Alive = 1 << Component.Alive,
     AnimateSprite = 1 << Component.AnimateSprite,
     Camera2D = 1 << Component.Camera2D,
     Collide2D = 1 << Component.Collide2D,

@@ -5,7 +5,7 @@ import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-const QUERY = Has.LocalTransform2D | Has.Walk | Has.Move2D;
+const QUERY = Has.LocalTransform2D | Has.Walk;
 
 export function sys_walk(game: Game, delta: number) {
     for (let y = 0; y < game.World.Grid.length; y++) {

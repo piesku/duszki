@@ -1,12 +1,13 @@
 import {instantiate} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
+import {element} from "../lib/random.js";
 import {Entity, first_having} from "../lib/world.js";
 import {destroy_all} from "./components/com_children.js";
 import {copy_position, set_position} from "./components/com_local_transform2d.js";
+import {set_sprite} from "./components/com_render2d.js";
 import {Game} from "./game.js";
 import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
-import {blueprint_grave} from "./scenes/blu_grave.js";
 import {blueprint_road_phantom} from "./scenes/blu_road.js";
 import {blueprint_tree_phantom} from "./scenes/blu_tree.js";
 import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
@@ -90,16 +91,16 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.DuszekDied: {
-            let [entity, position] = payload as [Entity, Vec2];
+            let [entity] = payload as [Entity, Vec2];
             game.World.DuszkiAlive--;
             game.FrameStats.Deaths++;
-            let tombstone = instantiate(game, [
-                ...blueprint_grave(game),
-                set_position(Math.round(position[0]), Math.round(position[1])),
-            ]);
-            if (entity === game.SelectedEntity) {
-                game.SelectedEntity = tombstone;
-            }
+            game.World.Signature[entity] &= ~(Has.ControlAi | Has.Move2D | Has.Alive);
+            game.World.Walk[entity].DestinationTrigger = null;
+            game.World.Walk[entity].Path = [];
+            let tomb = element(["064.png", "065.png", "066.png"]);
+            // console.log({tomb, entity});
+            set_sprite(game, entity, tomb);
+            game.World.Render2D[entity].Shift = 1;
             break;
         }
         case Action.ResetGame: {
