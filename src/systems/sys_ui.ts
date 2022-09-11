@@ -11,32 +11,33 @@
  */
 
 import {Game} from "../game.js";
-import {App} from "../ui/App.js";
+import {Advisor} from "../ui/Advisor.js";
+import {Commands} from "../ui/Commands.js";
+import {Details} from "../ui/Details.js";
+import {Overview} from "../ui/Overview.js";
 
-let prev: string;
+let nexts: Array<string> = [];
+let prevs: Array<string> = [];
 let time_since_last_update = 1;
 
 export function sys_ui(game: Game, delta: number) {
     time_since_last_update += delta;
     if (time_since_last_update > 1) {
         time_since_last_update = 0;
-        let next = App(game);
-        if (next !== prev) {
-            game.Ui.innerHTML = prev = next;
+
+        nexts[0] = Overview(game);
+        nexts[1] = Details(game);
+        nexts[2] = Commands(game);
+        nexts[3] = Advisor(game);
+
+        for (let i = 0; i < nexts.length; i++) {
+            if (nexts[i] !== prevs[i]) {
+                game.Ui.children[i].innerHTML = prevs[i] = nexts[i];
+            }
         }
     }
 
-    game.FollowContext.drawImage(
-        game.SceneCanvas,
-        10,
-        game.ViewportHeight - 210,
-        200,
-        200,
-        0,
-        0,
-        200,
-        200
-    );
+    game.FollowContext.drawImage(game.SceneCanvas, 10, 10, 200, 200, 0, 0, 200, 200);
 
     let minimap_image_data = game.MinimapContext.getImageData(
         0,

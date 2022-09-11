@@ -120,8 +120,8 @@ export class World extends WorldImpl {
     DuszkiWorking = 0;
 
     // Grid of the world.
-    Width: number = 120;
-    Height: number = 80;
+    Width: number = 100;
+    Height: number = 100;
     Grid: GridCell[][] = Array(this.Height)
         .fill(0)
         .map((_, y) =>

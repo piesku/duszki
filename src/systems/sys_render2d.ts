@@ -74,13 +74,16 @@ export function sys_render2d(game: Game, delta: number) {
         let camera_entity = game.Cameras[1];
         let camera = game.World.Camera2D[camera_entity];
 
+        let x = 10;
+        let y = game.ViewportHeight - camera.ViewportHeight - 10;
+
         game.Gl.enable(GL_SCISSOR_TEST);
-        game.Gl.scissor(10, 10, camera.ViewportWidth, camera.ViewportHeight);
+        game.Gl.scissor(x, y, camera.ViewportWidth, camera.ViewportHeight);
         game.Gl.clearColor(88 / 255, 151 / 255, 64 / 255, 1);
         game.Gl.clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         game.Gl.disable(GL_SCISSOR_TEST);
 
-        game.Gl.viewport(10, 10, camera.ViewportWidth, camera.ViewportHeight);
+        game.Gl.viewport(x, y, camera.ViewportWidth, camera.ViewportHeight);
         render_all(game, camera);
     }
 }

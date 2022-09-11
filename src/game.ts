@@ -38,6 +38,7 @@ import {sys_transform2d} from "./systems/sys_transform2d.js";
 import {sys_trigger2d} from "./systems/sys_trigger2d.js";
 import {sys_ui} from "./systems/sys_ui.js";
 import {sys_walk} from "./systems/sys_walk.js";
+import {App} from "./ui/App.js";
 import {Has, World} from "./world.js";
 
 export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
@@ -91,6 +92,7 @@ export class Game extends Game3D {
 
         this.MinimapCanvas.width = this.World.Width;
         this.MinimapCanvas.height = this.World.Height;
+        this.Ui.innerHTML = App();
 
         this.Gl.enable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);
