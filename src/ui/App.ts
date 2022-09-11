@@ -9,8 +9,9 @@ export function App() {
                 top: 0;
                 left: 0;
                 width: 200px;
-                padding: 220px 10px 10px;
-                background: #9999;
+                padding: 220px 50px 50px 10px;
+                border-radius: 0 0 100px;
+                background: #66e9;
                 backdrop-filter: blur(10px);
                 color: white;
             "
@@ -21,8 +22,9 @@ export function App() {
                 right: 0;
                 bottom: 0;
                 width: 200px;
-                padding: 10px 10px 220px;
-                background: #9999;
+                padding: 50px 10px 220px 50px;
+                border-radius: 100px 0 0;
+                background: #66e9;
                 backdrop-filter: blur(10px);
                 color: white;
             "
@@ -33,8 +35,9 @@ export function App() {
                 left: 0;
                 bottom: 0;
                 width: 200px;
-                padding: 10px;
-                background: #9999;
+                padding: 50px 50px 10px 10px;
+                border-radius: 0 100px 0;
+                background: #66e9;
                 backdrop-filter: blur(10px);
                 color: white;
             "
@@ -43,8 +46,8 @@ export function App() {
             style="
                 position: absolute;
                 bottom: 10px;
-                left: 230px;
-                width: calc(100% - 460px);
+                left: 270px;
+                width: calc(100% - 540px);
             "
         ></div>
     `;
