@@ -6,22 +6,14 @@ import {total_cost} from "../generator.js";
 import {cost_fmt} from "./Overview.js";
 
 export function Commands(game: Game) {
-    return html`<div
-        onmousedown="event.stopPropagation();"
-        onmouseup="event.stopPropagation();"
-        onclick="$(${Action.MinimapNavigation}, event);"
-        style="
-        "
-    >
-        <div>
-            <button onclick="$(${Action.EnterErase})">❌ Remove</button>
-            <button onclick="$(${Action.EnterPlaceRoad})">🛣 Road</button>
-            <button onclick="$(${Action.EnterPlaceTree})">🌳 Tree</button>
-            ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
-            ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
-            ${BuildingButton(game, GeneratorId.Mine3)}
-            <button onclick="$(${Action.ResetGame})">Reset</button>
-        </div>
+    return html`<div onmousedown="event.stopPropagation();" onmouseup="event.stopPropagation();">
+        <button onclick="$(${Action.EnterErase})">❌ Remove</button>
+        <button onclick="$(${Action.EnterPlaceRoad})">🛣 Road</button>
+        <button onclick="$(${Action.EnterPlaceTree})">🌳 Tree</button>
+        ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
+        ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
+        ${BuildingButton(game, GeneratorId.Mine3)}
+        <button onclick="$(${Action.ResetGame})">Reset</button>
     </div>`;
 }
 

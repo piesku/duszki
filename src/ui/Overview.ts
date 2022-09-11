@@ -1,4 +1,5 @@
 import {html} from "../../lib/html.js";
+import {Action} from "../actions.js";
 import {Game} from "../game.js";
 
 export const cost_fmt = new Intl.NumberFormat("en-US", {
@@ -8,7 +9,11 @@ export const cost_fmt = new Intl.NumberFormat("en-US", {
 });
 
 export function Overview(game: Game) {
-    return html`<div>
+    return html`<div
+        onmousedown="event.stopPropagation();"
+        onmouseup="event.stopPropagation();"
+        onclick="$(${Action.MinimapNavigation}, event);"
+    >
         <label>Wealth: ${cost_fmt.format(game.World.TotalWealth)}</label>
         <label>Income: ${cost_fmt.format(game.IncomePerSecond)}/s</label>
         <hr />

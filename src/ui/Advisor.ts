@@ -5,7 +5,8 @@ export function Advisor(game: Game) {
     if (game.PopulationSituation) {
         return html`<marquee
             style="
-                color: red;
+                color: #822;
+                font-size: 2em;
                 font-weight: bold;
                 font-style: italic;
             "

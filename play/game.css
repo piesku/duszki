@@ -15,6 +15,7 @@ main {
     user-select: none;
     touch-action: none;
     image-rendering: pixelated;
+    color: #fff;
 }
 canvas#minimap {
     position: absolute;
