@@ -22,7 +22,7 @@ export function sys_control_mouse(game: Game, delta: number) {
     }
 
     if (!pointer_viewport(game, game.PointerPosition)) {
-        // No mouse, no touch.
+        // No mouse input yet.
         return;
     }
 

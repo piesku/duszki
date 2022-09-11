@@ -41,12 +41,7 @@ export abstract class GameImpl {
         Mouse0: 0,
         Mouse1: 0,
         Mouse2: 0,
-        Touch0: 0,
-        Touch1: 0,
     };
-    // Map of touch ids to touch indices. In particular, Firefox assigns high
-    // ints as ids. Chrome usually starts at 0, so id === index.
-    InputTouches: Record<string, number> = {};
 
     Ui = document.querySelector("main")!;
 
@@ -74,81 +69,6 @@ export abstract class GameImpl {
         this.Ui.addEventListener("wheel", (evt) => {
             evt.preventDefault();
             this.InputDelta["WheelY"] = evt.deltaY;
-        });
-
-        this.Ui.addEventListener("touchstart", (evt) => {
-            if (evt.target === this.Ui) {
-                // Prevent browsers from interpreting touch gestures as navigation input.
-                evt.preventDefault();
-            }
-
-            if (evt.touches.length === 1) {
-                // It's a new gesture.
-                this.InputTouches = {};
-            }
-            for (let i = 0; i < evt.touches.length; i++) {
-                let touch = evt.touches[i];
-                this.InputTouches[touch.identifier] = i;
-            }
-            for (let i = 0; i < evt.changedTouches.length; i++) {
-                let touch = evt.changedTouches[i];
-                let index = this.InputTouches[touch.identifier];
-                this.InputState[`Touch${index}`] = 1;
-                this.InputState[`Touch${index}X`] = touch.clientX;
-                this.InputState[`Touch${index}Y`] = touch.clientY;
-                this.InputDelta[`Touch${index}`] = 1;
-                this.InputDelta[`Touch${index}X`] = 0;
-                this.InputDelta[`Touch${index}Y`] = 0;
-            }
-        });
-        this.Ui.addEventListener("touchmove", (evt) => {
-            if (evt.target === this.Ui) {
-                // Prevent browsers from interpreting touch gestures as navigation input.
-                evt.preventDefault();
-            }
-
-            for (let i = 0; i < evt.changedTouches.length; i++) {
-                let touch = evt.changedTouches[i];
-                let index = this.InputTouches[touch.identifier];
-                this.InputDelta[`Touch${index}X`] =
-                    touch.clientX - this.InputState[`Touch${index}X`];
-                this.InputDelta[`Touch${index}Y`] =
-                    touch.clientY - this.InputState[`Touch${index}Y`];
-                this.InputState[`Touch${index}X`] = touch.clientX;
-                this.InputState[`Touch${index}Y`] = touch.clientY;
-            }
-        });
-        this.Ui.addEventListener("touchend", (evt) => {
-            if (evt.target === this.Ui) {
-                // Prevent browsers from interpreting touch gestures as navigation input.
-                evt.preventDefault();
-            }
-
-            for (let i = 0; i < evt.changedTouches.length; i++) {
-                let touch = evt.changedTouches[i];
-                let index = this.InputTouches[touch.identifier];
-                this.InputState[`Touch${index}`] = 0;
-                this.InputDelta[`Touch${index}`] = -1;
-            }
-        });
-        this.Ui.addEventListener("touchcancel", (evt) => {
-            for (let i = 0; i < evt.changedTouches.length; i++) {
-                let touch = evt.changedTouches[i];
-                let index = this.InputTouches[touch.identifier];
-                this.InputState[`Touch${index}`] = 0;
-                this.InputDelta[`Touch${index}`] = -1;
-            }
-        });
-
-        window.addEventListener("keydown", (evt) => {
-            if (!evt.repeat) {
-                this.InputState[evt.code] = 1;
-                this.InputDelta[evt.code] = 1;
-            }
-        });
-        window.addEventListener("keyup", (evt) => {
-            this.InputState[evt.code] = 0;
-            this.InputDelta[evt.code] = -1;
         });
     }
 
@@ -198,15 +118,6 @@ export abstract class GameImpl {
         if (this.InputState["Mouse2"] === 1) {
             this.InputDistance["Mouse2"] += mouse_distance;
         }
-
-        if (this.InputState["Touch0"] === 1) {
-            this.InputDistance["Touch0"] +=
-                Math.abs(this.InputDelta["Touch0X"]) + Math.abs(this.InputDelta["Touch0Y"]);
-        }
-        if (this.InputState["Touch1"] === 1) {
-            this.InputDistance["Touch1"] +=
-                Math.abs(this.InputDelta["Touch1X"]) + Math.abs(this.InputDelta["Touch1Y"]);
-        }
     }
 
     FixedUpdate(step: number) {}
@@ -223,13 +134,6 @@ export abstract class GameImpl {
         }
         if (this.InputDelta["Mouse2"] === -1) {
             this.InputDistance["Mouse2"] = 0;
-        }
-
-        if (this.InputDelta["Touch0"] === -1) {
-            this.InputDistance["Touch0"] = 0;
-        }
-        if (this.InputDelta["Touch1"] === -1) {
-            this.InputDistance["Touch1"] = 0;
         }
 
         for (let name in this.InputDelta) {
