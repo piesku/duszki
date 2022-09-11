@@ -7,12 +7,15 @@ import {cost_fmt} from "./Overview.js";
 
 export function Commands(game: Game) {
     return html`<div onmousedown="event.stopPropagation();" onmouseup="event.stopPropagation();">
-        <button onclick="$(${Action.EnterErase})">❌ Remove</button>
-        <button onclick="$(${Action.EnterPlaceRoad})">🛣 Road</button>
-        <button onclick="$(${Action.EnterPlaceTree})">🌳 Tree</button>
+        <button onclick="$(${Action.EnterPlaceRoad})">Road</button>
+        <button onclick="$(${Action.EnterPlaceTree})">Tree</button>
+        <button onclick="$(${Action.EnterErase})">Erase</button>
+        <hr />
+
         ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
-        ${BuildingButton(game, GeneratorId.Mine1)} ${BuildingButton(game, GeneratorId.Mine2)}
-        ${BuildingButton(game, GeneratorId.Mine3)}
+        ${BuildingButton(game, GeneratorId.Mine1)}
+
+        <hr />
         <button onclick="$(${Action.ResetGame})">Reset</button>
     </div>`;
 }
@@ -25,7 +28,7 @@ function BuildingButton(game: Game, id: number) {
             ${gen_cost > game.World.TotalWealth && "disabled"}
             onclick="$(${Action.EnterPlaceBuilding}, ${id})"
         >
-            ${gen_config.Name} (${cost_fmt.format(gen_cost)})
+            ${gen_config.Name} (${cost_fmt.format(gen_cost)}) — ${gen_config.Description}
         </button>
     `;
 }

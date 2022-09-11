@@ -1,5 +1,5 @@
 import {query_down} from "../components/com_children.js";
-import {ERAS, GENERATORS} from "../config.js";
+import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
 import {income} from "../generator.js";
 import {Has} from "../world.js";
@@ -22,7 +22,6 @@ export function sys_generate(game: Game, delta: number) {
         }
     }
 
-    let era = ERAS[game.World.CurrentEra];
     game.IncomePerSecond = 0;
 
     // Then, generate income.
@@ -36,7 +35,7 @@ export function sys_generate(game: Game, delta: number) {
 
                     let gen_count = game.GeneratorOccupancy[gen_id];
                     let gen_config = GENERATORS[gen_id];
-                    let gen_income = income(era, gen_config, gen_count);
+                    let gen_income = income(gen_config, gen_count);
 
                     game.IncomePerSecond += gen_income;
                     game.World.TotalWealth += gen_income * delta;

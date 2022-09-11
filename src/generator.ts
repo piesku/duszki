@@ -1,4 +1,4 @@
-import {EraConfig, GeneratorConfig} from "./config.js";
+import {GeneratorConfig} from "./config.js";
 
 export function total_cost(gen: GeneratorConfig, own_count: number, buy_count: number) {
     let factor = 0;
@@ -9,10 +9,10 @@ export function total_cost(gen: GeneratorConfig, own_count: number, buy_count: n
     return gen.StartingCost * gen.CostFactor ** own_count * factor;
 }
 
-export function income(era: EraConfig, gen: GeneratorConfig, count: number) {
+export function income(gen: GeneratorConfig, count: number) {
     let multiplier = mult_current(gen, count);
     let factor = count ** gen.IncomeFactor;
-    return era.Multiplier * multiplier * gen.BaseIncome * factor;
+    return multiplier * gen.BaseIncome * factor;
 }
 
 export function mult_current(gen: GeneratorConfig, count: number) {
