@@ -96,7 +96,7 @@ type NeighborSprites = {
 };
 
 let TreesNeighborSprites: NeighborSprites = {
-    [0]: "013.png", // TODO: Randomize for each new tile
+    [0]: "015.png",
     [NeighborMasks.UP]: "045.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT]: "044.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "124.png",

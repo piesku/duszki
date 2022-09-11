@@ -7,6 +7,7 @@ import {render2d, shift} from "../components/com_render2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_tiled_road} from "../systems/sys_build_roads.js";
+import {make_tiled_park} from "../systems/sys_build_trees.js";
 import {GridType, World} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
@@ -59,16 +60,17 @@ export function scene_editable_dungeon(game: Game) {
         make_tiled_road(game, x, highway_y);
     }
 
-    let tree_count = (game.World.Width * game.World.Height) / 100;
+    let tree_count = (game.World.Width * game.World.Height) / 2;
     for (let i = 0; i < tree_count; i++) {
         let x = integer(1, game.World.Width - 2);
         let y = integer(1, game.World.Height - 2);
-        if (y !== highway_y) {
+        if (y !== highway_y && !game.World.Grid[y][x].Pleasant) {
             instantiate(game, [
                 ...blueprint_tree(game),
                 set_position(x, y),
                 grid(GridFlag.Pleasant, GridType.Tree),
             ]);
+            make_tiled_park(game, x, y);
         }
     }
 }
