@@ -14,8 +14,8 @@ export function sys_build_erase(game: Game, delta: number) {
     if (document.body.classList.contains("erasing")) {
         let x = Math.round(game.PointerPosition[0]);
         let y = Math.round(game.PointerPosition[1]);
-        let cell = game.World.Grid[y][x];
-        if (cell.TileEntity !== null) {
+        let cell = game.World.Grid[y]?.[x];
+        if (cell && cell.TileEntity !== null) {
             let render = game.World.Render2D[cell.TileEntity];
             render.Color[0] = 0.2;
             render.Color[1] = 0.2;

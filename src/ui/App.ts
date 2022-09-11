@@ -1,6 +1,7 @@
 import {html} from "../../lib/html.js";
 import {Entity} from "../../lib/world.js";
 import {Action} from "../actions.js";
+import {query_down} from "../components/com_children.js";
 import {NeedType} from "../components/com_needs.js";
 import {GeneratorId, GENERATORS} from "../config.js";
 import {Game} from "../game.js";
@@ -49,7 +50,7 @@ export function App(game: Game) {
             ${WorldStats(game)}
             <hr />
         </div>
-        <div>${game.SelectedEntity !== null && DuszekDetails(game, game.SelectedEntity)}</div>
+        <div>${game.SelectedEntity !== null && Details(game, game.SelectedEntity)}</div>
     </div>`;
 }
 
@@ -89,8 +90,11 @@ function WorldStats(game: Game) {
     `;
 }
 
-function DuszekDetails(game: Game, entity: Entity) {
-    if (game.World.Signature[entity] & Has.Needs) {
+function Details(game: Game, entity: Entity) {
+    if (
+        (game.World.Signature[entity] & (Has.ControlAi | Has.Needs)) ==
+        (Has.ControlAi | Has.Needs)
+    ) {
         let needs = game.World.Needs[entity];
         let control = game.World.ControlAi[entity];
         return html`
@@ -110,6 +114,15 @@ function DuszekDetails(game: Game, entity: Entity) {
             ></label>
         `;
     } else {
-        return "";
+        let generator = game.World.Generator[entity];
+        let satisfy;
+        for (let child_entity of query_down(game.World, entity, Has.Satisfy)) {
+            satisfy = game.World.Satisfy[child_entity];
+            let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
+            return html`
+                <label>${GENERATORS[generator.Id].Name}</label>
+                <label>Occupancy <meter value="${occupancy}"></meter></label>
+            `;
+        }
     }
 }

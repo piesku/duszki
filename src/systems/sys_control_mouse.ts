@@ -36,20 +36,30 @@ export function sys_control_mouse(game: Game, delta: number) {
         let x = Math.round(game.PointerPosition[0]);
         let y = Math.round(game.PointerPosition[1]);
         let cell = game.World.Grid[y]?.[x];
-        if (cell && cell.Ocupados.length > 0) {
-            game.SelectedEntity = cell.Ocupados[0];
+        if (cell && cell.TileEntity !== null) {
+            if (cell.Ocupados.length > 0) {
+                game.SelectedEntity = cell.Ocupados[0];
 
-            if (DEBUG) {
-                let duszki: Record<Entity, object> = {};
-                for (let ent of cell.Ocupados) {
-                    let needs = game.World.Needs[ent];
-                    duszki[ent] = {
-                        Happy: needs.Value[NeedType.HAPPY],
-                        Food: needs.Value[NeedType.FOOD],
-                        Sleep: needs.Value[NeedType.SLEEP],
-                    };
+                if (DEBUG) {
+                    let duszki: Record<Entity, object> = {};
+                    for (let ent of cell.Ocupados) {
+                        let needs = game.World.Needs[ent];
+                        duszki[ent] = {
+                            Happy: needs.Value[NeedType.HAPPY],
+                            Food: needs.Value[NeedType.FOOD],
+                            Sleep: needs.Value[NeedType.SLEEP],
+                        };
+                    }
+                    console.table(duszki);
                 }
-                console.table(duszki);
+            } else if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
+                let spatial = game.World.SpatialNode2D[cell.TileEntity];
+                if (
+                    spatial.Parent !== undefined &&
+                    game.World.Signature[spatial.Parent] & Has.Generator
+                ) {
+                    game.SelectedEntity = spatial.Parent;
+                }
             }
         }
     }
