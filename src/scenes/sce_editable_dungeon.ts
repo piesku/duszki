@@ -41,7 +41,7 @@ export function scene_editable_dungeon(game: Game) {
     ]);
 
     // Grass tiles in the background.
-    let grass_tiles = ["000.png", "017.png", "019.png", "034.png", "051.png"];
+    let grass_tiles = ["000.png", "017.png", "034.png", "051.png", "068.png"];
     let grass_count = (game.World.Width * game.World.Height) / 10;
     for (let i = 0; i < grass_count; i++) {
         let x = integer(1, game.World.Width - 2);
