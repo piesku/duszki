@@ -17,6 +17,7 @@ export function Commands(game: Game) {
 
         <hr />
         <button onclick="$(${Action.ResetGame})">Reset</button>
+        <em>Play time: ${(game.World.Age / 60).toFixed(0)} min.</em>
     </div>`;
 }
 
