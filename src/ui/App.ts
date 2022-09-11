@@ -70,6 +70,7 @@ function BuildingButton(game: Game, id: number) {
 function WorldStats(game: Game) {
     return html`
         <label>Population: ${game.World.Population.toFixed(0)}</label>
+        <label>Immigration: ${(game.World.Immigration * 60).toFixed(0)}/min</label>
         <label>Mortality: ${(game.World.Mortality * 60).toFixed(0)}/min</label>
         <label
             >Happiness: ${game.FrameStats.DuszkiUnhappy} unhappy

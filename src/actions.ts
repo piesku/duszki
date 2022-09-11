@@ -82,6 +82,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         }
         case Action.SpawnDuszek: {
             game.World.DuszkiAlive++;
+            game.FrameStats.Spawns++;
             instantiate(game, [
                 ...blueprint_duszek(game),
                 set_position(0, Math.round(game.World.Height / 2)),

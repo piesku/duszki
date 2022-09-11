@@ -71,6 +71,7 @@ export class Game extends Game3D {
 
     // Reset every frame in FrameReset().
     FrameStats: Record<string | number, number> = {
+        Spawns: 0,
         Deaths: 0,
         [NeedType.HAPPY]: 0,
         [NeedType.FOOD]: 0,

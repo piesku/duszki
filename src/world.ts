@@ -110,6 +110,7 @@ export class World extends WorldImpl {
     CurrentEra = 0;
     Age = 0;
     Population = 0;
+    Immigration = 0;
     Mortality = 0;
     Happiness = 0;
     Nutrition = 0;

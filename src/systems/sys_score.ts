@@ -8,6 +8,7 @@ export function sys_score(game: Game, delta: number) {
     let weight = Math.min(1, delta / 60);
 
     game.World.Population += (game.World.DuszkiAlive - game.World.Population) * weight;
+    game.World.Immigration += (game.FrameStats.Spawns / delta - game.World.Immigration) * weight;
     game.World.Mortality += (game.FrameStats.Deaths / delta - game.World.Mortality) * weight;
 
     if (game.World.Population > 0) {
