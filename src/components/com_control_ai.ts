@@ -12,18 +12,19 @@ export function control_ai() {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.ControlAi;
         game.World.ControlAi[entity] = {
-            Name: random_name(integer(3, 8)) + " " + random_name(integer(3, 8)),
+            Name: random_name(integer(2, 4)) + " " + random_name(integer(2, 4)),
             Says: "Hello!",
         };
     };
 }
 
-const consonants = "bcdfghjklmnpqrstvwxyz";
-const vowels = "aeiou";
+const consonants = "bcdfghjklmnpqrstyz";
+const vowels = "aeeaiou";
+const postfix = ["ski", "witz", "sky", "yde", "os"];
 function random_name(len: number) {
     let name = "";
     for (let i = 0; i < len; i++) {
-        if (float() < 0.6) {
+        if (float() < 0.4) {
             name += element(consonants as unknown as Array<string>);
         } else {
             name += element(vowels as unknown as Array<string>);
@@ -32,5 +33,7 @@ function random_name(len: number) {
             name = name.toUpperCase();
         }
     }
+    name += element(postfix as unknown as Array<string>);
+
     return name;
 }

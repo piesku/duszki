@@ -12,15 +12,13 @@ export function Details(game: Game) {
     }
 
     let entity = game.SelectedEntity;
-    if (
-        (game.World.Signature[entity] & (Has.ControlAi | Has.Needs)) ==
-        (Has.ControlAi | Has.Needs)
-    ) {
+    if (game.World.Signature[entity] & Has.Needs) {
         let needs = game.World.Needs[entity];
         let control = game.World.ControlAi[entity];
+        let alive = (game.World.Signature[entity] & Has.Alive) === Has.Alive;
         return html`
             <label>${control.Name}</label>
-            <label><em>${control.Says}</em></label>
+            <label><em>${alive ? control.Says : "Dead"}</em></label>
             <label
                 >Happy
                 <meter value="${needs.Value[NeedType.HAPPY]}" low="${LOW_SATISFY_THRESHOLD}"></meter

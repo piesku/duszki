@@ -14,7 +14,7 @@ export function sys_satisfy(game: Game, delta: number) {
     }
 }
 
-export const BEING_SATISFIED_MASK = Has.Render2D | Has.Walk | Has.Needs;
+export const BEING_SATISFIED_MASK = Has.Render2D | Has.Walk | Has.Alive;
 // Duszkis are getting tired and hungry while working.
 export const WORKING_MASK = Has.Render2D | Has.Walk;
 export const SATISFY_THRESHOLD = 0.75;

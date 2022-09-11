@@ -18,7 +18,7 @@ export interface Needs {
 
 export function needs() {
     return (game: Game, entity: Entity) => {
-        game.World.Signature[entity] |= Has.Needs;
+        game.World.Signature[entity] |= Has.Needs | Has.Alive;
         game.World.Needs[entity] = {
             Value: {
                 [NeedType.HAPPY]: 1,
