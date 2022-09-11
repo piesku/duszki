@@ -94,12 +94,6 @@ export function sys_build_buildings(game: Game, delta: number) {
                 let door_y = Math.round(door_local[1]);
                 let door_cell = game.World.Grid[door_y]?.[door_x];
                 door_cell.Walkable = true;
-                // if (generator.Id === DUSZEK_SPAWNING_BUILDING_INDEX) {
-                //     let i = 30;
-                //     while (i--) {
-                //         dispatch(game, Action.SpawnDuszek, {});
-                //     }
-                // }
             } else if (pointer_clicked(game, 2)) {
                 document.body.classList.remove("building");
                 destroy_all(game.World, ent);
