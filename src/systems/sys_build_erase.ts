@@ -12,12 +12,16 @@ const world_position: Vec2 = [0, 0];
 
 export function sys_build_erase(game: Game, delta: number) {
     if (document.body.classList.contains("erasing")) {
-        if (pointer_down(game, 0)) {
-            let x = Math.round(game.PointerPosition[0]);
-            let y = Math.round(game.PointerPosition[1]);
+        let x = Math.round(game.PointerPosition[0]);
+        let y = Math.round(game.PointerPosition[1]);
+        let cell = game.World.Grid[y][x];
+        if (cell.TileEntity !== null) {
+            let render = game.World.Render2D[cell.TileEntity];
+            render.Color[0] = 0.2;
+            render.Color[1] = 0.2;
+            render.Color[2] = 0.2;
 
-            let cell = game.World.Grid[y][x];
-            if (cell.TileEntity !== null) {
+            if (pointer_down(game, 0)) {
                 if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
                     let spatial = game.World.SpatialNode2D[cell.TileEntity];
                     if (spatial.Parent !== undefined) {

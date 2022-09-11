@@ -8,6 +8,19 @@ import {Has} from "../world.js";
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
 export function sys_control_mouse(game: Game, delta: number) {
+    {
+        // Unhighlight the currently hovered entity.
+        let x = Math.round(game.PointerPosition[0]);
+        let y = Math.round(game.PointerPosition[1]);
+        let cell = game.World.Grid[y]?.[x];
+        if (cell && cell.TileEntity !== null) {
+            let render = game.World.Render2D[cell.TileEntity];
+            render.Color[0] = 1;
+            render.Color[1] = 1;
+            render.Color[2] = 1;
+        }
+    }
+
     if (!pointer_viewport(game, game.PointerPosition)) {
         // No mouse, no touch.
         return;
