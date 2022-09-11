@@ -103,7 +103,7 @@ export function to_euler(euler: Vec3, quat: Quat) {
     let m23 = 2 * (y * z - w * x);
     let m33 = 1 - 2 * (x * x + y * y);
 
-    euler[0] = Math.asin(-clamp(-1, 1, m23)) * RAD_TO_DEG;
+    euler[0] = Math.asin(-clamp(m23, -1, 1)) * RAD_TO_DEG;
     if (Math.abs(m23) + EPSILON < 1) {
         euler[1] = Math.atan2(m13, m33) * RAD_TO_DEG;
         euler[2] = Math.atan2(m21, m22) * RAD_TO_DEG;
@@ -126,7 +126,7 @@ export function get_pitch(quat: Quat) {
     let w = quat[3];
 
     let m23 = 2 * (y * z - w * x);
-    return Math.asin(-clamp(-1, 1, m23)) * RAD_TO_DEG;
+    return Math.asin(-clamp(m23, -1, 1)) * RAD_TO_DEG;
 }
 
 /**

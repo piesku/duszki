@@ -21,7 +21,7 @@ export function sys_control_camera_main(game: Game, delta: number) {
 
     if (game.InputDelta["WheelY"]) {
         let cur_zoom = 4 ** (wheel_y_clamped / -500);
-        wheel_y_clamped = clamp(-1000, 500, wheel_y_clamped + game.InputDelta["WheelY"]);
+        wheel_y_clamped = clamp(wheel_y_clamped + game.InputDelta["WheelY"], -1000, 500);
         let new_zoom = 4 ** (wheel_y_clamped / -500);
 
         game.UnitSize = 16 * new_zoom;

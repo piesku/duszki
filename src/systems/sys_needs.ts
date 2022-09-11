@@ -83,19 +83,19 @@ function update(game: Game, entity: number, delta: number) {
             }
         }
     }
-    needs.Value[NeedType.HAPPY] = clamp(0, 1, needs.Value[NeedType.HAPPY]);
+    needs.Value[NeedType.HAPPY] = clamp(needs.Value[NeedType.HAPPY]);
 
-    game.FrameStats[NeedType.HAPPY] += needs.Value[NeedType.HAPPY];
+    game.FrameStats[NeedType.HAPPY] += clamp(needs.Value[NeedType.HAPPY]);
     if (needs.Value[NeedType.HAPPY] <= LOW_SATISFY_THRESHOLD) {
         game.FrameStats.DuszkiUnhappy++;
     }
 
-    game.FrameStats[NeedType.FOOD] += needs.Value[NeedType.FOOD];
+    game.FrameStats[NeedType.FOOD] += clamp(needs.Value[NeedType.FOOD]);
     if (needs.Value[NeedType.FOOD] <= LOW_SATISFY_THRESHOLD) {
         game.FrameStats.DuszkiHungry++;
     }
 
-    game.FrameStats[NeedType.SLEEP] += needs.Value[NeedType.SLEEP];
+    game.FrameStats[NeedType.SLEEP] += clamp(needs.Value[NeedType.SLEEP]);
     if (needs.Value[NeedType.SLEEP] <= LOW_SATISFY_THRESHOLD) {
         game.FrameStats.DuszkiTired++;
     }
