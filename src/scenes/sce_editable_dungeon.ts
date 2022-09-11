@@ -50,21 +50,27 @@ export function scene_editable_dungeon(game: Game) {
     }
 
     // Highway to Hell
-    let highway_y = Math.round(game.World.Height / 2);
+    let mid_x = Math.round(game.World.Width / 2);
+    let mid_y = Math.round(game.World.Height / 2);
     for (let x = 0; x < game.World.Width; x++) {
         instantiate(game, [
             ...blueprint_road(game),
-            set_position(x, highway_y),
+            set_position(x, mid_y),
             grid(GridFlag.Walkable, GridType.Road),
         ]);
-        make_tiled_road(game, x, highway_y);
+        make_tiled_road(game, x, mid_y);
     }
 
     let tree_count = (game.World.Width * game.World.Height) / 2;
     for (let i = 0; i < tree_count; i++) {
         let x = integer(1, game.World.Width - 2);
         let y = integer(1, game.World.Height - 2);
-        if (y !== highway_y && !game.World.Grid[y][x].Pleasant) {
+        let cell = game.World.Grid[y][x];
+        if (
+            y !== mid_y &&
+            (x < mid_x - 10 || x > mid_x + 10 || y < mid_y - 10 || y > mid_y + 10) &&
+            !cell.Pleasant
+        ) {
             instantiate(game, [
                 ...blueprint_tree(game),
                 set_position(x, y),
