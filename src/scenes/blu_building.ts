@@ -24,6 +24,16 @@ const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png", "
 // Rest defaults to Work
 const needs: NeedType[] = [NeedType.SLEEP, NeedType.FOOD];
 
+export const enum BuildingAttributes {
+    Tiles = 0,
+    Satisfier = 1,
+}
+
+export const enum BuildingSatisfiers {
+    Jezyczek = 0,
+    Door = 1,
+}
+
 const capacities = {
     [NeedType.SLEEP]: 50,
     [NeedType.FOOD]: 50,
@@ -51,17 +61,21 @@ export function blueprint_building(game: Game, map_id: number) {
     }
     let modifier = map.Height === 5 ? 2 : 1;
 
+    let jezyczek = [
+        spatial_node2d(),
+        local_transform2d([0, -Math.round(map.Height / 2) + modifier]),
+    ];
+
+    let door = [spatial_node2d(), local_transform2d([0, 0])];
+
     return [
         spatial_node2d(),
         local_transform2d(),
         control_player("building"),
+        satisfy(building_type, capacities[building_type]),
         children(
             [spatial_node2d(), local_transform2d(), children(...child_tiles)],
-            [
-                spatial_node2d(),
-                local_transform2d([0, -Math.round(map.Height / 2) + modifier]),
-                satisfy(building_type, capacities[building_type]),
-            ]
+            [spatial_node2d(), local_transform2d(), children(jezyczek, door)]
         ),
         generator(map_id),
         disable(Has.Generator),

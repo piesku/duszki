@@ -2,6 +2,7 @@ import {get_translation} from "../../lib/mat2d.js";
 import {query_down} from "../components/com_children.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
+import {BuildingAttributes, BuildingSatisfiers} from "../scenes/blu_building.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.Satisfy;
@@ -22,19 +23,41 @@ export const LOW_SATISFY_THRESHOLD = 0.4;
 
 function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
-    let local = game.World.SpatialNode2D[entity];
-    let pos = get_translation([0, 0], local.World);
-    let y = Math.round(pos[1]);
-    let x = Math.round(pos[0]);
-    let cell = game.World.Grid[y]?.[x];
-    if (!cell) {
+    let buildingSatisfierEntities =
+        game.World.Children[entity]?.Children[BuildingAttributes.Satisfier];
+    let jezyczek =
+        game.World.Children[buildingSatisfierEntities]?.Children[BuildingSatisfiers.Jezyczek];
+    let door = game.World.Children[buildingSatisfierEntities]?.Children[BuildingSatisfiers.Door];
+
+    // JEZYCZEK LOGIC
+    let jezyczek_local = game.World.SpatialNode2D[jezyczek];
+    let jezyczek_pos = get_translation([0, 0], jezyczek_local.World);
+    let jezyczek_y = Math.round(jezyczek_pos[1]);
+    let jezyczek_x = Math.round(jezyczek_pos[0]);
+    let jezyczek_cell = game.World.Grid[jezyczek_y]?.[jezyczek_x];
+    if (!jezyczek_cell) {
         return;
     }
 
-    let guests_at_the_door = cell.Ocupados;
-    for (let guest of guests_at_the_door) {
+    let guests_on_jezyczek = jezyczek_cell.Ocupados;
+    for (let guest of guests_on_jezyczek) {
         let need = game.World.Needs[guest];
+        need.Target[satisfy.NeedType] = door;
+    }
 
+    // DOOR LOGIC
+    let door_local = game.World.SpatialNode2D[door];
+    let pos = get_translation([0, 0], door_local.World);
+    let door_y = Math.round(pos[1]);
+    let door_x = Math.round(pos[0]);
+    let door_cell = game.World.Grid[door_y]?.[door_x];
+    if (!door_cell) {
+        return;
+    }
+
+    let guests_on_door = door_cell.Ocupados;
+    for (let guest of guests_on_door) {
+        let need = game.World.Needs[guest];
         if (need && satisfy.NeedType === NeedType.WORK) {
             // Duszek works only when fed and rested.
             if (
@@ -45,9 +68,9 @@ function update(game: Game, entity: number, delta: number) {
                     satisfy.Ocupados.push(guest);
                     game.World.Signature[guest] &= ~WORKING_MASK;
                     game.World.DuszkiWorking++;
-                    need.Target[NeedType.WORK] = entity;
+                    need.Target[satisfy.NeedType] = door;
                     // } else if (guests_at_the_door.length > 1) {
-                } else if (entity === need.Target[satisfy.NeedType]) {
+                } else if (door === need.Target[satisfy.NeedType]) {
                     // more than one duszek at the door, so redirect all but one to another target
                     need.Target[satisfy.NeedType] = undefined;
                 }
@@ -59,9 +82,9 @@ function update(game: Game, entity: number, delta: number) {
                 // );
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
-                need.Target[satisfy.NeedType] = entity;
+                need.Target[satisfy.NeedType] = door;
                 // } else if (guests_at_the_door.length > 1) {
-            } else if (entity === need.Target[satisfy.NeedType]) {
+            } else if (door === need.Target[satisfy.NeedType]) {
                 // more than one duszek at the door, so redirect all but one to another target
                 need.Target[satisfy.NeedType] = undefined;
             }
@@ -89,22 +112,21 @@ function update(game: Game, entity: number, delta: number) {
         }
     }
 
-    let parent = local.Parent!;
-    let parentIsBeingBuilt = game.World.Signature[parent] & Has.ControlPlayer;
+    let buildingIsBeingBuilt = game.World.Signature[entity] & Has.ControlPlayer;
 
-    if (parentIsBeingBuilt) {
+    if (buildingIsBeingBuilt) {
         return;
     }
 
     if (satisfy.Ocupados.length === 0) {
-        for (let child_entity of query_down(game.World, parent, Has.Render2D)) {
+        for (let child_entity of query_down(game.World, entity, Has.Render2D)) {
             let render = game.World.Render2D[child_entity];
             render.Color[0] = 1;
             render.Color[1] = 1;
             render.Color[2] = 1;
         }
     } else {
-        for (let child_entity of query_down(game.World, parent, Has.Render2D)) {
+        for (let child_entity of query_down(game.World, entity, Has.Render2D)) {
             let render = game.World.Render2D[child_entity];
             render.Color[0] = 1;
             render.Color[1] = 1;

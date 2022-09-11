@@ -14,8 +14,8 @@ export function satisfy(type: NeedType, Capacity: number) {
         game.World.Signature[entity] |= Has.Satisfy;
         game.World.Satisfy[entity] = {
             NeedType: type,
-            Ocupados: [],
             Capacity,
+            Ocupados: [],
         };
     };
 }

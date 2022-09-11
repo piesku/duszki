@@ -7,7 +7,11 @@ import {set_position} from "../components/com_local_transform2d.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
 import {total_cost} from "../generator.js";
-import {blueprint_building} from "../scenes/blu_building.js";
+import {
+    blueprint_building,
+    BuildingAttributes,
+    BuildingSatisfiers,
+} from "../scenes/blu_building.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
@@ -76,6 +80,20 @@ export function sys_build_buildings(game: Game, delta: number) {
                     render.Shift = 0;
                 }
 
+                // set door to walkable
+                let buildingSatisfierEntities =
+                    game.World.Children[ent]?.Children[BuildingAttributes.Satisfier];
+                let door =
+                    game.World.Children[buildingSatisfierEntities]?.Children[
+                        BuildingSatisfiers.Door
+                    ];
+
+                let door_spatial = game.World.SpatialNode2D[door];
+                let door_local = get_translation([0, 0], door_spatial.World);
+                let door_x = Math.round(door_local[0]);
+                let door_y = Math.round(door_local[1]);
+                let door_cell = game.World.Grid[door_y]?.[door_x];
+                door_cell.Walkable = true;
                 // if (generator.Id === DUSZEK_SPAWNING_BUILDING_INDEX) {
                 //     let i = 30;
                 //     while (i--) {
