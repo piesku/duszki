@@ -24,10 +24,10 @@ export function sys_build_trees(game: Game, delta: number) {
             let y = Math.round(local.Translation[1]);
 
             // Check whether the tree can be placed.
-            let can_be_placed = true;
+            let can_be_placed = false;
             let cell = game.World.Grid[y]?.[x];
-            if (cell && cell.TileEntity !== null) {
-                can_be_placed = false;
+            if (cell && cell.TileEntity === null) {
+                can_be_placed = true;
             }
 
             // Tint the tree according to whether it can be placed.
