@@ -11,7 +11,6 @@ import {sys_build_erase} from "./systems/sys_build_erase.js";
 import {sys_build_roads} from "./systems/sys_build_roads.js";
 import {sys_build_trees} from "./systems/sys_build_trees.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
-import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_camera_follow} from "./systems/sys_control_camera_follow.js";
 import {sys_control_camera_main} from "./systems/sys_control_camera_main.js";
@@ -34,7 +33,6 @@ import {sys_shake2d} from "./systems/sys_shake2d.js";
 import {sys_spawn2d} from "./systems/sys_spawn2d.js";
 import {sys_toggle} from "./systems/sys_toggle.js";
 import {sys_transform2d} from "./systems/sys_transform2d.js";
-import {sys_trigger2d} from "./systems/sys_trigger2d.js";
 import {sys_ui} from "./systems/sys_ui.js";
 import {sys_walk} from "./systems/sys_walk.js";
 import {App} from "./ui/App.js";
@@ -131,10 +129,6 @@ export class Game extends Game3D {
 
         // Commit all positions.
         sys_transform2d(this, delta);
-
-        // Collisions.
-        sys_collide2d(this, delta);
-        sys_trigger2d(this, delta);
 
         // Camera.
         sys_resize2d(this, delta);

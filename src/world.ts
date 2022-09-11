@@ -4,7 +4,6 @@ import {FLOATS_PER_INSTANCE} from "../materials/layout2d.js";
 import {AnimateSprite} from "./components/com_animate_sprite.js";
 import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
-import {Collide2D} from "./components/com_collide2d.js";
 import {ControlAi} from "./components/com_control_ai.js";
 import {ControlPlayer} from "./components/com_control_player.js";
 import {Draw} from "./components/com_draw.js";
@@ -16,14 +15,12 @@ import {Move2D} from "./components/com_move2d.js";
 import {Named} from "./components/com_named.js";
 import {Needs} from "./components/com_needs.js";
 import {Render2D} from "./components/com_render2d.js";
-import {RigidBody2D} from "./components/com_rigid_body2d.js";
 import {Satisfy} from "./components/com_satisfy.js";
 import {Shake} from "./components/com_shake.js";
 import {SpatialNode2D} from "./components/com_spatial_node2d.js";
 import {Spawn} from "./components/com_spawn.js";
 import {Task} from "./components/com_task.js";
 import {Toggle} from "./components/com_toggle.js";
-import {Trigger} from "./components/com_trigger.js";
 import {Walk} from "./components/com_walk.js";
 
 const enum Component {
@@ -44,14 +41,12 @@ const enum Component {
     Named,
     Needs,
     Render2D,
-    RigidBody2D,
     Satisfy,
     Shake,
     SpatialNode2D,
     Spawn,
     Task,
     Toggle,
-    Trigger,
     Walk,
 }
 
@@ -74,14 +69,12 @@ export const enum Has {
     Named = 1 << Component.Named,
     Needs = 1 << Component.Needs,
     Render2D = 1 << Component.Render2D,
-    RigidBody2D = 1 << Component.RigidBody2D,
     Satisfy = 1 << Component.Satisfy,
     Shake = 1 << Component.Shake,
     SpatialNode2D = 1 << Component.SpatialNode2D,
     Spawn = 1 << Component.Spawn,
     Task = 1 << Component.Task,
     Toggle = 1 << Component.Toggle,
-    Trigger = 1 << Component.Trigger,
     Walk = 1 << Component.Walk,
 }
 
@@ -149,7 +142,6 @@ export class World extends WorldImpl {
     // Component data.
     AnimateSprite: Array<AnimateSprite> = [];
     Camera2D: Array<Camera2D> = [];
-    Collide2D: Array<Collide2D> = [];
     ControlAi: Array<ControlAi> = [];
     ControlPlayer: Array<ControlPlayer> = [];
     Children: Array<Children> = [];
@@ -162,13 +154,11 @@ export class World extends WorldImpl {
     Named: Array<Named> = [];
     Needs: Array<Needs> = [];
     Render2D: Array<Render2D> = [];
-    RigidBody2D: Array<RigidBody2D> = [];
     Satisfy: Array<Satisfy> = [];
     Shake: Array<Shake> = [];
     SpatialNode2D: Array<SpatialNode2D> = [];
     Spawn: Array<Spawn> = [];
     Task: Array<Task> = [];
     Toggle: Array<Toggle> = [];
-    Trigger: Array<Trigger> = [];
     Walk: Array<Walk> = [];
 }
