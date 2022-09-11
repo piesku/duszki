@@ -174,7 +174,7 @@ export abstract class GameImpl {
         };
 
         this.Stop();
-        tick(last);
+        requestAnimationFrame(tick);
     }
 
     Stop() {
