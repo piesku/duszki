@@ -19,7 +19,6 @@ import {Satisfy} from "./components/com_satisfy.js";
 import {Shake} from "./components/com_shake.js";
 import {SpatialNode2D} from "./components/com_spatial_node2d.js";
 import {Spawn} from "./components/com_spawn.js";
-import {Task} from "./components/com_task.js";
 import {Toggle} from "./components/com_toggle.js";
 import {Walk} from "./components/com_walk.js";
 
@@ -45,7 +44,6 @@ const enum Component {
     Shake,
     SpatialNode2D,
     Spawn,
-    Task,
     Toggle,
     Walk,
 }
@@ -73,7 +71,6 @@ export const enum Has {
     Shake = 1 << Component.Shake,
     SpatialNode2D = 1 << Component.SpatialNode2D,
     Spawn = 1 << Component.Spawn,
-    Task = 1 << Component.Task,
     Toggle = 1 << Component.Toggle,
     Walk = 1 << Component.Walk,
 }
@@ -158,7 +155,6 @@ export class World extends WorldImpl {
     Shake: Array<Shake> = [];
     SpatialNode2D: Array<SpatialNode2D> = [];
     Spawn: Array<Spawn> = [];
-    Task: Array<Task> = [];
     Toggle: Array<Toggle> = [];
     Walk: Array<Walk> = [];
 }

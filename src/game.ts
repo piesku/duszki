@@ -21,7 +21,6 @@ import {sys_generate} from "./systems/sys_generate.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
 import {sys_needs} from "./systems/sys_needs.js";
-import {sys_poll} from "./systems/sys_poll.js";
 import {sys_populate} from "./systems/sys_populate.js";
 import {sys_render2d} from "./systems/sys_render2d.js";
 import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
@@ -98,9 +97,6 @@ export class Game extends Game3D {
     }
 
     override FrameUpdate(delta: number) {
-        // Event loop.
-        sys_poll(this, delta);
-
         // Player input.
         sys_control_camera_main(this, delta);
         sys_control_camera_follow(this, delta);
