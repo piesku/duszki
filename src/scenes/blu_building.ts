@@ -12,7 +12,7 @@ import {disable} from "../components/com_disable.js";
 import {generator} from "../components/com_generator.js";
 import {local_transform2d} from "../components/com_local_transform2d.js";
 import {NeedType} from "../components/com_needs.js";
-import {shift} from "../components/com_render2d.js";
+import {render2d, shift} from "../components/com_render2d.js";
 import {satisfy} from "../components/com_satisfy.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
@@ -28,6 +28,8 @@ const building_maps = [
     map_mine4,
     map_mine5,
 ];
+
+const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png", "133.png"];
 
 // House satisfies sleep
 // Farm satisfies food
@@ -46,8 +48,17 @@ export function blueprint_building(game: Game, map_id: number) {
     let map = building_maps[map_id];
 
     for (let layer of map.Layers) {
-        for (let tile of tiled_blueprints(layer, map.Width, map.Height)) {
+        for (let [tile_name, tile] of tiled_blueprints(layer, map.Width, map.Height)) {
             child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
+            if (window_sprites.includes(tile_name)) {
+                child_tiles.push([
+                    spatial_node2d(),
+                    ...tile,
+                    // Render a blue quad under the window.
+                    render2d("135.png", [0, 0, 1, 1]),
+                    shift(-0.1),
+                ]);
+            }
         }
     }
     let modifier = map.Height === 5 ? 2 : 1;

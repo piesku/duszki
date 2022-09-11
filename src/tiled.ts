@@ -1,4 +1,4 @@
-import {instantiate} from "../lib/game.js";
+import {Blueprint, instantiate} from "../lib/game.js";
 import {Entity} from "../lib/world.js";
 import {grid, GridFlag} from "./components/com_grid.js";
 import {local_transform2d} from "./components/com_local_transform2d.js";
@@ -57,7 +57,11 @@ export function instantiate_tiled_layer(game: Game, layer: Array<number>, width:
     return tile_entities;
 }
 
-export function* tiled_blueprints(layer: Array<number>, width: number, height: number) {
+export function* tiled_blueprints(
+    layer: Array<number>,
+    width: number,
+    height: number
+): Generator<[string, Blueprint<Game>]> {
     for (let i = 0; i < layer.length; i++) {
         let global_id = layer[i]; // Global ID with flip flags.
         let tile_id = global_id & ~TileFlip.All; // Remove flip flags.
@@ -85,6 +89,6 @@ export function* tiled_blueprints(layer: Array<number>, width: number, height: n
         }
 
         let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
-        yield [local, render2d(tile_name)];
+        yield [tile_name, [local, render2d(tile_name)]];
     }
 }
