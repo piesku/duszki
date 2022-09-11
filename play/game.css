@@ -7,6 +7,7 @@ canvas#background,
 canvas#scene,
 canvas#foreground,
 main {
+    image-rendering: pixelated;
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -14,10 +15,10 @@ main {
     word-break: break-word;
     user-select: none;
     touch-action: none;
-    image-rendering: pixelated;
     color: #fff;
 }
 canvas#minimap {
+    image-rendering: pixelated;
     position: absolute;
     top: 10px;
     left: 10px;
@@ -25,6 +26,7 @@ canvas#minimap {
     pointer-events: none;
 }
 canvas#follow {
+    image-rendering: pixelated;
     position: absolute;
     bottom: 10px;
     right: 10px;
