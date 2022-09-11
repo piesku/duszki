@@ -10,7 +10,6 @@ import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
 import {blueprint_road_phantom} from "./scenes/blu_road.js";
 import {blueprint_tree_phantom} from "./scenes/blu_tree.js";
-import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
 import {clear} from "./store.js";
 import {Has} from "./world.js";
 
@@ -104,8 +103,10 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             break;
         }
         case Action.ResetGame: {
-            clear(game.Store);
-            scene_editable_dungeon(game);
+            if (confirm("Are you sure you want to start a new game? All progress will be lost.")) {
+                clear(game.Store);
+                location.reload();
+            }
             break;
         }
         case Action.MinimapNavigation: {
