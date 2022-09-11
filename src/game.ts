@@ -13,7 +13,6 @@ import {sys_build_trees} from "./systems/sys_build_trees.js";
 import {sys_camera2d} from "./systems/sys_camera2d.js";
 import {sys_collide2d} from "./systems/sys_collide2d.js";
 import {sys_control_ai} from "./systems/sys_control_ai.js";
-import {sys_control_always2d} from "./systems/sys_control_always2d.js";
 import {sys_control_camera_follow} from "./systems/sys_control_camera_follow.js";
 import {sys_control_camera_main} from "./systems/sys_control_camera_main.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
@@ -116,7 +115,6 @@ export class Game extends Game3D {
         // AI.
         sys_needs(this, delta);
         sys_control_ai(this, delta);
-        sys_control_always2d(this, delta);
         sys_satisfy(this, delta);
         sys_populate(this, delta);
         sys_score(this, delta);
