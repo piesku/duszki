@@ -102,6 +102,8 @@ export interface GridCell {
     Ocupados: Entity[];
     TrafficIntensity: number;
     Type: GridType;
+    TimesWalked: number;
+    Updated: boolean;
 }
 
 export class World extends WorldImpl {
@@ -139,6 +141,8 @@ export class World extends WorldImpl {
                         Ocupados: [],
                         TrafficIntensity: 0,
                         Type: GridType.Other,
+                        TimesWalked: 0,
+                        Updated: false,
                     })
                 )
         );

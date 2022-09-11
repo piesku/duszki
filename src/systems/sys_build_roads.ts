@@ -9,6 +9,8 @@ import {GridType, Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 
+export const ROAD_UPDATE_WALKS_THRESHOLD = 100;
+
 export function sys_build_roads(game: Game, delta: number) {
     let road_placed = false;
 
@@ -45,6 +47,8 @@ export function sys_build_roads(game: Game, delta: number) {
                 cell.Walkable = true;
                 cell.Pleasant = false;
                 cell.Type = GridType.Road;
+                cell.TimesWalked = 0;
+                cell.Updated = false;
                 make_tiled_road(game, x, y);
 
                 // Bring back the original tint.
@@ -114,9 +118,26 @@ let RoadNeighborSprites: NeighborSprites = {
     [NeighborMasks.LEFT | NeighborMasks.DOWN]: "086.png",
 };
 
+// Can we just subtract 33?
+export let RoadUpdateMap: Record<string, string> = {
+    "085.png": "052.png",
+    "086.png": "053.png",
+    "087.png": "054.png",
+    "088.png": "055.png",
+    "089.png": "056.png",
+    "090.png": "057.png",
+    "102.png": "069.png",
+    "103.png": "070.png",
+    "104.png": "071.png",
+    "105.png": "072.png",
+    "106.png": "073.png",
+};
+
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
     let tile = game.World.Grid[y][x].TileEntity;
     let type = game.World.Grid[y][x].Type;
+    let timesWalked = game.World.Grid[y][x].TimesWalked;
+
     if (!tile || type == GridType.Other) {
         return;
     }
@@ -136,5 +157,10 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
         neighbors |= NeighborMasks.LEFT;
     }
 
-    set_sprite(game, tile, RoadNeighborSprites[neighbors]);
+    let sprite = RoadNeighborSprites[neighbors];
+    if (timesWalked > ROAD_UPDATE_WALKS_THRESHOLD) {
+        sprite = RoadUpdateMap[sprite];
+    }
+
+    set_sprite(game, tile, sprite);
 }

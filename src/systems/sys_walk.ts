@@ -4,6 +4,7 @@ import {add, length, normalize, subtract} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
+import {make_tiled_road, ROAD_UPDATE_WALKS_THRESHOLD} from "./sys_build_roads.js";
 
 const QUERY = Has.LocalTransform2D | Has.Walk;
 
@@ -61,7 +62,13 @@ function update(game: Game, entity: Entity) {
         subtract(diff, next_cell.Position, local.Translation);
         if (length(diff) < 0.1) {
             // We are close enough to the next waypoint.
+            cell.TimesWalked++;
+            // console.log(cell.TimesWalked);
             walk.Path.shift();
+            if (!cell.Updated && cell.TimesWalked > ROAD_UPDATE_WALKS_THRESHOLD) {
+                make_tiled_road(game, x, y);
+                cell.Updated = true;
+            }
         } else {
             let move = game.World.Move2D[entity];
             normalize(diff, diff);
