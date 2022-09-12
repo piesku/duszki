@@ -29,9 +29,12 @@ export function sys_build_buildings(game: Game, delta: number) {
                 continue;
             }
 
+            let children = game.World.Children[ent].Children;
+            let tiles_container = children[BuildingAttributes.Tiles];
+
             // Check whether the building can be placed and tint its tiles accordingly.
             let can_be_placed = true;
-            for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
+            for (let child_entity of query_down(game.World, tiles_container, Has.Render2D)) {
                 let render = game.World.Render2D[child_entity];
                 let spatial = game.World.SpatialNode2D[child_entity];
                 let x = Math.round(spatial.World[4]);
@@ -62,7 +65,7 @@ export function sys_build_buildings(game: Game, delta: number) {
 
                 // Populate the world grid with the building's footprint and
                 // bring back the original tint.
-                for (let child_entity of query_down(game.World, ent, Has.Render2D)) {
+                for (let child_entity of query_down(game.World, tiles_container, Has.Render2D)) {
                     let child_spatial = game.World.SpatialNode2D[child_entity];
                     get_translation(world_position, child_spatial.World);
                     let x = Math.round(world_position[0]);
@@ -81,8 +84,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                 }
 
                 // set door to walkable
-                let buildingSatisfierEntities =
-                    game.World.Children[ent]?.Children[BuildingAttributes.Satisfier];
+                let buildingSatisfierEntities = children[BuildingAttributes.Satisfier];
                 let door =
                     game.World.Children[buildingSatisfierEntities]?.Children[
                         BuildingSatisfiers.Door

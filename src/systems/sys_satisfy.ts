@@ -23,8 +23,8 @@ export const LOW_SATISFY_THRESHOLD = 0.4;
 
 function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
-    let buildingSatisfierEntities =
-        game.World.Children[entity]?.Children[BuildingAttributes.Satisfier];
+    let children = game.World.Children[entity].Children;
+    let buildingSatisfierEntities = children[BuildingAttributes.Satisfier];
     let jezyczek =
         game.World.Children[buildingSatisfierEntities]?.Children[BuildingSatisfiers.Jezyczek];
     let door = game.World.Children[buildingSatisfierEntities]?.Children[BuildingSatisfiers.Door];
@@ -118,19 +118,17 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (satisfy.Ocupados.length === 0) {
-        for (let child_entity of query_down(game.World, entity, Has.Render2D)) {
-            let render = game.World.Render2D[child_entity];
-            render.Color[0] = 1;
-            render.Color[1] = 1;
-            render.Color[2] = 1;
-        }
-    } else {
-        for (let child_entity of query_down(game.World, entity, Has.Render2D)) {
-            let render = game.World.Render2D[child_entity];
+    let lights_container = children[BuildingAttributes.Lights];
+    for (let child_entity of query_down(game.World, lights_container, Has.Render2D)) {
+        let render = game.World.Render2D[child_entity];
+        if (satisfy.Ocupados.length > 0) {
             render.Color[0] = 1;
             render.Color[1] = 1;
             render.Color[2] = 0;
+        } else {
+            render.Color[0] = 0.3;
+            render.Color[1] = 0.3;
+            render.Color[2] = 0.3;
         }
     }
 }

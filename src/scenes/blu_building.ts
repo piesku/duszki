@@ -17,7 +17,7 @@ import {Has} from "../world.js";
 
 const building_maps = [map_house3, map_house1, map_mine1];
 
-const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png", "133.png"];
+const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png"];
 
 // House satisfies sleep
 // Farm satisfies food
@@ -27,6 +27,7 @@ const needs: NeedType[] = [NeedType.SLEEP, NeedType.FOOD];
 export const enum BuildingAttributes {
     Tiles = 0,
     Satisfier = 1,
+    Lights = 2,
 }
 
 export const enum BuildingSatisfiers {
@@ -42,18 +43,19 @@ const capacities = {
 
 export function blueprint_building(game: Game, map_id: number) {
     let building_type = needs[map_id] || NeedType.WORK;
-    let child_tiles: Array<Blueprint<Game>> = [];
     let map = building_maps[map_id];
 
+    let child_tiles: Array<Blueprint<Game>> = [];
+    let light_tiles: Array<Blueprint<Game>> = [];
     for (let layer of map.Layers) {
         for (let [tile_name, tile] of tiled_blueprints(layer, map.Width, map.Height)) {
             child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
             if (window_sprites.includes(tile_name)) {
-                child_tiles.push([
+                light_tiles.push([
                     spatial_node2d(),
                     ...tile,
-                    // Render a blue quad under the window.
-                    render2d("135.png", [0, 0, 1, 1]),
+                    // Render a quad under the window which will be lit up by sys_satisfy.
+                    render2d("135.png", [0.3, 0.3, 0.3, 1]),
                     shift(-0.1),
                 ]);
             }
@@ -75,7 +77,8 @@ export function blueprint_building(game: Game, map_id: number) {
         satisfy(building_type, capacities[building_type]),
         children(
             [spatial_node2d(), local_transform2d(), children(...child_tiles)],
-            [spatial_node2d(), local_transform2d(), children(jezyczek, door)]
+            [spatial_node2d(), local_transform2d(), children(jezyczek, door)],
+            [spatial_node2d(), local_transform2d(), children(...light_tiles)]
         ),
         generator(map_id),
         disable(Has.Generator),
