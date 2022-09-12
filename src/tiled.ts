@@ -23,7 +23,7 @@ export function* tiled_blueprints(
         let local: ReturnType<typeof local_transform2d>;
 
         if (tile_id & TileFlip.Horizontal) {
-            local = local_transform2d([x, y], 0, [-1, 1]);
+            local = local_transform2d([x, y], [-1, 1]);
         } else {
             local = local_transform2d([x, y]);
         }

@@ -18,7 +18,7 @@
  * it must also be tagged as **dirty** with `Has.Dirty`.
  */
 
-import {Deg, Vec2} from "../../lib/math.js";
+import {Vec2} from "../../lib/math.js";
 import {copy} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
@@ -27,8 +27,6 @@ import {Has} from "../world.js";
 export interface LocalTransform2D {
     /** Local translation relative to the parent. */
     Translation: Vec2;
-    /** Local rotation relative to the parent. */
-    Rotation: Deg;
     /** Local scale relative to the parent. */
     Scale: Vec2;
 }
@@ -44,19 +42,13 @@ export interface LocalTransform2D {
  * the entity must also have the `SpatialNode2D` component.
  *
  * @param translation Local translation relative to the parent.
- * @param rotation Local rotation relative to the parent.
  * @param scale Local scale relative to the parent.
  */
-export function local_transform2d(
-    translation: Vec2 = [0, 0],
-    rotation: Deg = 0,
-    scale: Vec2 = [1, 1]
-) {
+export function local_transform2d(translation: Vec2 = [0, 0], scale: Vec2 = [1, 1]) {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.LocalTransform2D | Has.Dirty;
         game.World.LocalTransform2D[entity] = {
             Translation: translation,
-            Rotation: rotation,
             Scale: scale,
         };
     };
@@ -91,21 +83,6 @@ export function copy_position(translation: Vec2) {
     return (game: Game, entity: Entity) => {
         let local = game.World.LocalTransform2D[entity];
         copy(local.Translation, translation);
-    };
-}
-
-/**
- * Set rotation in the entity's transform.
- *
- * This mixin must be used after `local_transform2d()` in order to ensure that
- * the entity already has the `LocalTransform2D` component.
- *
- * @param z The rotation in degrees, relative to the parent.
- */
-export function set_rotation(z: number) {
-    return (game: Game, entity: Entity) => {
-        let local = game.World.LocalTransform2D[entity];
-        local.Rotation = z;
     };
 }
 

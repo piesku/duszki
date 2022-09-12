@@ -34,7 +34,6 @@
  */
 
 import * as mat2d from "../../lib/mat2d.js";
-import {DEG_TO_RAD} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../../materials/layout2d.js";
 import {Game} from "../game.js";
@@ -66,7 +65,6 @@ function update_instance_data(game: Game, entity: Entity) {
     let instance_offset = entity * FLOATS_PER_INSTANCE;
     game.World.InstanceData[instance_offset + 0] = local.Scale[0];
     game.World.InstanceData[instance_offset + 1] = local.Scale[1];
-    game.World.InstanceData[instance_offset + 2] = local.Rotation * DEG_TO_RAD;
     game.World.InstanceData[instance_offset + 4] = local.Translation[0];
     game.World.InstanceData[instance_offset + 5] = local.Translation[1];
 }
@@ -77,7 +75,7 @@ function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
     let local = game.World.LocalTransform2D[entity];
     let node = game.World.SpatialNode2D[entity];
 
-    mat2d.compose(node.World, local.Translation, local.Rotation * DEG_TO_RAD, local.Scale);
+    mat2d.compose(node.World, local.Translation, 0, local.Scale);
 
     if (parent !== undefined) {
         node.Parent = parent;
