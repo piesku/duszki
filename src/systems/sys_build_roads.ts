@@ -102,11 +102,11 @@ type NeighborSprites = {
 let RoadNeighborSprites: NeighborSprites = {
     [0]: "090.png",
     [NeighborMasks.UP]: "104.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: "102.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "106.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: "085.png",
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "089.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "090.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "088.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "102.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT]: "085.png",
     [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "088.png",
     [NeighborMasks.UP | NeighborMasks.DOWN]: "104.png",
     [NeighborMasks.RIGHT]: "087.png",
@@ -125,9 +125,7 @@ export let RoadUpdateMap: Record<string, string> = {
     "088.png": "055.png",
     "089.png": "056.png",
     "090.png": "057.png",
-    "102.png": "069.png",
     "104.png": "071.png",
-    "106.png": "073.png",
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
@@ -143,6 +141,10 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
 
     if (game.World.Grid[y + 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.UP;
+
+        game.World.Signature[tile] |= Has.Dirty;
+        let local = game.World.LocalTransform2D[tile];
+        local.Scale[1] = -1;
     }
     if (game.World.Grid[y][x + 1]?.Walkable) {
         neighbors |= NeighborMasks.RIGHT;
