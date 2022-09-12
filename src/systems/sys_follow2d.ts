@@ -4,9 +4,7 @@
  * Update the entity's position to follow another entity.
  */
 
-import {get_translation} from "../../lib/mat2d.js";
-import {Vec2} from "../../lib/math.js";
-import {copy, lerp} from "../../lib/vec2.js";
+import {lerp} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -21,26 +19,18 @@ export function sys_follow(game: Game, delta: number) {
     }
 }
 
-let target_position: Vec2 = [0, 0];
-
 function update(game: Game, entity: Entity) {
     let entity_local = game.World.LocalTransform2D[entity];
     let entity_follow = game.World.Follow[entity];
-
     let target_entity = entity_follow.Target;
-    if (game.World.Signature[target_entity] & Has.SpatialNode2D) {
-        let target_spatial = game.World.SpatialNode2D[target_entity];
-        get_translation(target_position, target_spatial.World);
-    } else if (game.World.Signature[target_entity] & Has.LocalTransform2D) {
-        let target_local = game.World.LocalTransform2D[target_entity];
-        copy(target_position, target_local.Translation);
-    }
+    // The target must be a top-level entity.
+    let target_local = game.World.LocalTransform2D[target_entity];
 
     lerp(
         entity_local.Translation,
         entity_local.Translation,
-        target_position,
-        entity_follow.Stiffness
+        target_local.Translation,
+        0.1 // stiffness
     );
 
     game.World.Signature[entity] |= Has.Dirty;
