@@ -5,7 +5,6 @@
  */
 
 import {Entity} from "../../lib/world.js";
-import {dispatch} from "../actions.js";
 import {destroy_all} from "../components/com_children.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -24,9 +23,6 @@ function update(game: Game, entity: Entity, delta: number) {
     let lifespan = game.World.Lifespan[entity];
     lifespan.Remaining -= delta;
     if (lifespan.Remaining < 0) {
-        if (lifespan.Action) {
-            dispatch(game, lifespan.Action, entity);
-        }
         destroy_all(game.World, entity);
     }
 }
