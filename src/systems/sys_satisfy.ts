@@ -28,6 +28,7 @@ export const LOW_SATISFY_THRESHOLD = 0.4;
 
 function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
+
     let children = game.World.Children[entity].Children;
     let buildingSatisfierEntities = children[BuildingAttributes.Satisfier];
     let jezyczek =
@@ -63,6 +64,7 @@ function update(game: Game, entity: number, delta: number) {
     let guests_on_door = door_cell.Ocupados;
     for (let guest of guests_on_door) {
         let need = game.World.Needs[guest];
+        let walk = game.World.Walk[guest];
         if (need && satisfy.NeedType === NeedType.WORK) {
             // Duszek works only when fed and rested.
             if (
@@ -74,6 +76,8 @@ function update(game: Game, entity: number, delta: number) {
                     game.World.Signature[guest] &= ~WORKING_MASK;
                     game.World.DuszkiWorking++;
                     need.Target[satisfy.NeedType] = door;
+                    walk.Path = [];
+                    walk.DestinationTrigger = null;
                     // } else if (guests_at_the_door.length > 1) {
                 } else if (door === need.Target[satisfy.NeedType]) {
                     // more than one duszek at the door, so redirect all but one to another target
@@ -85,8 +89,9 @@ function update(game: Game, entity: number, delta: number) {
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
                 need.Target[satisfy.NeedType] = door;
+                walk.Path = [];
+                walk.DestinationTrigger = null;
 
-                // add grave if graveyard
                 if (satisfy.NeedType === NeedType.SLEEP) {
                     let tile_entities =
                         game.World.Children[entity].Children[BuildingAttributes.Tiles];
