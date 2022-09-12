@@ -7,7 +7,7 @@ import {NeedType} from "../components/com_needs.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {BuildingAttributes, BuildingSatisfiers} from "../scenes/blu_building.js";
-import {blueprint_grave, GraveSprites} from "../scenes/blu_grave.js";
+import {blueprint_grave} from "../scenes/blu_grave.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.Satisfy;
@@ -99,10 +99,9 @@ function update(game: Game, entity: number, delta: number) {
 
                     let x = integer(-2, 1);
                     let y = integer(1, 3);
-                    let sprite = GraveSprites[(x + y) % GraveSprites.length];
                     let grave = instantiate(game, [
                         spatial_node2d(),
-                        ...blueprint_grave(game, true, sprite),
+                        ...blueprint_grave(game, x + y),
                         set_position(x, y),
                     ]);
 
