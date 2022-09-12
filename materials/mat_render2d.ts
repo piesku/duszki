@@ -34,7 +34,7 @@ function vertex() {
             gl_Position = vec4(clip_position.xy, -attr_translation.z, 1);
 
             // attr_texcoords are +Y=down for compatibility with spritesheet frame coordinates.
-            vert_texcoord = (attr_sprite.xy + attr_sprite.zw * attr_texcoord) / vec2(135, 118);
+            vert_texcoord = (attr_sprite.xy + vec2(16, 16) * attr_texcoord) / vec2(135, 118);
             vert_color = attr_color;
         } else {
             // Place the vertex outside the frustum.
