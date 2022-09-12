@@ -1,5 +1,6 @@
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
+import {Dialog} from "../ui/Dialog.js";
 
 export function sys_score(game: Game, delta: number) {
     game.World.Age += delta;
@@ -29,5 +30,23 @@ export function sys_score(game: Game, delta: number) {
         game.World.Happiness = 0;
         game.World.Nutrition = 0;
         game.World.Restedness = 0;
+    }
+
+    if (game.World.Milestone === 0) {
+        // A new game.
+        game.World.Milestone++;
+        let dialog = Dialog(
+            game,
+            `<h1>Welcome to Duszkiton!</h1>
+            <p>Where do duszki go when they die?</p>`
+        );
+        document.body.insertAdjacentHTML("beforeend", dialog);
+    } else if (game.World.Population > 10 ** (game.World.Milestone + 1)) {
+        game.World.Milestone++;
+        let dialog = Dialog(
+            game,
+            `<h1>You've reached ${10 ** game.World.Milestone} population!</h1>`
+        );
+        document.body.insertAdjacentHTML("beforeend", dialog);
     }
 }

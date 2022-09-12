@@ -84,6 +84,7 @@ export class World extends WorldImpl {
     // Persistent game state.
     TotalWealth = 100;
     Age = 0;
+    Milestone = 0;
     Population = 0;
     Immigration = 0;
     Mortality = 0;
