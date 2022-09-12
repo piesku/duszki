@@ -50,16 +50,17 @@ export function sys_build_erase(game: Game, delta: number) {
                         get_translation(world_position, jezyczek_spatial.World);
                         let jezyczek_x = Math.round(world_position[0]);
                         let jezyczek_y = Math.round(world_position[1]);
-                        let jezyczek_cell = game.World.Grid[jezyczek_y][jezyczek_x];
-
-                        for (let ocupado of satisfy.Ocupados) {
-                            game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
-                            let walk = game.World.Walk[ocupado];
-                            // Don't use DestinationTrigger because it triggers
-                            // proper path finding, which requires that the
-                            // current cell be walkable (which it won't be when
-                            // we finish here).
-                            walk.Path = [jezyczek_cell];
+                        let jezyczek_cell = game.World.Grid[jezyczek_y]?.[jezyczek_x];
+                        if (jezyczek_cell) {
+                            for (let ocupado of satisfy.Ocupados) {
+                                game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
+                                let walk = game.World.Walk[ocupado];
+                                // Don't use DestinationTrigger because it triggers
+                                // proper path finding, which requires that the
+                                // current cell be walkable (which it won't be when
+                                // we finish here).
+                                walk.Path = [jezyczek_cell];
+                            }
                         }
 
                         for (let child_entity of query_down(
