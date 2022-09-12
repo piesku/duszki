@@ -35,9 +35,6 @@ canvas#follow {
 [hidden] {
     display: none;
 }
-[onclick] {
-    cursor: pointer;
-}
 .grabbing {
     cursor: grabbing;
 }

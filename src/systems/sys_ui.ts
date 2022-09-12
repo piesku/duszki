@@ -75,4 +75,21 @@ export function sys_ui(game: Game, delta: number) {
     }
 
     game.MinimapContext.putImageData(minimap_image_data, 0, 0);
+
+    let camera_entity = game.Cameras[0];
+    if (camera_entity !== undefined) {
+        let camera_local = game.World.LocalTransform2D[camera_entity];
+        let x = camera_local.Translation[0];
+        let y = camera_local.Translation[1];
+        let visible_width = game.ViewportWidth / game.UnitSize;
+        let visible_height = game.ViewportHeight / game.UnitSize;
+
+        game.MinimapContext.strokeStyle = "#fff";
+        game.MinimapContext.strokeRect(
+            Math.round(x - visible_width / 2) + 0.5,
+            Math.round(game.World.Height - y - visible_height / 2) + 0.5,
+            Math.round(visible_width),
+            Math.round(visible_height)
+        );
+    }
 }

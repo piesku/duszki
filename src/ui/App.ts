@@ -1,9 +1,13 @@
 import {html} from "../../lib/html.js";
+import {Action} from "../actions.js";
 
 export function App() {
     // overview, details, commands, advisor
     return html`
         <div
+            onmousedown="event.stopPropagation();"
+            onmouseup="event.stopPropagation();"
+            onclick="$(${Action.MinimapNavigation}, event);"
             style="
                 position: absolute;
                 top: 0;
