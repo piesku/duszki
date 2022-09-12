@@ -96,7 +96,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             game.World.Walk[entity].DestinationTrigger = null;
             game.World.Walk[entity].Path = [];
             set_sprite(game, entity, "059.png");
-            game.World.Render2D[entity].Shift = 1;
+            game.World.Render2D[entity].Shift = 0.1;
             game.World.Signature[entity] |= Has.Lifespan;
             break;
         }
