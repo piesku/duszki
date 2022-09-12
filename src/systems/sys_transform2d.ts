@@ -34,7 +34,7 @@
  */
 
 import * as mat2d from "../../lib/mat2d.js";
-import {DEG_TO_RAD, Vec2} from "../../lib/math.js";
+import {DEG_TO_RAD} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../../materials/layout2d.js";
 import {Game} from "../game.js";
@@ -71,8 +71,6 @@ function update_instance_data(game: Game, entity: Entity) {
     game.World.InstanceData[instance_offset + 5] = local.Translation[1];
 }
 
-const world_position: Vec2 = [0, 0];
-
 function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
     game.World.Signature[entity] &= ~Has.Dirty;
 
@@ -88,11 +86,6 @@ function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
     if (node.Parent !== undefined) {
         let parent_transform = game.World.SpatialNode2D[node.Parent];
         mat2d.multiply(node.World, parent_transform.World, node.World);
-
-        if (node.IsGyroscope) {
-            mat2d.get_translation(world_position, node.World);
-            mat2d.compose(node.World, world_position, local.Rotation * DEG_TO_RAD, local.Scale);
-        }
     }
 
     mat2d.invert(node.Self, node.World);

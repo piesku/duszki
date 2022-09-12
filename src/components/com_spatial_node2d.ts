@@ -21,8 +21,6 @@ export interface SpatialNode2D {
     /** World to self matrix. */
     Self: Mat2D;
     Parent?: Entity;
-    /** Ignore parent's rotation and scale? */
-    IsGyroscope: boolean;
 }
 
 /**
@@ -36,10 +34,8 @@ export interface SpatialNode2D {
  * Entities with `LocalTransform2D` and `SpatialNode2D` have their model matrix
  * computed in sys_transform2d() on the CPU, making them slower than entities
  * with only `LocalTransform2D`, but more fully-featured.
- *
- * @param is_gyroscope Ignore parent's rotation and scale?
  */
-export function spatial_node2d(is_gyroscope = false) {
+export function spatial_node2d() {
     return (game: Game, entity: Entity) => {
         game.World.Signature[entity] |= Has.SpatialNode2D | Has.Dirty;
         game.World.SpatialNode2D[entity] = {
@@ -48,7 +44,6 @@ export function spatial_node2d(is_gyroscope = false) {
                 entity * FLOATS_PER_INSTANCE + 6
             ),
             Self: create(),
-            IsGyroscope: is_gyroscope,
         };
     };
 }
