@@ -97,36 +97,26 @@ const enum NeighborMasks {
 }
 
 type NeighborSprites = {
-    [x: number]: string;
+    [x: number]: number;
 };
 
 let RoadNeighborSprites: NeighborSprites = {
-    [0]: "090.png",
-    [NeighborMasks.UP]: "104.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: "085.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "089.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "090.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "088.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "085.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "088.png",
-    [NeighborMasks.UP | NeighborMasks.DOWN]: "104.png",
-    [NeighborMasks.RIGHT]: "087.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "087.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "089.png",
-    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "085.png",
-    [NeighborMasks.DOWN]: "104.png",
-    [NeighborMasks.LEFT]: "087.png",
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "085.png",
-};
-
-// Can we just subtract 33?
-export let RoadUpdateMap: Record<string, string> = {
-    "085.png": "052.png",
-    "087.png": "054.png",
-    "088.png": "055.png",
-    "089.png": "056.png",
-    "090.png": "057.png",
-    "104.png": "071.png",
+    [0]: 90,
+    [NeighborMasks.UP]: 104,
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: 85,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: 89,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 90,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: 88,
+    [NeighborMasks.UP | NeighborMasks.LEFT]: 85,
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: 88,
+    [NeighborMasks.UP | NeighborMasks.DOWN]: 104,
+    [NeighborMasks.RIGHT]: 87,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: 87,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 89,
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: 85,
+    [NeighborMasks.DOWN]: 104,
+    [NeighborMasks.LEFT]: 87,
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: 85,
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
@@ -161,7 +151,8 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
 
     let sprite = RoadNeighborSprites[neighbors];
     if (timesWalked > ROAD_UPDATE_WALKS_THRESHOLD) {
-        sprite = RoadUpdateMap[sprite];
+        // Stone road tiles are offset from the regular road tiles by 33.
+        sprite = sprite - 33;
     }
 
     set_sprite(game, tile, sprite);

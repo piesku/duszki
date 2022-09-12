@@ -93,26 +93,26 @@ const enum NeighborMasks {
 }
 
 type NeighborSprites = {
-    [x: number]: string;
+    [x: number]: number;
 };
 
 let TreesNeighborSprites: NeighborSprites = {
-    [0]: "015.png",
-    [NeighborMasks.UP]: "045.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: "044.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "124.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "028.png",
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "121.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "044.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "121.png",
-    [NeighborMasks.UP | NeighborMasks.DOWN]: "120.png",
-    [NeighborMasks.RIGHT]: "027.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "119.png",
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "123.png",
-    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "010.png",
-    [NeighborMasks.DOWN]: "011.png",
-    [NeighborMasks.LEFT]: "027.png",
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "010.png",
+    [0]: 15,
+    [NeighborMasks.UP]: 45,
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: 44,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: 124,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 28,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: 121,
+    [NeighborMasks.UP | NeighborMasks.LEFT]: 44,
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: 121,
+    [NeighborMasks.UP | NeighborMasks.DOWN]: 120,
+    [NeighborMasks.RIGHT]: 27,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: 119,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 123,
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: 10,
+    [NeighborMasks.DOWN]: 11,
+    [NeighborMasks.LEFT]: 27,
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: 10,
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {

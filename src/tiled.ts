@@ -11,7 +11,7 @@ const enum TileFlip {
 export function* tiled_blueprints(
     layer: Array<number | null>,
     width: number
-): Generator<[string, Blueprint<Game>]> {
+): Generator<[number, Blueprint<Game>]> {
     for (let i = 0; i < layer.length; i++) {
         let tile_id = layer[i];
         if (tile_id === null) {
@@ -30,8 +30,6 @@ export function* tiled_blueprints(
 
         // Remove flip flags.
         tile_id &= ~TileFlip.Horizontal;
-
-        let tile_name = `${tile_id}.png`.padStart(7, "0");
-        yield [tile_name, [local, render2d(tile_name)]];
+        yield [tile_id, [local, render2d(tile_id)]];
     }
 }

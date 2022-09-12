@@ -95,7 +95,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             game.World.Signature[entity] &= ~(Has.ControlAi | Has.Move2D | Has.Alive);
             game.World.Walk[entity].DestinationTrigger = null;
             game.World.Walk[entity].Path = [];
-            set_sprite(game, entity, "059.png");
+            set_sprite(game, entity, 59);
             game.World.Render2D[entity].Shift = 0.9;
             game.World.Signature[entity] |= Has.Lifespan;
             break;

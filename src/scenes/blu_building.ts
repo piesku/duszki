@@ -17,7 +17,7 @@ import {Has} from "../world.js";
 
 const building_maps = [map_sleep, map_food, map_work];
 
-const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png"];
+const window_sprites = [79, 107, 108, 111, 112];
 
 // House satisfies sleep
 // Farm satisfies food
@@ -47,14 +47,14 @@ export function blueprint_building(game: Game, map_id: number) {
 
     let child_tiles: Array<Blueprint<Game>> = [];
     let light_tiles: Array<Blueprint<Game>> = [];
-    for (let [tile_name, tile] of tiled_blueprints(map.Tiles, map.Width)) {
+    for (let [tile_id, tile] of tiled_blueprints(map.Tiles, map.Width)) {
         child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
-        if (window_sprites.includes(tile_name)) {
+        if (window_sprites.includes(tile_id)) {
             light_tiles.push([
                 spatial_node2d(),
                 ...tile,
                 // Render a quad under the window which will be lit up by sys_satisfy.
-                render2d("135.png", [0.3, 0.3, 0.3, 1]),
+                render2d(135, [0.3, 0.3, 0.3, 1]),
                 shift(-0.1),
             ]);
         }

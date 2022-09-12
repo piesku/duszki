@@ -24,7 +24,8 @@ export interface Render2D {
  * @param sprite_name The name of the sprite to render.
  * @param color The tint of the sprite.
  */
-export function render2d(sprite_name: string, color: Vec4 = [1, 1, 1, 1]) {
+export function render2d(tile_id: number, color: Vec4 = [1, 1, 1, 1]) {
+    let sprite_name = `${tile_id}.png`.padStart(7, "0");
     return (game: Game, entity: Entity) => {
         let instance_offset = entity * FLOATS_PER_INSTANCE;
         // Detail.
@@ -56,7 +57,8 @@ export function shift(z: number) {
     };
 }
 
-export function set_sprite(game: Game, entity: Entity, sprite_name: string) {
+export function set_sprite(game: Game, entity: Entity, tile_id: number) {
+    let sprite_name = `${tile_id}.png`.padStart(7, "0");
     let instance_offset = entity * FLOATS_PER_INSTANCE;
     game.World.InstanceData[instance_offset + 12] = spritesheet[sprite_name].x;
     game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
