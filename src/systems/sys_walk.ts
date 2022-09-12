@@ -1,6 +1,6 @@
 import {Vec2} from "../../lib/math.js";
 import {path_find} from "../../lib/pathfind.js";
-import {add, length, normalize, subtract} from "../../lib/vec2.js";
+import {add, distance_squared, normalize, subtract} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -59,8 +59,7 @@ function update(game: Game, entity: Entity) {
             walk.Path = [];
         }
 
-        subtract(diff, next_cell.Position, local.Translation);
-        if (length(diff) < 0.1) {
+        if (distance_squared(next_cell.Position, local.Translation) < 0.01) {
             // We are close enough to the next waypoint.
             cell.TimesWalked++;
             // console.log(cell.TimesWalked);
@@ -71,6 +70,7 @@ function update(game: Game, entity: Entity) {
             }
         } else {
             let move = game.World.Move2D[entity];
+            subtract(diff, next_cell.Position, local.Translation);
             normalize(diff, diff);
             add(move.Direction, move.Direction, diff);
             game.World.Signature[entity] |= Has.Dirty;
