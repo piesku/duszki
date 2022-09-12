@@ -91,6 +91,7 @@ function update(game: Game, entity: number, delta: number) {
                     let tile_entities =
                         game.World.Children[entity].Children[BuildingAttributes.Tiles];
                     let tiles = game.World.Children[tile_entities].Children;
+
                     let x = integer(-2, 1);
                     let y = integer(1, 3);
                     let sprite = GraveSprites[(x + y) % GraveSprites.length];
@@ -134,9 +135,9 @@ function update(game: Game, entity: number, delta: number) {
                         game.World.Children[entity].Children[BuildingAttributes.Tiles];
                     let tiles = game.World.Children[tile_entities].Children;
 
-                    // remove last children
-                    let last = tiles.pop()!;
-                    destroy_all(game.World, last);
+                    let grave = tiles[12];
+                    tiles.splice(12, 1);
+                    destroy_all(game.World, grave);
                 }
             }
         }
