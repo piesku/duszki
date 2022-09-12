@@ -4,7 +4,9 @@ import {Vec2} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {query_up} from "../components/com_spatial_node2d.js";
+import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
+import {total_cost} from "../generator.js";
 import {BuildingAttributes, BuildingSatisfiers} from "../scenes/blu_building.js";
 import {GridType, Has} from "../world.js";
 import {make_tiled_road} from "./sys_build_roads.js";
@@ -39,6 +41,13 @@ export function sys_build_erase(game: Game, delta: number) {
                     if (root_entity === undefined) {
                         destroy_all(game.World, cell.TileEntity);
                     } else {
+                        let generator = game.World.Generator[root_entity];
+                        let reimbursed = total_cost(
+                            GENERATORS[generator.Id],
+                            game.GeneratorCounts[generator.Id] - 1
+                        );
+                        game.World.TotalWealth += reimbursed;
+
                         let satisfy = game.World.Satisfy[root_entity];
                         let children = game.World.Children[root_entity].Children;
                         let satisfier_entities = children[BuildingAttributes.Satisfier];
