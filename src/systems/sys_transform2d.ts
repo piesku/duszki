@@ -45,12 +45,9 @@ const QUERY_NODE = Has.LocalTransform2D | Has.SpatialNode2D;
 export function sys_transform2d(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY_DIRTY) === QUERY_DIRTY) {
+            update_instance_data(game, ent);
             if (game.World.Signature[ent] & Has.SpatialNode2D) {
                 update_spatial_node(game, ent);
-            } else {
-                // Fast path for top-level transforms which aren't scene graph
-                // nodes (they can't be parents nor children).
-                update_instance_data(game, ent);
             }
         }
     }
@@ -70,20 +67,7 @@ function update_instance_data(game: Game, entity: Entity) {
 }
 
 function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
-    game.World.Signature[entity] &= ~Has.Dirty;
-
-    let local = game.World.LocalTransform2D[entity];
     let node = game.World.SpatialNode2D[entity];
-
-    mat2d.set(
-        node.World,
-        local.Scale[0],
-        0,
-        0,
-        local.Scale[1],
-        local.Translation[0],
-        local.Translation[1]
-    );
 
     if (parent !== undefined) {
         node.Parent = parent;
@@ -102,6 +86,7 @@ function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
         for (let i = 0; i < children.Children.length; i++) {
             let child = children.Children[i];
             if ((game.World.Signature[child] & QUERY_NODE) === QUERY_NODE) {
+                update_instance_data(game, child);
                 update_spatial_node(game, child, entity);
             }
         }
