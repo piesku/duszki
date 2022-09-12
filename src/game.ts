@@ -6,6 +6,7 @@ import {Entity} from "../lib/world.js";
 import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
 import {NeedType} from "./components/com_needs.js";
+import {sys_audio_source} from "./systems/sys_audio_source.js";
 import {sys_build_buildings} from "./systems/sys_build_buildings.js";
 import {sys_build_erase} from "./systems/sys_build_erase.js";
 import {sys_build_roads} from "./systems/sys_build_roads.js";
@@ -127,6 +128,7 @@ export class Game extends Game3D {
         sys_save(this, delta);
 
         // Rendering.
+        sys_audio_source(this, delta);
         sys_render2d(this, delta);
         sys_ui(this, delta);
     }
