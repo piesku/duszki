@@ -75,12 +75,12 @@ export function blueprint_building(game: Game, map_id: number) {
         local_transform2d(),
         control_player("building"),
         satisfy(building_type, capacities[building_type]),
+        generator(map_id),
+        disable(Has.Generator | Has.Satisfy),
         children(
             [spatial_node2d(), local_transform2d(), children(...child_tiles)],
             [spatial_node2d(), local_transform2d(), children(jezyczek, door)],
             [spatial_node2d(), local_transform2d(), children(...light_tiles)]
         ),
-        generator(map_id),
-        disable(Has.Generator),
     ];
 }

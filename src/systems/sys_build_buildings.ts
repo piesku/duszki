@@ -61,7 +61,7 @@ export function sys_build_buildings(game: Game, delta: number) {
             if (can_be_placed && cost <= game.World.TotalWealth && pointer_clicked(game, 0)) {
                 game.World.TotalWealth -= cost;
                 game.World.Signature[ent] &= ~Has.ControlPlayer;
-                game.World.Signature[ent] |= Has.Generator;
+                game.World.Signature[ent] |= Has.Generator | Has.Satisfy;
                 building_placed = true;
 
                 // Populate the world grid with the building's footprint and

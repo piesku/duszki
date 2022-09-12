@@ -21,26 +21,13 @@ export function sys_needs(game: Game, delta: number) {
     for (let i = 0; i < game.World.Signature.length; i++) {
         if ((game.World.Signature[i] & SATISFY_QUERY) == SATISFY_QUERY) {
             let satisfy = game.World.Satisfy[i];
-            let spatial = game.World.SpatialNode2D[i];
             if (satisfy.NeedType == NeedType.FOOD) {
-                // don't count not built buildings
-                if (spatial.Parent && game.World.Signature[spatial.Parent] & Has.ControlPlayer) {
-                    return;
-                }
                 food_destination.push(i);
                 game.FrameStats.RestaurantSeats += satisfy.Capacity;
             } else if (satisfy.NeedType == NeedType.WORK) {
-                // don't count not built buildings
-                if (spatial.Parent && game.World.Signature[spatial.Parent] & Has.ControlPlayer) {
-                    return;
-                }
                 work_destination.push(i);
                 game.FrameStats.Workplaces += satisfy.Capacity;
             } else if (satisfy.NeedType == NeedType.SLEEP) {
-                // don't count not built buildings
-                if (spatial.Parent && game.World.Signature[spatial.Parent] & Has.ControlPlayer) {
-                    return;
-                }
                 sleep_destination.push(i);
                 game.FrameStats.Beds += satisfy.Capacity;
             }

@@ -115,6 +115,7 @@ function update(game: Game, entity: number, delta: number) {
             }
         }
     }
+
     for (let guest of satisfy.Ocupados) {
         let need = game.World.Needs[guest];
         // Duszek stops working when hungry or tired.
@@ -145,12 +146,6 @@ function update(game: Game, entity: number, delta: number) {
                 }
             }
         }
-    }
-
-    let buildingIsBeingBuilt = game.World.Signature[entity] & Has.ControlPlayer;
-
-    if (buildingIsBeingBuilt) {
-        return;
     }
 
     let lights_container = children[BuildingAttributes.Lights];
