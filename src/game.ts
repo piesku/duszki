@@ -15,7 +15,6 @@ import {sys_control_ai} from "./systems/sys_control_ai.js";
 import {sys_control_camera_follow} from "./systems/sys_control_camera_follow.js";
 import {sys_control_camera_main} from "./systems/sys_control_camera_main.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
-import {sys_draw2d} from "./systems/sys_draw2d.js";
 import {sys_follow} from "./systems/sys_follow2d.js";
 import {sys_generate} from "./systems/sys_generate.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
@@ -89,6 +88,7 @@ export class Game extends Game3D {
         this.Gl.enable(GL_DEPTH_TEST);
         this.Gl.enable(GL_BLEND);
         this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        this.Gl.clearColor(0.4, 0.4, 0.4, 1);
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
 
@@ -127,7 +127,6 @@ export class Game extends Game3D {
         sys_save(this, delta);
 
         // Rendering.
-        sys_draw2d(this, delta);
         sys_render2d(this, delta);
         sys_ui(this, delta);
     }

@@ -160,12 +160,6 @@ export abstract class GameImpl {
  * Context2D instances for drawing behind and in front of the scene.
  */
 export abstract class Game3D extends GameImpl {
-    BackgroundCanvas = document.querySelector("#background")! as HTMLCanvasElement;
-    BackgroundContext = this.BackgroundCanvas.getContext("2d")!;
-
-    ForegroundCanvas = document.querySelector("#foreground")! as HTMLCanvasElement;
-    ForegroundContext = this.ForegroundCanvas.getContext("2d")!;
-
     SceneCanvas = document.querySelector("#scene")! as HTMLCanvasElement;
     Gl = this.SceneCanvas.getContext("webgl2", {antialias: false})!;
 

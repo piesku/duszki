@@ -5,7 +5,6 @@ import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
 import {ControlAi} from "./components/com_control_ai.js";
 import {ControlPlayer} from "./components/com_control_player.js";
-import {Draw} from "./components/com_draw.js";
 import {Follow} from "./components/com_follow.js";
 import {Generator} from "./components/com_generator.js";
 import {Lifespan} from "./components/com_lifespan.js";
@@ -26,7 +25,6 @@ const enum Component {
     ControlPlayer,
     Children,
     Dirty,
-    Draw,
     Generator,
     Follow,
     Lifespan,
@@ -49,7 +47,6 @@ export const enum Has {
     ControlPlayer = 1 << Component.ControlPlayer,
     Children = 1 << Component.Children,
     Dirty = 1 << Component.Dirty,
-    Draw = 1 << Component.Draw,
     Generator = 1 << Component.Generator,
     Follow = 1 << Component.Follow,
     Lifespan = 1 << Component.Lifespan,
@@ -129,7 +126,6 @@ export class World extends WorldImpl {
     ControlAi: Array<ControlAi> = [];
     ControlPlayer: Array<ControlPlayer> = [];
     Children: Array<Children> = [];
-    Draw: Array<Draw> = [];
     Generator: Array<Generator> = [];
     Follow: Array<Follow> = [];
     Lifespan: Array<Lifespan> = [];

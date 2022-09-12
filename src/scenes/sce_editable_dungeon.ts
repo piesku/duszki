@@ -1,17 +1,15 @@
 import {instantiate} from "../../lib/game.js";
-import {integer} from "../../lib/random.js";
-import {DrawContext, draw_rect} from "../components/com_draw.js";
+import {float, integer} from "../../lib/random.js";
 import {grid, GridFlag} from "../components/com_grid.js";
-import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
+import {set_position} from "../components/com_local_transform2d.js";
 import {shift} from "../components/com_render2d.js";
-import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_tiled_road} from "../systems/sys_build_roads.js";
 import {make_tiled_park} from "../systems/sys_build_trees.js";
 import {GridType, World} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
-import {blueprint_grass} from "./blu_grass.js";
+import {blueprint_empty, blueprint_grass} from "./blu_grass.js";
 import {blueprint_road} from "./blu_road.js";
 import {blueprint_tree} from "./blu_tree.js";
 
@@ -31,24 +29,6 @@ export function scene_editable_dungeon(game: Game) {
         set_position(game.World.Width / 2, game.World.Height / 2),
     ]);
 
-    // Solid background.
-    instantiate(game, [
-        spatial_node2d(),
-        local_transform2d([game.World.Width / 2 - 0.5, game.World.Height / 2 - 0.5], 0, [
-            game.World.Width,
-            game.World.Height,
-        ]),
-        draw_rect(DrawContext.Background, "#589740"),
-    ]);
-
-    // Grass tiles in the background.
-    let grass_count = (game.World.Width * game.World.Height) / 10;
-    for (let i = 0; i < grass_count; i++) {
-        let x = integer(1, game.World.Width - 2);
-        let y = integer(1, game.World.Height - 2);
-        instantiate(game, [...blueprint_grass(game), set_position(x, y), shift(-1)]);
-    }
-
     // Highway to Hell
     let mid_x = Math.round(game.World.Width / 2);
     let mid_y = Math.round(game.World.Height / 2);
@@ -61,6 +41,21 @@ export function scene_editable_dungeon(game: Game) {
         make_tiled_road(game, x, mid_y);
     }
 
+    // Grass tiles in the background.
+    for (let y = 0; y < game.World.Height; y++) {
+        for (let x = 0; x < game.World.Width; x++) {
+            let cell = game.World.Grid[y][x];
+            if (cell.TileEntity === null) {
+                if (float() < 0.1) {
+                    instantiate(game, [...blueprint_grass(game), set_position(x, y), shift(-1)]);
+                } else {
+                    instantiate(game, [...blueprint_empty(game), set_position(x, y), shift(-1)]);
+                }
+            }
+        }
+    }
+
+    // Trees.
     let tree_count = (game.World.Width * game.World.Height) / 2;
     for (let i = 0; i < tree_count; i++) {
         let x = integer(1, game.World.Width - 2);
