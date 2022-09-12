@@ -31,7 +31,7 @@ import {sys_transform2d} from "./systems/sys_transform2d.js";
 import {sys_ui} from "./systems/sys_ui.js";
 import {sys_walk} from "./systems/sys_walk.js";
 import {App} from "./ui/App.js";
-import {Has, World} from "./world.js";
+import {World} from "./world.js";
 
 export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
 
@@ -46,7 +46,7 @@ export class Game extends Game3D {
     FollowContext = this.FollowCanvas.getContext("2d")!;
 
     Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img")!);
-    MaterialRender2D = mat_render2d(this.Gl, Has.Render2D, Has.SpatialNode2D);
+    MaterialRender2D = mat_render2d(this.Gl);
     InstanceBuffer = this.Gl.createBuffer()!;
 
     UnitSize = 16;

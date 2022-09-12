@@ -8,7 +8,6 @@
  * parents of other entities.
  */
 
-import {create} from "../../lib/mat2d.js";
 import {Mat2D} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../../materials/layout2d.js";
@@ -18,8 +17,6 @@ import {Has, World} from "../world.js";
 export interface SpatialNode2D {
     /** Absolute matrix relative to the world. */
     World: Mat2D;
-    /** World to self matrix. */
-    Self: Mat2D;
     Parent?: Entity;
 }
 
@@ -43,7 +40,6 @@ export function spatial_node2d() {
                 entity * FLOATS_PER_INSTANCE,
                 entity * FLOATS_PER_INSTANCE + 6
             ),
-            Self: create(),
         };
     };
 }

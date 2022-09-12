@@ -14,7 +14,6 @@ export interface Render2DLayout {
     Pv: WebGLUniformLocation;
     World: WebGLUniformLocation;
     SheetTexture: WebGLUniformLocation;
-    SheetSize: WebGLUniformLocation;
 }
 
 export const FLOATS_PER_INSTANCE = 16;

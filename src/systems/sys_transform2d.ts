@@ -64,7 +64,7 @@ function update_instance_data(game: Game, entity: Entity) {
     let local = game.World.LocalTransform2D[entity];
     let instance_offset = entity * FLOATS_PER_INSTANCE;
     game.World.InstanceData[instance_offset + 0] = local.Scale[0];
-    game.World.InstanceData[instance_offset + 1] = local.Scale[1];
+    game.World.InstanceData[instance_offset + 3] = local.Scale[1];
     game.World.InstanceData[instance_offset + 4] = local.Translation[0];
     game.World.InstanceData[instance_offset + 5] = local.Translation[1];
 }
@@ -75,7 +75,15 @@ function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
     let local = game.World.LocalTransform2D[entity];
     let node = game.World.SpatialNode2D[entity];
 
-    mat2d.compose(node.World, local.Translation, 0, local.Scale);
+    mat2d.set(
+        node.World,
+        local.Scale[0],
+        0,
+        0,
+        local.Scale[1],
+        local.Translation[0],
+        local.Translation[1]
+    );
 
     if (parent !== undefined) {
         node.Parent = parent;
@@ -86,7 +94,8 @@ function update_spatial_node(game: Game, entity: Entity, parent?: Entity) {
         mat2d.multiply(node.World, parent_transform.World, node.World);
     }
 
-    mat2d.invert(node.Self, node.World);
+    //Expensive and only used for camera.Pv. See sys_camera2d.
+    //mat2d.invert(node.Self, node.World);
 
     if (game.World.Signature[entity] & Has.Children) {
         let children = game.World.Children[entity];

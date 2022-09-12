@@ -88,15 +88,13 @@ export function sys_render2d(game: Game, delta: number) {
 
 function render_all(game: Game, eye: Camera2D) {
     let material = game.MaterialRender2D;
-    let sheet = game.Spritesheet;
 
     game.Gl.useProgram(material.Program);
     game.Gl.uniformMatrix3x2fv(material.Locations.Pv, false, eye.Pv);
 
     game.Gl.activeTexture(GL_TEXTURE0);
-    game.Gl.bindTexture(GL_TEXTURE_2D, sheet.Texture);
+    game.Gl.bindTexture(GL_TEXTURE_2D, game.Spritesheet);
     game.Gl.uniform1i(material.Locations.SheetTexture, 0);
-    game.Gl.uniform2f(material.Locations.SheetSize, sheet.Width, sheet.Height);
 
     game.Gl.drawArraysInstanced(material.Mode, 0, 4, game.World.Signature.length);
 }
