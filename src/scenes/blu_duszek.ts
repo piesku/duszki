@@ -18,7 +18,7 @@ export function blueprint_duszek(game: Game) {
         shift(1),
         control_ai(),
         walk(float(2, 2.5)),
-        move2d(1, 0),
+        move2d(1),
         needs(),
         lifespan(60),
         disable(Has.Lifespan),

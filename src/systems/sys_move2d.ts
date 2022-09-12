@@ -65,10 +65,4 @@ function update(game: Game, entity: Entity, delta: number) {
         move.Direction[0] = 0;
         move.Direction[1] = 0;
     }
-
-    if (move.Rotation) {
-        local.Rotation += move.Rotation * move.RotationSpeed * delta;
-
-        move.Rotation = 0;
-    }
 }
