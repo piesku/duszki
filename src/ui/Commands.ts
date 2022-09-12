@@ -28,8 +28,10 @@ function BuildingButton(game: Game, id: number) {
         <button
             ${gen_cost > game.World.TotalWealth && "disabled"}
             onclick="$(${Action.EnterPlaceBuilding}, ${id})"
+            style="width: 100%;"
         >
-            ${gen_config.Name} (${cost_fmt.format(gen_cost)}) — ${gen_config.Description}
+            <big>${gen_config.Name}</big> (${cost_fmt.format(gen_cost)})<br />
+            ${gen_config.Description}
         </button>
     `;
 }

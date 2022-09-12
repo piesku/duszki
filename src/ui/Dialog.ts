@@ -12,7 +12,8 @@ export function Dialog(game: Game, message: string) {
                 border-radius: 10px;
                 background: #66e9;
                 backdrop-filter: blur(10px);
-				text-align: center;
+                text-align: center;
+                color: #fff;
             "
         >
             <p>${message}</p>

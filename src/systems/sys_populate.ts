@@ -38,14 +38,11 @@ export function sys_populate(game: Game, delta: number) {
         dispatch(game, Action.SpawnDuszek, {});
     } else {
         if (!enough_beds) {
-            game.PopulationSituation =
-                "The housing situation is terrible, duszki have nowhere to sleep!";
+            game.PopulationSituation = "The cemeteries are too few, duszki have nowhere to sleep!";
         } else if (!enough_food) {
-            game.PopulationSituation =
-                "There is not enough restaurants, duszki have nowhere to eat!";
+            game.PopulationSituation = "There is not enough chapels, duszki have nowhere to eat!";
         } else if (!enough_work) {
-            game.PopulationSituation =
-                "There is not enough workplaces, duszki have nowhere to work!";
+            game.PopulationSituation = "There is not enough crypts, duszki have nowhere to work!";
         } else if (!low_mortality) {
             game.PopulationSituation =
                 "The mortality rate is too high, duszki are dying on the streets!";

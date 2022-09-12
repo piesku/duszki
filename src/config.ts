@@ -15,24 +15,24 @@ export const enum GeneratorId {
 
 export const GENERATORS: Array<GeneratorConfig> = [
     {
-        Name: "Resting Place",
-        Description: "A place for your citizens to rest.",
+        Name: "Cemetery",
+        Description: "Where duszki can rest.",
         BaseIncome: 0,
         IncomeFactor: 1,
         StartingCost: 20,
         CostFactor: 1.4,
     },
     {
-        Name: "Eating Place",
-        Description: "Build to feed your citizens.",
+        Name: "Chapel",
+        Description: "Where duszki can feed.",
         BaseIncome: 0,
         IncomeFactor: 1,
         StartingCost: 15,
         CostFactor: 1.5,
     },
     {
-        Name: "Working Place",
-        Description: "Generate wealth by working.",
+        Name: "Crypt",
+        Description: "Where duszki can work.",
         BaseIncome: 0.2,
         IncomeFactor: 1.01,
         StartingCost: 40,

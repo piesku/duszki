@@ -37,8 +37,10 @@ export function sys_score(game: Game, delta: number) {
         game.World.Milestone++;
         let dialog = Dialog(
             game,
-            `<h1>Welcome to Duszkiton!</h1>
-            <p>Where do duszki go when they die?</p>`
+            `<h1>Welcome to AFTERLIFE!</h1>
+            <p>Where do Pac-Man's ghosts go when they die?</p>
+            <p>They come here — to the ghost town full of life!</p>
+            <p>Afterlife, that is.</p>`
         );
         document.body.insertAdjacentHTML("beforeend", dialog);
     } else if (game.World.Population >= 10 ** (game.World.Milestone + 1)) {
