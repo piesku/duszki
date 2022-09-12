@@ -13,6 +13,7 @@ import {
     BuildingSatisfiers,
 } from "../scenes/blu_building.js";
 import {Has} from "../world.js";
+import {make_tiled_road} from "./sys_build_roads.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
 const world_position: Vec2 = [0, 0];
@@ -102,6 +103,7 @@ export function sys_build_buildings(game: Game, delta: number) {
                 let door_y = Math.round(door_local[1]);
                 let door_cell = game.World.Grid[door_y]?.[door_x];
                 door_cell.Walkable = true;
+                make_tiled_road(game, door_x, door_y);
             } else if (pointer_clicked(game, 2)) {
                 document.body.classList.remove("building");
                 destroy_all(game.World, ent);
