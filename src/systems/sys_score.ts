@@ -41,7 +41,7 @@ export function sys_score(game: Game, delta: number) {
             <p>Where do duszki go when they die?</p>`
         );
         document.body.insertAdjacentHTML("beforeend", dialog);
-    } else if (game.World.Population > 10 ** (game.World.Milestone + 1)) {
+    } else if (game.World.Population >= 10 ** (game.World.Milestone + 1)) {
         game.World.Milestone++;
         let dialog = Dialog(
             game,
