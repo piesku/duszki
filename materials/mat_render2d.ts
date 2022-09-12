@@ -71,9 +71,14 @@ let fragment = `#version 300 es\n
     out vec4 frag_color;
 
     void main() {
-        frag_color = vert_color * texture(sheet_texture, vert_texcoord);
-        if (frag_color.a == 0.0) {
-            discard;
+        vec4 tex_color = texture(sheet_texture, vert_texcoord);
+        if (tex_color.r * tex_color.g * tex_color.b * tex_color.a == 1.0) {
+            frag_color = tex_color;
+        } else {
+            frag_color = vert_color * texture(sheet_texture, vert_texcoord);
+            if (frag_color.a == 0.0) {
+                discard;
+            }
         }
     }
 `;
