@@ -12,9 +12,7 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 
 export interface Render2D {
-    Detail: Float32Array;
     Color: Float32Array;
-    Sprite: Float32Array;
     Shift: number;
 }
 
@@ -45,9 +43,7 @@ export function render2d(sprite_name: string, color: Vec4 = [1, 1, 1, 1]) {
 
         game.World.Signature[entity] |= Has.Render2D;
         game.World.Render2D[entity] = {
-            Detail: game.World.InstanceData.subarray(instance_offset + 6, instance_offset + 8),
             Color: game.World.InstanceData.subarray(instance_offset + 8, instance_offset + 12),
-            Sprite: game.World.InstanceData.subarray(instance_offset + 12, instance_offset + 16),
             Shift: 0,
         };
     };
@@ -66,12 +62,4 @@ export function set_sprite(game: Game, entity: Entity, sprite_name: string) {
     game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
     game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
     game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
-}
-
-export function set_color(game: Game, entity: Entity, color: Vec4) {
-    let instance_offset = entity * FLOATS_PER_INSTANCE;
-    game.World.InstanceData[instance_offset + 8] = color[0];
-    game.World.InstanceData[instance_offset + 9] = color[1];
-    game.World.InstanceData[instance_offset + 10] = color[2];
-    game.World.InstanceData[instance_offset + 11] = color[3];
 }
