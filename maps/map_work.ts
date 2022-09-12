@@ -1,2 +1,2 @@
 // prettier-ignore
-export const map_work = {"Width":4,"Height":4,"Tiles":[93,113,110,349,42,108,94,364,8,42,43,298,0,8,9,264]};
+export const map_work = {"Width":4,"Height":4,"Tiles":[92,112,109,348,41,107,93,363,7,41,42,297,null,7,8,263]};

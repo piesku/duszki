@@ -9,13 +9,12 @@ const enum TileFlip {
 }
 
 export function* tiled_blueprints(
-    layer: Array<number>,
+    layer: Array<number | null>,
     width: number
 ): Generator<[string, Blueprint<Game>]> {
     for (let i = 0; i < layer.length; i++) {
-        let global_id = layer[i]; // Global ID with flip flags.
-        let tile_id = global_id & ~TileFlip.Horizontal; // Remove flip flags.
-        if (tile_id == 0) {
+        let tile_id = layer[i];
+        if (tile_id === null) {
             continue;
         }
 
@@ -23,14 +22,16 @@ export function* tiled_blueprints(
         let y = Math.floor(i / width);
         let local: ReturnType<typeof local_transform2d>;
 
-        // Rotate and flip flags are stored in the global ID.
-        if (global_id & TileFlip.Horizontal) {
+        if (tile_id & TileFlip.Horizontal) {
             local = local_transform2d([x, y], 0, [-1, 1]);
         } else {
             local = local_transform2d([x, y]);
         }
 
-        let tile_name = `${tile_id - 1}.png`.padStart(7, "0");
+        // Remove flip flags.
+        tile_id &= ~TileFlip.Horizontal;
+
+        let tile_name = `${tile_id}.png`.padStart(7, "0");
         yield [tile_name, [local, render2d(tile_name)]];
     }
 }

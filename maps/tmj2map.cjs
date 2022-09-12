@@ -30,10 +30,18 @@ for (let tiled_layer of tiled_json.layers) {
     for (let y = 0; y < tiled_layer.height; y++) {
         for (let x = 0; x < tiled_layer.width; x++) {
             let tile = tiled_layer.data[(tiled_layer.height - y - 1) * tiled_layer.width + x];
+            if (tile === 0) {
+                // Empty tile.
+                map.Tiles[y * tiled_layer.width + x] = null;
+                continue;
+            }
+
             if (tile & TILED_FLIP_HORIZONTAL) {
                 tile = (tile & ~TILED_FLIP_HORIZONTAL) | OURS_FLIP_HORIZONTAL;
             }
-            map.Tiles[y * tiled_layer.width + x] = tile;
+
+            // Tiled's tile IDs are 1-based, but we want 0-based.
+            map.Tiles[y * tiled_layer.width + x] = tile - 1;
         }
     }
 
