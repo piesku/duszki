@@ -22,14 +22,18 @@ let map = {
     Tiles: [],
 };
 
+const TILED_FLIP_HORIZONTAL = 1 << 31;
+const OURS_FLIP_HORIZONTAL = 1 << 8;
+
 for (let tiled_layer of tiled_json.layers) {
     // Convert a tile layer from right-down render order to right-up.
     for (let y = 0; y < tiled_layer.height; y++) {
         for (let x = 0; x < tiled_layer.width; x++) {
-            map.Tiles[y * tiled_layer.width + x] =
-                tiled_layer.data[(tiled_layer.height - y - 1) * tiled_layer.width + x];
-            map.Tiles[(tiled_layer.height - y - 1) * tiled_layer.width + x] =
-                tiled_layer.data[y * tiled_layer.width + x];
+            let tile = tiled_layer.data[(tiled_layer.height - y - 1) * tiled_layer.width + x];
+            if (tile & TILED_FLIP_HORIZONTAL) {
+                tile = (tile & ~TILED_FLIP_HORIZONTAL) | OURS_FLIP_HORIZONTAL;
+            }
+            map.Tiles[y * tiled_layer.width + x] = tile;
         }
     }
 

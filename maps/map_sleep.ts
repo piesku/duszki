@@ -1,2 +1,2 @@
 // prettier-ignore
-export const map_sleep = {"Width":3,"Height":4,"Tiles":[59,43,2147483707,25,26,2147483673,25,26,2147483673,8,9,2147483656]};
+export const map_sleep = {"Width":3,"Height":4,"Tiles":[59,43,315,25,26,281,25,26,281,8,9,264]};
