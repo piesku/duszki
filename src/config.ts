@@ -24,7 +24,7 @@ export const GENERATORS: Array<GeneratorConfig> = [
     },
     {
         Name: "Chapel",
-        Description: "Where duszki can feed.",
+        Description: "Where duszki can eat.",
         BaseIncome: 0,
         IncomeFactor: 1,
         StartingCost: 15,
