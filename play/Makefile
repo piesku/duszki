@@ -30,7 +30,7 @@ game.terser.js: game.sed.js terser_compress.txt
 
 game.roadroller.js: game.terser.js
 # Set -O2 for better (and longer) compression.
-	npx --quiet roadroller -O1 --dirty $< -o $@
+	npx --quiet roadroller -O2 --dirty $< -o $@
 
 index.html: game.html game.roadroller.js game.css debug.css posthtml.cjs
 	node posthtml.cjs $< > $@
