@@ -1,9 +1,9 @@
 import {instantiate} from "../../lib/game.js";
-import {element, integer} from "../../lib/random.js";
+import {integer} from "../../lib/random.js";
 import {DrawContext, draw_rect} from "../components/com_draw.js";
 import {grid, GridFlag} from "../components/com_grid.js";
 import {local_transform2d, set_position} from "../components/com_local_transform2d.js";
-import {render2d, shift} from "../components/com_render2d.js";
+import {shift} from "../components/com_render2d.js";
 import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game, WORLD_CAPACITY} from "../game.js";
 import {make_tiled_road} from "../systems/sys_build_roads.js";
@@ -11,6 +11,7 @@ import {make_tiled_park} from "../systems/sys_build_trees.js";
 import {GridType, World} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
+import {blueprint_grass} from "./blu_grass.js";
 import {blueprint_road} from "./blu_road.js";
 import {blueprint_tree} from "./blu_tree.js";
 
@@ -41,12 +42,11 @@ export function scene_editable_dungeon(game: Game) {
     ]);
 
     // Grass tiles in the background.
-    let grass_tiles = ["000.png", "017.png", "034.png", "051.png", "068.png"];
     let grass_count = (game.World.Width * game.World.Height) / 10;
     for (let i = 0; i < grass_count; i++) {
         let x = integer(1, game.World.Width - 2);
         let y = integer(1, game.World.Height - 2);
-        instantiate(game, [local_transform2d([x, y]), render2d(element(grass_tiles)), shift(-1)]);
+        instantiate(game, [...blueprint_grass(game), set_position(x, y), shift(-1)]);
     }
 
     // Highway to Hell
