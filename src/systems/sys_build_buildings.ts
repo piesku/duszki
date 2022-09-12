@@ -56,7 +56,7 @@ export function sys_build_buildings(game: Game, delta: number) {
             let generator = game.World.Generator[ent];
             let gen_config = GENERATORS[generator.Id];
             let gen_count = game.GeneratorCounts[generator.Id];
-            let cost = total_cost(gen_config, gen_count, 1);
+            let cost = total_cost(gen_config, gen_count);
 
             if (can_be_placed && cost <= game.World.TotalWealth && pointer_clicked(game, 0)) {
                 game.World.TotalWealth -= cost;

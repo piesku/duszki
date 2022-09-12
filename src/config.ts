@@ -5,17 +5,12 @@ export interface GeneratorConfig {
     IncomeFactor: number;
     StartingCost: number;
     CostFactor: number;
-    Multipliers: Array<[number, number]>;
 }
 
 export const enum GeneratorId {
-    House,
-    Farm,
-    Mine1,
-    Mine2,
-    Mine3,
-    Mine4,
-    Mine5,
+    Sleep,
+    Food,
+    Work,
 }
 
 export const GENERATORS: Array<GeneratorConfig> = [
@@ -26,7 +21,6 @@ export const GENERATORS: Array<GeneratorConfig> = [
         IncomeFactor: 1,
         StartingCost: 20,
         CostFactor: 1.4,
-        Multipliers: [],
     },
     {
         Name: "Eating Place",
@@ -35,7 +29,6 @@ export const GENERATORS: Array<GeneratorConfig> = [
         IncomeFactor: 1,
         StartingCost: 15,
         CostFactor: 1.5,
-        Multipliers: [],
     },
     {
         Name: "Working Place",
@@ -44,6 +37,5 @@ export const GENERATORS: Array<GeneratorConfig> = [
         IncomeFactor: 1.01,
         StartingCost: 40,
         CostFactor: 1.6,
-        Multipliers: [],
     },
 ];

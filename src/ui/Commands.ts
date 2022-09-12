@@ -12,8 +12,8 @@ export function Commands(game: Game) {
         <button onclick="$(${Action.EnterErase})">Erase</button>
         <hr />
 
-        ${BuildingButton(game, GeneratorId.House)} ${BuildingButton(game, GeneratorId.Farm)}
-        ${BuildingButton(game, GeneratorId.Mine1)}
+        ${BuildingButton(game, GeneratorId.Sleep)} ${BuildingButton(game, GeneratorId.Food)}
+        ${BuildingButton(game, GeneratorId.Work)}
 
         <hr />
         <button onclick="$(${Action.ResetGame})">Reset</button>
@@ -23,7 +23,7 @@ export function Commands(game: Game) {
 
 function BuildingButton(game: Game, id: number) {
     let gen_config = GENERATORS[id];
-    let gen_cost = total_cost(gen_config, game.GeneratorCounts[id], 1);
+    let gen_cost = total_cost(gen_config, game.GeneratorCounts[id]);
     return html`
         <button
             ${gen_cost > game.World.TotalWealth && "disabled"}
