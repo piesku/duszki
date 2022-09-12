@@ -1,7 +1,6 @@
 import {dispatch} from "./actions.js";
 import {Game} from "./game.js";
 import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
-import {scene_stage} from "./scenes/sce_stage.js";
 import {connect, get} from "./store.js";
 
 async function main() {
@@ -12,10 +11,8 @@ async function main() {
     if (save) {
         game.World = save;
         game.ViewportResized = true;
-    } else if (true) {
-        scene_editable_dungeon(game);
     } else {
-        scene_stage(game);
+        scene_editable_dungeon(game);
     }
 
     game.Start();

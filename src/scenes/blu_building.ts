@@ -47,18 +47,16 @@ export function blueprint_building(game: Game, map_id: number) {
 
     let child_tiles: Array<Blueprint<Game>> = [];
     let light_tiles: Array<Blueprint<Game>> = [];
-    for (let layer of map.Layers) {
-        for (let [tile_name, tile] of tiled_blueprints(layer, map.Width, map.Height)) {
-            child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
-            if (window_sprites.includes(tile_name)) {
-                light_tiles.push([
-                    spatial_node2d(),
-                    ...tile,
-                    // Render a quad under the window which will be lit up by sys_satisfy.
-                    render2d("135.png", [0.3, 0.3, 0.3, 1]),
-                    shift(-0.1),
-                ]);
-            }
+    for (let [tile_name, tile] of tiled_blueprints(map.Tiles, map.Width)) {
+        child_tiles.push([spatial_node2d(), ...tile, shift(5)]);
+        if (window_sprites.includes(tile_name)) {
+            light_tiles.push([
+                spatial_node2d(),
+                ...tile,
+                // Render a quad under the window which will be lit up by sys_satisfy.
+                render2d("135.png", [0.3, 0.3, 0.3, 1]),
+                shift(-0.1),
+            ]);
         }
     }
     let modifier = map.Height === 5 ? 2 : 1;
