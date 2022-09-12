@@ -1,5 +1,6 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_down} from "../../lib/input.js";
+import {set} from "../../lib/vec2.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {set_sprite} from "../components/com_render2d.js";
@@ -137,13 +138,14 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
         return;
     }
 
+    let local = game.World.LocalTransform2D[tile];
+    set(local.Scale, 1, 1);
+    game.World.Signature[tile] |= Has.Dirty;
+
     let neighbors = 0;
 
     if (game.World.Grid[y + 1]?.[x].Walkable) {
         neighbors |= NeighborMasks.UP;
-
-        game.World.Signature[tile] |= Has.Dirty;
-        let local = game.World.LocalTransform2D[tile];
         local.Scale[1] = -1;
     }
     if (game.World.Grid[y][x + 1]?.Walkable) {
@@ -154,9 +156,6 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
     }
     if (game.World.Grid[y][x - 1]?.Walkable) {
         neighbors |= NeighborMasks.LEFT;
-
-        game.World.Signature[tile] |= Has.Dirty;
-        let local = game.World.LocalTransform2D[tile];
         local.Scale[0] = -1;
     }
 
