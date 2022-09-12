@@ -7,7 +7,7 @@ import {Has} from "../world.js";
 
 export function Details(game: Game) {
     if (game.SelectedEntity === null) {
-        return "";
+        return "<em>Select something to see details.</em>";
     }
 
     let entity = game.SelectedEntity;
@@ -40,4 +40,6 @@ export function Details(game: Game) {
             <label>Occupancy <meter value="${occupancy}"></meter></label>
         `;
     }
+
+    return "";
 }
