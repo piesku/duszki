@@ -1,8 +1,13 @@
+import {instantiate} from "../../lib/game.js";
 import {get_translation} from "../../lib/mat2d.js";
-import {query_down} from "../components/com_children.js";
+import {integer} from "../../lib/random.js";
+import {destroy_all, query_down} from "../components/com_children.js";
+import {set_position} from "../components/com_local_transform2d.js";
 import {NeedType} from "../components/com_needs.js";
+import {spatial_node2d} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {BuildingAttributes, BuildingSatisfiers} from "../scenes/blu_building.js";
+import {blueprint_grave, GraveSprites} from "../scenes/blu_grave.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.Satisfy;
@@ -77,13 +82,28 @@ function update(game: Game, entity: number, delta: number) {
             }
         } else if (need && need.Value[satisfy.NeedType] < SATISFY_THRESHOLD) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
-                // console.log(
-                //     `Domek ${satisfy.NeedType} ocupados: ${satisfy.Ocupados.length} / ${satisfy.Capacity}`
-                // );
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
                 need.Target[satisfy.NeedType] = door;
-                // } else if (guests_at_the_door.length > 1) {
+
+                // add grave if graveyard
+                if (satisfy.NeedType === NeedType.SLEEP) {
+                    let tile_entities =
+                        game.World.Children[entity].Children[BuildingAttributes.Tiles];
+                    let tiles = game.World.Children[tile_entities].Children;
+                    let x = integer(-2, 1);
+                    let y = integer(1, 3);
+                    let sprite = GraveSprites[(x + y) % GraveSprites.length];
+                    let grave = instantiate(game, [
+                        spatial_node2d(),
+                        ...blueprint_grave(game, true, sprite),
+                        set_position(x, y),
+                    ]);
+
+                    tiles.push(grave);
+
+                    game.World.Signature[tile_entities] |= Has.Dirty;
+                }
             } else if (door === need.Target[satisfy.NeedType]) {
                 // more than one duszek at the door, so redirect all but one to another target
                 need.Target[satisfy.NeedType] = undefined;
@@ -108,6 +128,16 @@ function update(game: Game, entity: number, delta: number) {
             if (need.Value[satisfy.NeedType] >= 1) {
                 satisfy.Ocupados.splice(satisfy.Ocupados.indexOf(guest), 1);
                 game.World.Signature[guest] |= BEING_SATISFIED_MASK;
+
+                if (satisfy.NeedType === NeedType.SLEEP) {
+                    let tile_entities =
+                        game.World.Children[entity].Children[BuildingAttributes.Tiles];
+                    let tiles = game.World.Children[tile_entities].Children;
+
+                    // remove last children
+                    let last = tiles.pop()!;
+                    destroy_all(game.World, last);
+                }
             }
         }
     }

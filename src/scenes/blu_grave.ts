@@ -4,8 +4,16 @@ import {local_transform2d} from "../components/com_local_transform2d.js";
 import {render2d, shift} from "../components/com_render2d.js";
 import {Game} from "../game.js";
 
-const sprites = ["064.png", "065.png", "066.png"];
+export const GraveSprites = ["064.png", "066.png"];
 
-export function blueprint_grave(game: Game) {
-    return [local_transform2d(), render2d(element(sprites)), shift(0.1), lifespan(100)];
+export function blueprint_grave(
+    game: Game,
+    no_lifespan: boolean = false,
+    sprite = element(GraveSprites)
+) {
+    let blu = [local_transform2d(), render2d(sprite), shift(0.1)];
+    if (!no_lifespan) {
+        blu.push(lifespan(60));
+    }
+    return blu;
 }
