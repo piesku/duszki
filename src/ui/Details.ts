@@ -1,5 +1,4 @@
 import {html} from "../../lib/html.js";
-import {query_down} from "../components/com_children.js";
 import {NeedType} from "../components/com_needs.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
@@ -34,15 +33,11 @@ export function Details(game: Game) {
         `;
     } else {
         let generator = game.World.Generator[entity];
-        let satisfy;
-        for (let child_entity of query_down(game.World, entity, Has.Satisfy)) {
-            satisfy = game.World.Satisfy[child_entity];
-            let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
-            return html`
-                <label>${GENERATORS[generator.Id].Name}</label>
-                <label>Occupancy <meter value="${occupancy}"></meter></label>
-            `;
-        }
-        return "";
+        let satisfy = game.World.Satisfy[entity];
+        let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
+        return html`
+            <label>${GENERATORS[generator.Id].Name}</label>
+            <label>Occupancy <meter value="${occupancy}"></meter></label>
+        `;
     }
 }

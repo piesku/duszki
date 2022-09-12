@@ -15,10 +15,8 @@ export function sys_generate(game: Game, delta: number) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let gen = game.World.Generator[ent];
             game.GeneratorCounts[gen.Id]++;
-            for (let child_entity of query_down(game.World, ent, Has.Satisfy)) {
-                let satisfy = game.World.Satisfy[child_entity];
-                game.GeneratorOccupancy[gen.Id] += satisfy.Ocupados.length;
-            }
+            let satisfy = game.World.Satisfy[ent];
+            game.GeneratorOccupancy[gen.Id] += satisfy.Ocupados.length;
         }
     }
 
