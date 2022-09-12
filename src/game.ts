@@ -28,9 +28,6 @@ import {sys_resize2d} from "./systems/sys_resize2d.js";
 import {sys_satisfy} from "./systems/sys_satisfy.js";
 import {sys_save} from "./systems/sys_save.js";
 import {sys_score} from "./systems/sys_score.js";
-import {sys_shake2d} from "./systems/sys_shake2d.js";
-import {sys_spawn2d} from "./systems/sys_spawn2d.js";
-import {sys_toggle} from "./systems/sys_toggle.js";
 import {sys_transform2d} from "./systems/sys_transform2d.js";
 import {sys_ui} from "./systems/sys_ui.js";
 import {sys_walk} from "./systems/sys_walk.js";
@@ -119,9 +116,6 @@ export class Game extends Game3D {
         sys_move2d(this, delta);
         sys_follow(this, delta);
         sys_lifespan(this, delta);
-        sys_shake2d(this, delta);
-        sys_toggle(this, delta);
-        sys_spawn2d(this, delta);
 
         // Commit all positions.
         sys_transform2d(this, delta);
