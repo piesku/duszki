@@ -10,7 +10,7 @@ export const cost_fmt = new Intl.NumberFormat("en-US", {
 export function Overview(game: Game) {
     return html`<div>
         <label>Wealth: ${cost_fmt.format(game.World.TotalWealth)}</label>
-        <label>Income: ${cost_fmt.format(game.IncomePerSecond)}/s</label>
+        <label>Income: ${cost_fmt.format(game.IncomePerSecond * 60)}/min</label>
         <hr />
         <label>Population: ${game.World.Population.toFixed(0)}</label>
         <label>Immigration: ${(game.World.Immigration * 60).toFixed(0)}/min</label>

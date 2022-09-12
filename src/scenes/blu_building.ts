@@ -36,9 +36,9 @@ export const enum BuildingSatisfiers {
 }
 
 const capacities = {
-    [NeedType.SLEEP]: 50,
-    [NeedType.FOOD]: 50,
-    [NeedType.WORK]: 50,
+    [NeedType.SLEEP]: 7,
+    [NeedType.FOOD]: 13,
+    [NeedType.WORK]: 27,
 };
 
 export function blueprint_building(game: Game, map_id: number) {

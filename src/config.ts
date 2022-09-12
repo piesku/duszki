@@ -33,7 +33,7 @@ export const GENERATORS: Array<GeneratorConfig> = [
     {
         Name: "Working Place",
         Description: "Generate wealth by working.",
-        BaseIncome: 2,
+        BaseIncome: 0.2,
         IncomeFactor: 1.01,
         StartingCost: 40,
         CostFactor: 1.6,

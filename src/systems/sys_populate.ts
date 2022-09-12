@@ -2,12 +2,12 @@ import {Action, dispatch} from "../actions.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 
-let spawn_timeout = 5;
+let spawn_timeout = 2;
 let time_since_last_spawn = spawn_timeout;
 
 // Some initial duszkis should move into town just
 // because there's place to sleep and eat
-let initial_population = 3;
+let initial_population = 5;
 export function sys_populate(game: Game, delta: number) {
     time_since_last_spawn -= delta;
 
@@ -19,9 +19,9 @@ export function sys_populate(game: Game, delta: number) {
         return;
     }
 
-    let enough_beds = game.FrameStats.Beds > total_duszki;
-    let enough_food = game.FrameStats.RestaurantSeats > total_duszki;
-    let enough_work = game.FrameStats.Workplaces > total_duszki;
+    let enough_beds = game.FrameStats.Beds > total_duszki / 3;
+    let enough_food = game.FrameStats.RestaurantSeats > total_duszki / 3;
+    let enough_work = game.FrameStats.Workplaces > total_duszki / 3;
     let low_mortality = game.World.Mortality < 0.3;
     let high_happiness = game.FrameStats[NeedType.HAPPY] / total_duszki > 0.5;
 
