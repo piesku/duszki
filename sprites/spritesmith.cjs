@@ -8,11 +8,12 @@ if (process.argv.length < 4) {
 }
 
 let files = process.argv.slice(2);
-let sheet = files.pop();
+let out_path = files.pop();
 
 Spritesmith.run(
     {
         src: files,
+        algorithm: "top-down",
         padding: 1,
     },
     function handleResult(err, result) {
@@ -20,18 +21,19 @@ Spritesmith.run(
             throw err;
         }
 
-        writeFileSync(__dirname + "/" + sheet, result.image);
+        writeFileSync(__dirname + "/" + out_path, result.image);
+        let sheet = {};
+        for (let file in result.coordinates) {
+            let {x, y, width, height} = result.coordinates[file];
+            sheet[file] = y;
+        }
+
         console.log(
             `// prettier-ignore
 export let spritesheet: {
-    [key: string]: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    };
+    [key: string]: number;
 } =`,
-            JSON.stringify(result.coordinates, null, 4)
+            JSON.stringify(sheet, null, 4)
         );
     }
 );

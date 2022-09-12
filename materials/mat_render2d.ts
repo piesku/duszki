@@ -24,7 +24,7 @@ function vertex() {
         if((int(an.w) & ${Has.Render2D})==${Has.Render2D}) {
             vec3 p=mat3(pv)*mat3(mat3x2(ar,an.xy))*vec3(ap,1);
             gl_Position=vec4(p.xy,-an.z,1);
-            vt=(as.xy+as.zw*at)/vec2(135,118);
+            vt=(as.xy+vec2(16,16)*at)/vec2(16,951);
             vc=ac;
         }else{
             gl_Position.z=2.;

@@ -37,10 +37,10 @@ export function render2d(tile_id: number, color: Vec4 = [1, 1, 1, 1]) {
         game.World.InstanceData[instance_offset + 10] = color[2];
         game.World.InstanceData[instance_offset + 11] = color[3];
         // Sprite.
-        game.World.InstanceData[instance_offset + 12] = spritesheet[sprite_name].x;
-        game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
-        game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
-        game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
+        game.World.InstanceData[instance_offset + 12] = 0;
+        game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name];
+        // game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
+        // game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
 
         game.World.Signature[entity] |= Has.Render2D;
         game.World.Render2D[entity] = {
@@ -60,8 +60,7 @@ export function shift(z: number) {
 export function set_sprite(game: Game, entity: Entity, tile_id: number) {
     let sprite_name = `${tile_id}.png`.padStart(7, "0");
     let instance_offset = entity * FLOATS_PER_INSTANCE;
-    game.World.InstanceData[instance_offset + 12] = spritesheet[sprite_name].x;
-    game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name].y;
-    game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
-    game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
+    game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name];
+    // game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
+    // game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
 }
