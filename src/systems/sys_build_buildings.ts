@@ -36,11 +36,12 @@ export function sys_build_buildings(game: Game, delta: number) {
             let can_be_placed = true;
             for (let child_entity of query_down(game.World, tiles_container, Has.Render2D)) {
                 let render = game.World.Render2D[child_entity];
+                let local = game.World.LocalTransform2D[child_entity];
                 let spatial = game.World.SpatialNode2D[child_entity];
                 let x = Math.round(spatial.World[4]);
                 let y = Math.round(spatial.World[5]);
                 let cell = game.World.Grid[y]?.[x];
-                if (cell && cell.TileEntity === null) {
+                if (local.Translation[1] > 3 || (cell && cell.TileEntity === null)) {
                     render.Color[0] = 0;
                     render.Color[1] = 1;
                     render.Color[2] = 0;
@@ -66,15 +67,20 @@ export function sys_build_buildings(game: Game, delta: number) {
                 // Populate the world grid with the building's footprint and
                 // bring back the original tint.
                 for (let child_entity of query_down(game.World, tiles_container, Has.Render2D)) {
-                    let child_spatial = game.World.SpatialNode2D[child_entity];
-                    get_translation(world_position, child_spatial.World);
+                    let local = game.World.LocalTransform2D[child_entity];
+                    let spatial = game.World.SpatialNode2D[child_entity];
+                    get_translation(world_position, spatial.World);
                     let x = Math.round(world_position[0]);
                     let y = Math.round(world_position[1]);
 
-                    let cell = game.World.Grid[y]?.[x];
-                    cell.TileEntity = child_entity;
-                    cell.Walkable = false;
-                    cell.Pleasant = false;
+                    if (local.Translation[1] > 3) {
+                        // It's a peak roof tile; don't place it on the grid.
+                    } else {
+                        let cell = game.World.Grid[y]?.[x];
+                        cell.TileEntity = child_entity;
+                        cell.Walkable = false;
+                        cell.Pleasant = false;
+                    }
 
                     let render = game.World.Render2D[child_entity];
                     render.Color[0] = 1;
