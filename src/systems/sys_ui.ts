@@ -26,14 +26,16 @@ export function sys_ui(game: Game, delta: number) {
         time_since_last_update = 0;
 
         nexts[0] = Overview(game);
-        nexts[1] = Details(game);
         nexts[2] = Commands(game);
         nexts[3] = Advisor(game);
+    }
 
-        for (let i = 0; i < nexts.length; i++) {
-            if (nexts[i] !== prevs[i]) {
-                game.Ui.children[i].innerHTML = prevs[i] = nexts[i];
-            }
+    // Details are updated every frame.
+    nexts[1] = Details(game);
+
+    for (let i = 0; i < nexts.length; i++) {
+        if (nexts[i] !== prevs[i]) {
+            game.Ui.children[i].innerHTML = prevs[i] = nexts[i];
         }
     }
 

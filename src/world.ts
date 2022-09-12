@@ -1,7 +1,6 @@
 import {Vec2} from "../lib/math.js";
 import {Entity, WorldImpl} from "../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../materials/layout2d.js";
-import {AnimateSprite} from "./components/com_animate_sprite.js";
 import {Camera2D} from "./components/com_camera2d.js";
 import {Children} from "./components/com_children.js";
 import {ControlAi} from "./components/com_control_ai.js";
@@ -21,7 +20,6 @@ import {Walk} from "./components/com_walk.js";
 
 const enum Component {
     Alive,
-    AnimateSprite,
     Camera2D,
     Collide2D,
     ControlAi,
@@ -45,7 +43,6 @@ const enum Component {
 export const enum Has {
     None = 0,
     Alive = 1 << Component.Alive,
-    AnimateSprite = 1 << Component.AnimateSprite,
     Camera2D = 1 << Component.Camera2D,
     Collide2D = 1 << Component.Collide2D,
     ControlAi = 1 << Component.ControlAi,
@@ -128,7 +125,6 @@ export class World extends WorldImpl {
     InstanceData = new Float32Array(this.Capacity * FLOATS_PER_INSTANCE);
 
     // Component data.
-    AnimateSprite: Array<AnimateSprite> = [];
     Camera2D: Array<Camera2D> = [];
     ControlAi: Array<ControlAi> = [];
     ControlPlayer: Array<ControlPlayer> = [];

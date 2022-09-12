@@ -23,7 +23,6 @@ import {sys_move2d} from "./systems/sys_move2d.js";
 import {sys_needs} from "./systems/sys_needs.js";
 import {sys_populate} from "./systems/sys_populate.js";
 import {sys_render2d} from "./systems/sys_render2d.js";
-import {sys_render2d_animate} from "./systems/sys_render2d_animate.js";
 import {sys_resize2d} from "./systems/sys_resize2d.js";
 import {sys_satisfy} from "./systems/sys_satisfy.js";
 import {sys_save} from "./systems/sys_save.js";
@@ -129,7 +128,6 @@ export class Game extends Game3D {
 
         // Rendering.
         sys_draw2d(this, delta);
-        sys_render2d_animate(this, delta);
         sys_render2d(this, delta);
         sys_ui(this, delta);
     }
