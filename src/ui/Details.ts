@@ -31,7 +31,7 @@ export function Details(game: Game) {
                 <meter value="${needs.Value[NeedType.SLEEP]}" low="${LOW_SATISFY_THRESHOLD}"></meter
             ></label>
         `;
-    } else {
+    } else if (game.World.Signature[entity] & Has.Satisfy) {
         let generator = game.World.Generator[entity];
         let satisfy = game.World.Satisfy[entity];
         let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
