@@ -3,14 +3,14 @@
  <editorsettings>
   <export target="map_domek01.json" format="json"/>
  </editorsettings>
- <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Tilesheet.tsx"/>
+ <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Colored/tilemap.tsx"/>
  <layer id="1" name="Warstwa Kafelków 1" width="3" height="5">
   <data encoding="csv">
 0,81,0,
 97,98,99,
 82,115,116,
 131,80,133,
-93,111,109
+93,110,2147483756
 </data>
  </layer>
 </map>

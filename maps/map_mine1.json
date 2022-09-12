@@ -3,10 +3,10 @@
  "infinite":false,
  "layers":[
         {
-         "data":[0, 8, 9, 10,
-            8, 42, 43, 44,
-            42, 93, 112, 95,
-            93, 113, 111, 95],
+         "data":[0, 8, 9, 2147483656,
+            8, 42, 43, 2147483690,
+            42, 108, 94, 2147483756,
+            93, 113, 110, 2147483741],
          "height":4,
          "id":1,
          "name":"Warstwa Kafelk\u00f3w 1",
@@ -26,7 +26,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/assets\/Monochrome RPG Tileset\/Tilesheet.tsx"
+         "source":"..\/assets\/Monochrome RPG Tileset\/Colored\/tilemap.tsx"
         }],
  "tilewidth":16,
  "type":"map",

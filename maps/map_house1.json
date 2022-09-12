@@ -7,7 +7,7 @@
             97, 98, 99,
             82, 115, 116,
             131, 80, 133,
-            93, 111, 109],
+            93, 110, 2147483756],
          "height":5,
          "id":1,
          "name":"Warstwa Kafelk\u00f3w 1",
@@ -27,7 +27,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/assets\/Monochrome RPG Tileset\/Tilesheet.tsx"
+         "source":"..\/assets\/Monochrome RPG Tileset\/Colored\/tilemap.tsx"
         }],
  "tilewidth":16,
  "type":"map",

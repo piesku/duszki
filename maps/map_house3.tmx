@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="3" height="4" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <editorsettings>
+  <export target="map_house3.json" format="json"/>
+ </editorsettings>
  <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Colored/tilemap.tsx"/>
  <layer id="1" name="Warstwa Kafelków 1" width="3" height="4">
   <data encoding="csv">
-8,9,10,
-25,26,27,
-25,26,27,
-59,43,61
+8,9,2147483656,
+25,26,2147483673,
+25,26,2147483673,
+59,43,2147483707
 </data>
  </layer>
 </map>
