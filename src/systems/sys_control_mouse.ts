@@ -2,6 +2,7 @@ import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {Entity} from "../../lib/world.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {NeedType} from "../components/com_needs.js";
+import {query_up} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -53,12 +54,8 @@ export function sys_control_mouse(game: Game, delta: number) {
                     console.table(duszki);
                 }
             } else if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
-                let spatial = game.World.SpatialNode2D[cell.TileEntity];
-                if (
-                    spatial.Parent !== undefined &&
-                    game.World.Signature[spatial.Parent] & Has.Generator
-                ) {
-                    game.SelectedEntity = spatial.Parent;
+                for (let parent_entity of query_up(game.World, cell.TileEntity, Has.Generator)) {
+                    game.SelectedEntity = parent_entity;
                 }
             }
         }
