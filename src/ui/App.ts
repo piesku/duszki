@@ -46,9 +46,14 @@ export function App() {
         <div
             style="
                 position: absolute;
-                bottom: 10px;
-                left: 270px;
-                width: calc(100% - 540px);
+                top: 0;
+                right: 0;
+                width: calc(100% - 400px);
+                height: 30px;
+                padding: 10px 10px 10px 50px;
+                border-radius: 0 0 0 100px;
+                background: #66e9;
+                backdrop-filter: blur(10px);
             "
         ></div>
     `;
