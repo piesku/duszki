@@ -106,8 +106,8 @@ let RoadNeighborSprites: NeighborSprites = {
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "106.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "090.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "088.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "103.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "105.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT]: "102.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "088.png",
     [NeighborMasks.UP | NeighborMasks.DOWN]: "104.png",
     [NeighborMasks.RIGHT]: "087.png",
     [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "087.png",
@@ -115,21 +115,18 @@ let RoadNeighborSprites: NeighborSprites = {
     [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "085.png",
     [NeighborMasks.DOWN]: "104.png",
     [NeighborMasks.LEFT]: "087.png",
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "086.png",
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "085.png",
 };
 
 // Can we just subtract 33?
 export let RoadUpdateMap: Record<string, string> = {
     "085.png": "052.png",
-    "086.png": "053.png",
     "087.png": "054.png",
     "088.png": "055.png",
     "089.png": "056.png",
     "090.png": "057.png",
     "102.png": "069.png",
-    "103.png": "070.png",
     "104.png": "071.png",
-    "105.png": "072.png",
     "106.png": "073.png",
 };
 
@@ -155,6 +152,10 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
     }
     if (game.World.Grid[y][x - 1]?.Walkable) {
         neighbors |= NeighborMasks.LEFT;
+
+        game.World.Signature[tile] |= Has.Dirty;
+        let local = game.World.LocalTransform2D[tile];
+        local.Scale[0] = -1;
     }
 
     let sprite = RoadNeighborSprites[neighbors];

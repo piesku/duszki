@@ -102,16 +102,16 @@ let TreesNeighborSprites: NeighborSprites = {
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: "124.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "028.png",
     [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: "121.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT]: "046.png",
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "122.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT]: "044.png",
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: "121.png",
     [NeighborMasks.UP | NeighborMasks.DOWN]: "120.png",
     [NeighborMasks.RIGHT]: "027.png",
     [NeighborMasks.RIGHT | NeighborMasks.LEFT]: "119.png",
     [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: "123.png",
     [NeighborMasks.RIGHT | NeighborMasks.DOWN]: "010.png",
     [NeighborMasks.DOWN]: "011.png",
-    [NeighborMasks.LEFT]: "029.png",
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "012.png",
+    [NeighborMasks.LEFT]: "027.png",
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: "010.png",
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
@@ -134,6 +134,10 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
     }
     if (game.World.Grid[y][x - 1]?.Pleasant) {
         neighbors |= NeighborMasks.LEFT;
+
+        game.World.Signature[tile] |= Has.Dirty;
+        let local = game.World.LocalTransform2D[tile];
+        local.Scale[0] = -1;
     }
 
     set_sprite(game, tile, TreesNeighborSprites[neighbors]);
