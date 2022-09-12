@@ -14,7 +14,7 @@ export function Details(game: Game) {
     if (game.World.Signature[entity] & Has.Needs) {
         let needs = game.World.Needs[entity];
         let control = game.World.ControlAi[entity];
-        let alive = (game.World.Signature[entity] & Has.Alive) === Has.Alive;
+        let alive = (game.World.Signature[entity] & Has.ControlAi) === Has.ControlAi;
         return html`
             <label>${control.Name}</label>
             <label><em>${alive ? control.Says : "Dead"}</em></label>

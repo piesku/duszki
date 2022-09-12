@@ -34,7 +34,11 @@ function update(game: Game, entity: Entity) {
 
     let x = Math.round(local.Translation[0]);
     let y = Math.round(local.Translation[1]);
-    let cell = game.World.Grid[y][x];
+    let cell = game.World.Grid[y]?.[x];
+    if (!cell) {
+        return;
+    }
+
     cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
