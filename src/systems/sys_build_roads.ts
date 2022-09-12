@@ -1,5 +1,5 @@
 import {instantiate} from "../../lib/game.js";
-import {pointer_down} from "../../lib/input.js";
+import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {set} from "../../lib/vec2.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
@@ -57,7 +57,7 @@ export function sys_build_roads(game: Game, delta: number) {
                 render.Color[1] = 1;
                 render.Color[2] = 1;
                 render.Shift = 0;
-            } else if (pointer_down(game, 2)) {
+            } else if (pointer_clicked(game, 2)) {
                 document.body.classList.remove("building");
                 destroy_all(game.World, ent);
             }
