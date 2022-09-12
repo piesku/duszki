@@ -1,7 +1,7 @@
 import {Blueprint} from "../../lib/game.js";
-import {map_house1} from "../../maps/map_house1.js";
-import {map_house3} from "../../maps/map_house3.js";
-import {map_mine1} from "../../maps/map_mine1.js";
+import {map_food} from "../../maps/map_food.js";
+import {map_sleep} from "../../maps/map_sleep.js";
+import {map_work} from "../../maps/map_work.js";
 import {children} from "../components/com_children.js";
 import {control_player} from "../components/com_control_player.js";
 import {disable} from "../components/com_disable.js";
@@ -15,7 +15,7 @@ import {Game} from "../game.js";
 import {tiled_blueprints} from "../tiled.js";
 import {Has} from "../world.js";
 
-const building_maps = [map_house3, map_house1, map_mine1];
+const building_maps = [map_sleep, map_food, map_work];
 
 const window_sprites = ["079.png", "107.png", "108.png", "111.png", "112.png"];
 

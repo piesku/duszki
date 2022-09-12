@@ -277,7 +277,7 @@ export let spritesheet: {
         "width": 16,
         "height": 16
     },
-    "108.png": {
+    "107.png": {
         "x": 51,
         "y": 102,
         "width": 16,
