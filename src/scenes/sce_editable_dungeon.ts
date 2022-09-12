@@ -33,6 +33,7 @@ export function scene_editable_dungeon(game: Game) {
     let mid_x = Math.round(game.World.Width / 2);
     let mid_y = Math.round(game.World.Height / 2);
     for (let x = 0; x < game.World.Width; x++) {
+        instantiate(game, [...blueprint_empty(game), set_position(x, mid_y), shift(-1)]);
         instantiate(game, [
             ...blueprint_road(game),
             set_position(x, mid_y),
