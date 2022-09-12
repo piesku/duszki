@@ -98,7 +98,7 @@ function update(game: Game, entity: number, delta: number) {
                     let tiles = game.World.Children[tile_entities].Children;
 
                     let x = integer(-2, 1);
-                    let y = integer(1, 3);
+                    let y = integer(1, 2);
                     let grave = instantiate(game, [
                         spatial_node2d(),
                         ...blueprint_grave(game, x + y),

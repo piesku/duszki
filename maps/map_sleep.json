@@ -1,13 +1,12 @@
 { "compressionlevel":-1,
- "height":4,
+ "height":3,
  "infinite":false,
  "layers":[
         {
          "data":[8, 9, 2147483656,
             25, 26, 2147483673,
-            25, 26, 2147483673,
             59, 43, 2147483707],
-         "height":4,
+         "height":3,
          "id":1,
          "name":"Warstwa Kafelk\u00f3w 1",
          "opacity":1,
