@@ -1,8 +1,11 @@
 import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {get_translation} from "../../lib/mat2d.js";
 import {Vec2} from "../../lib/math.js";
+import {Entity} from "../../lib/world.js";
 import {destroy_all, query_down} from "../components/com_children.js";
+import {query_up} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
+import {BuildingAttributes, BuildingSatisfiers} from "../scenes/blu_building.js";
 import {GridType, Has} from "../world.js";
 import {make_tiled_road} from "./sys_build_roads.js";
 import {make_tiled_park} from "./sys_build_trees.js";
@@ -23,12 +26,46 @@ export function sys_build_erase(game: Game, delta: number) {
 
             if (pointer_down(game, 0)) {
                 if (game.World.Signature[cell.TileEntity] & Has.SpatialNode2D) {
-                    let spatial = game.World.SpatialNode2D[cell.TileEntity];
-                    if (spatial.Parent !== undefined) {
+                    let root_entity: Entity | undefined;
+                    for (let parent_entity of query_up(
+                        game.World,
+                        cell.TileEntity,
+                        Has.Generator
+                    )) {
+                        root_entity = parent_entity;
+                        break;
+                    }
+
+                    if (root_entity === undefined) {
+                        destroy_all(game.World, cell.TileEntity);
+                    } else {
+                        let satisfy = game.World.Satisfy[root_entity];
+                        let children = game.World.Children[root_entity].Children;
+                        let satisfier_entities = children[BuildingAttributes.Satisfier];
+                        let jezyczek_entity =
+                            game.World.Children[satisfier_entities].Children[
+                                BuildingSatisfiers.Jezyczek
+                            ];
+                        let jezyczek_spatial = game.World.SpatialNode2D[jezyczek_entity];
+                        get_translation(world_position, jezyczek_spatial.World);
+                        let jezyczek_x = Math.round(world_position[0]);
+                        let jezyczek_y = Math.round(world_position[1]);
+                        let jezyczek_cell = game.World.Grid[jezyczek_y][jezyczek_x];
+
+                        for (let ocupado of satisfy.Ocupados) {
+                            game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
+                            let walk = game.World.Walk[ocupado];
+                            // Don't use DestinationTrigger because it triggers
+                            // proper path finding, which requires that the
+                            // current cell be walkable (which it won't be when
+                            // we finish here).
+                            walk.Path = [jezyczek_cell];
+                        }
+
                         for (let child_entity of query_down(
                             game.World,
-                            spatial.Parent,
-                            Has.SpatialNode2D
+                            root_entity,
+                            Has.Render2D
                         )) {
                             let child_spatial = game.World.SpatialNode2D[child_entity];
                             get_translation(world_position, child_spatial.World);
@@ -36,24 +73,13 @@ export function sys_build_erase(game: Game, delta: number) {
                             let y = Math.round(world_position[1]);
                             let cell = game.World.Grid[y][x];
 
-                            if (game.World.Signature[child_entity] & Has.Satisfy) {
-                                // Release all the duszki from the building.
-                                let satisfy = game.World.Satisfy[child_entity];
-                                let ocupados = satisfy.Ocupados;
-                                for (let i = 0; i < ocupados.length; i++) {
-                                    let ocupado = ocupados[i];
-                                    game.World.Signature[ocupado] |= BEING_SATISFIED_MASK;
-                                }
-                            } else {
-                                // Reset the world grid for the building's tiles.
-                                cell.Walkable = false;
-                                cell.TileEntity = null;
-                            }
+                            // Reset the world grid for the building's tiles.
+                            cell.Walkable = false;
+                            cell.TileEntity = null;
                         }
+
                         // Destroy the building's root entity.
-                        destroy_all(game.World, spatial.Parent);
-                    } else {
-                        destroy_all(game.World, cell.TileEntity);
+                        destroy_all(game.World, root_entity);
                     }
                 } else {
                     // It's a road or a tree.
