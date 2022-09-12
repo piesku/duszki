@@ -38,10 +38,10 @@ export class Game extends Game3D {
     Store: IDBDatabase;
     World = new World(WORLD_CAPACITY);
 
-    MinimapCanvas = document.querySelector("canvas#minimap") as HTMLCanvasElement;
+    MinimapCanvas = document.querySelector("canvas#m") as HTMLCanvasElement;
     MinimapContext = this.MinimapCanvas.getContext("2d")!;
 
-    FollowCanvas = document.querySelector("canvas#follow") as HTMLCanvasElement;
+    FollowCanvas = document.querySelector("canvas#f") as HTMLCanvasElement;
     FollowContext = this.FollowCanvas.getContext("2d")!;
 
     Spritesheet = create_spritesheet_from(this.Gl, document.querySelector("img")!);

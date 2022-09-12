@@ -160,7 +160,7 @@ export abstract class GameImpl {
  * Context2D instances for drawing behind and in front of the scene.
  */
 export abstract class Game3D extends GameImpl {
-    SceneCanvas = document.querySelector("#scene")! as HTMLCanvasElement;
+    SceneCanvas = document.querySelector("#s")! as HTMLCanvasElement;
     Gl = this.SceneCanvas.getContext("webgl2", {antialias: false})!;
 
     Audio = new AudioContext();
