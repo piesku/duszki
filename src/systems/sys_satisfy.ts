@@ -140,8 +140,8 @@ function update(game: Game, entity: number, delta: number) {
                         game.World.Children[entity].Children[BuildingAttributes.Tiles];
                     let tiles = game.World.Children[tile_entities].Children;
 
-                    let grave = tiles[12];
-                    tiles.splice(12, 1);
+                    let grave = tiles[9];
+                    tiles.splice(9, 1);
                     destroy_all(game.World, grave);
                 }
             }
