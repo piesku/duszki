@@ -8,37 +8,26 @@ function vertex() {
     uniform mat3x2 pv;
 
     // Vertex attributes
-    layout(location=${Attribute.VertexPosition}) in vec2 attr_position;
-    layout(location=${Attribute.VertexTexCoord}) in vec2 attr_texcoord;
+    layout(location=${Attribute.VertexPosition}) in vec2 ap;
+    layout(location=${Attribute.VertexTexCoord}) in vec2 at;
 
     // Instance attributes
-    layout(location=${Attribute.InstanceRotation}) in vec4 attr_rotation; // [a, b, c, d]
-    layout(location=${Attribute.InstanceTranslation}) in vec4 attr_translation; // [x, y, z, w: Signature]
-    layout(location=${Attribute.InstanceColor}) in vec4 attr_color;
-    layout(location=${Attribute.InstanceSprite}) in vec4 attr_sprite;
+    layout(location=${Attribute.InstanceRotation}) in vec4 ar;
+    layout(location=${Attribute.InstanceTranslation}) in vec4 an;
+    layout(location=${Attribute.InstanceColor}) in vec4 ac;
+    layout(location=${Attribute.InstanceSprite}) in vec4 as;
 
-    out vec2 vert_texcoord;
-    out vec4 vert_color;
-    out vec4 vert_sprite;
+    out vec2 vt;
+    out vec4 vc;
 
     void main() {
-        int signature = int(attr_translation.w);
-        if ((signature & ${Has.Render2D}) == ${Has.Render2D}) {
-            mat3x2 world = mat3x2(
-                attr_rotation,
-                attr_translation.xy
-            );
-
-            vec3 world_position = mat3(world) * vec3(attr_position, 1);
-            vec3 clip_position = mat3(pv) * world_position;
-            gl_Position = vec4(clip_position.xy, -attr_translation.z, 1);
-
-            // attr_texcoords are +Y=down for compatibility with spritesheet frame coordinates.
-            vert_texcoord = (attr_sprite.xy + attr_sprite.zw * attr_texcoord) / vec2(135, 118);
-            vert_color = attr_color;
-        } else {
-            // Place the vertex outside the frustum.
-            gl_Position.z = 2.0;
+        if((int(an.w) & ${Has.Render2D})==${Has.Render2D}) {
+            vec3 p=mat3(pv)*mat3(mat3x2(ar,an.xy))*vec3(ap,1);
+            gl_Position=vec4(p.xy,-an.z,1);
+            vt=(as.xy+as.zw*at)/vec2(135,118);
+            vc=ac;
+        }else{
+            gl_Position.z=2.;
         }
     }`;
 }
@@ -46,20 +35,20 @@ function vertex() {
 let fragment = `#version 300 es\n
     precision mediump float;
 
-    uniform sampler2D sheet_texture;
+    uniform sampler2D st;
 
-    in vec2 vert_texcoord;
-    in vec4 vert_color;
+    in vec2 vt;
+    in vec4 vc;
 
-    out vec4 frag_color;
+    out vec4 fc;
 
-    void main() {
-        vec4 tex_color = texture(sheet_texture, vert_texcoord);
-        if (tex_color.r * tex_color.g * tex_color.b * tex_color.a == 1.0) {
-            frag_color = tex_color;
-        } else {
-            frag_color = vert_color * texture(sheet_texture, vert_texcoord);
-            if (frag_color.a == 0.0) {
+    void main(){
+        vec4 tc=texture(st,vt);
+        if (tc.r*tc.g*tc.b*tc.a==1.) {
+            fc=tc;
+        }else{
+            fc=vc*texture(st,vt);
+            if(fc.a==0.){
                 discard;
             }
         }
@@ -73,8 +62,7 @@ export function mat_render2d(gl: WebGL2RenderingContext): Material<Render2DLayou
         Program: program,
         Locations: {
             Pv: gl.getUniformLocation(program, "pv")!,
-            World: gl.getUniformLocation(program, "world")!,
-            SheetTexture: gl.getUniformLocation(program, "sheet_texture")!,
+            SheetTexture: gl.getUniformLocation(program, "st")!,
         },
     };
 }

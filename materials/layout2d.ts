@@ -12,7 +12,6 @@ export const enum Attribute {
 export interface Render2DLayout {
     // Uniforms
     Pv: WebGLUniformLocation;
-    World: WebGLUniformLocation;
     SheetTexture: WebGLUniformLocation;
 }
 
