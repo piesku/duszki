@@ -68,7 +68,13 @@ export const enum SourceParam {
     FreqRelease,
 }
 
-export function play_note(audio: AudioContext, instr: Instrument, note: number, offset: number) {
+export function play_note(
+    audio: AudioContext,
+    instr: Instrument,
+    note: number,
+    offset: number,
+    duration: number
+) {
     let time = audio.currentTime + offset;
     let total_duration = 0;
 
@@ -112,7 +118,8 @@ export function play_note(audio: AudioContext, instr: Instrument, note: number, 
 
         let gain_amount = (source[SourceParam.GainAmount] / 9) ** 3;
         let gain_attack = (source[SourceParam.GainAttack] / 9) ** 3;
-        let gain_sustain = (source[SourceParam.GainSustain] / 9) ** 3;
+        //let gain_sustain = (source[SourceParam.GainSustain] / 9) ** 3;
+        let gain_sustain = duration;
         let gain_release = (source[SourceParam.GainRelease] / 6) ** 3;
         let gain_duration = gain_attack + gain_sustain + gain_release;
 
@@ -187,18 +194,4 @@ function lazy_noise_buffer(audio: AudioContext) {
         }
     }
     return noise_buffer;
-}
-
-export function play_synth_clip(audio: AudioContext, clip: AudioSynthClip) {
-    // Seconds per beat, corresponding to a quarter note.
-    let spb = 60 / 120;
-    // Track timing is based on sixteenth notes.
-    let interval = spb / 4;
-    for (let track of clip.Tracks) {
-        for (let i = 0; i < track.Notes.length; i++) {
-            if (track.Notes[i]) {
-                play_note(audio, track.Instrument, track.Notes[i], i * interval);
-            }
-        }
-    }
 }
