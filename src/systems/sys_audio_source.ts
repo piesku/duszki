@@ -1,8 +1,8 @@
 import {Instrument, play_note} from "../../lib/audio.js";
 import {Game} from "../game.js";
-import {music2} from "../sounds/music2.js";
+import {music1} from "../sounds/music1.js";
 
-let music = music2;
+let music = music1;
 let prev_time = 0;
 let curr_time = 0;
 let note_index = 0;
