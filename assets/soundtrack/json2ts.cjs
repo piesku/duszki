@@ -20,7 +20,7 @@ let source_notes = source_json.tracks[0].notes;
 let out_notes = [];
 
 for (let note of source_notes) {
-    out_notes.push(`[${note.time.toFixed(3)}, ${note.midi}, ${note.duration.toFixed(3)}]`);
+    out_notes.push(`[${note.time.toFixed(2)}, ${note.midi}, ${note.duration.toFixed(1)}]`);
 }
 
 let map_name = positionals[0].replace(/\.json$/, "");
