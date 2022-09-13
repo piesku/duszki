@@ -2,21 +2,18 @@ import {Instrument, play_note} from "../../lib/audio.js";
 import {Game} from "../game.js";
 import {music2} from "../sounds/music2.js";
 
+let music = music2;
 let prev_time = 0;
 let curr_time = 0;
 let note_index = 0;
 let instrument: Instrument = [
-    5,
+    2,
     false,
     8,
-    8,
-    false,
-    false,
-    8,
-    8,
+    0,
     [
-        ["triangle", 8, 2, 2, 4, 8, false, false, 8, 8, 8],
-        ["sine", 4, 3, 3, 5, 9, false, false, 8, 8, 8],
+        ["triangle", 8, 2, 2, 4, 8, false],
+        ["sine", 4, 3, 3, 5, 9, false],
     ],
 ];
 
@@ -24,8 +21,8 @@ export function sys_audio_source(game: Game, delta: number) {
     prev_time = curr_time;
     curr_time += delta;
 
-    while (note_index < music2.length) {
-        let [time, note, duration] = music2[note_index];
+    while (note_index < music.length) {
+        let [time, note, duration] = music[note_index];
         if (time > curr_time) {
             return;
         }
