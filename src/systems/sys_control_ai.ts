@@ -48,7 +48,7 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (walkables.length > 0 && walk.DestinationTrigger === null && walk.Path.length === 0) {
+    if (walk.Path.length == 0) {
         let food_target = needs.Target[NeedType.FOOD];
         let sleep_target = needs.Target[NeedType.SLEEP];
         let work_target = needs.Target[NeedType.WORK];
@@ -110,7 +110,7 @@ function update(game: Game, entity: number, delta: number) {
             } else {
                 needs.Target[NeedType.WORK] = undefined;
             }
-        } else {
+        } else if (walkables.length > 0) {
             console.log("z jakiegoś powodu duszek is wandering around without a purpose");
             walk.DestinationTrigger = element(walkables);
             control.Says = "I'm bored!";
