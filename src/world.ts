@@ -10,7 +10,6 @@ import {Generator} from "./components/com_generator.js";
 import {Lifespan} from "./components/com_lifespan.js";
 import {LocalTransform2D} from "./components/com_local_transform2d.js";
 import {Move2D} from "./components/com_move2d.js";
-import {Named} from "./components/com_named.js";
 import {Needs} from "./components/com_needs.js";
 import {Render2D} from "./components/com_render2d.js";
 import {Satisfy} from "./components/com_satisfy.js";
@@ -30,7 +29,6 @@ const enum Component {
     Lifespan,
     LocalTransform2D,
     Move2D,
-    Named,
     Needs,
     Render2D,
     Satisfy,
@@ -52,7 +50,6 @@ export const enum Has {
     Lifespan = 1 << Component.Lifespan,
     LocalTransform2D = 1 << Component.LocalTransform2D,
     Move2D = 1 << Component.Move2D,
-    Named = 1 << Component.Named,
     Needs = 1 << Component.Needs,
     Render2D = 1 << Component.Render2D,
     Satisfy = 1 << Component.Satisfy,
@@ -132,7 +129,6 @@ export class World extends WorldImpl {
     Lifespan: Array<Lifespan> = [];
     LocalTransform2D: Array<LocalTransform2D> = [];
     Move2D: Array<Move2D> = [];
-    Named: Array<Named> = [];
     Needs: Array<Needs> = [];
     Render2D: Array<Render2D> = [];
     Satisfy: Array<Satisfy> = [];
