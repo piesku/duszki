@@ -19,9 +19,6 @@ async function main() {
 
     // @ts-ignore
     window.$ = dispatch.bind(null, game);
-
-    // @ts-ignore
-    window.game = game;
 }
 
 main();
