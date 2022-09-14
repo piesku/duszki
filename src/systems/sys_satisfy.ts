@@ -1,5 +1,6 @@
 import {instantiate} from "../../lib/game.js";
 import {get_translation} from "../../lib/mat2d.js";
+import {Vec2} from "../../lib/math.js";
 import {integer} from "../../lib/random.js";
 import {destroy_all, query_down} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
@@ -26,6 +27,8 @@ export const WORKING_MASK = Has.Render2D | Has.Walk;
 export const SATISFY_THRESHOLD = 0.75;
 export const LOW_SATISFY_THRESHOLD = 0.4;
 
+const world_position: Vec2 = [0, 0];
+
 function update(game: Game, entity: number, delta: number) {
     let satisfy = game.World.Satisfy[entity];
 
@@ -36,10 +39,10 @@ function update(game: Game, entity: number, delta: number) {
     let door = game.World.Children[buildingSatisfierEntities]?.Children[BuildingSatisfiers.Door];
 
     // JEZYCZEK LOGIC
-    let jezyczek_local = game.World.SpatialNode2D[jezyczek];
-    let jezyczek_pos = get_translation([0, 0], jezyczek_local.World);
-    let jezyczek_y = Math.round(jezyczek_pos[1]);
-    let jezyczek_x = Math.round(jezyczek_pos[0]);
+    let jezyczek_spatial = game.World.SpatialNode2D[jezyczek];
+    get_translation(world_position, jezyczek_spatial.World);
+    let jezyczek_x = Math.round(world_position[0]);
+    let jezyczek_y = Math.round(world_position[1]);
     let jezyczek_cell = game.World.Grid[jezyczek_y]?.[jezyczek_x];
     if (!jezyczek_cell) {
         return;
@@ -52,10 +55,10 @@ function update(game: Game, entity: number, delta: number) {
     }
 
     // DOOR LOGIC
-    let door_local = game.World.SpatialNode2D[door];
-    let pos = get_translation([0, 0], door_local.World);
-    let door_y = Math.round(pos[1]);
-    let door_x = Math.round(pos[0]);
+    let door_spatial = game.World.SpatialNode2D[door];
+    get_translation(world_position, door_spatial.World);
+    let door_x = Math.round(world_position[0]);
+    let door_y = Math.round(world_position[1]);
     let door_cell = game.World.Grid[door_y]?.[door_x];
     if (!door_cell) {
         return;
