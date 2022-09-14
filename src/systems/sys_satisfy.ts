@@ -51,7 +51,7 @@ function update(game: Game, entity: number, delta: number) {
     let guests_on_jezyczek = jezyczek_cell.Ocupados;
     for (let guest of guests_on_jezyczek) {
         let need = game.World.Needs[guest];
-        need.Target[satisfy.NeedType] = door;
+        need.Target[satisfy.NeedType] = entity;
     }
 
     // DOOR LOGIC
@@ -78,11 +78,11 @@ function update(game: Game, entity: number, delta: number) {
                     satisfy.Ocupados.push(guest);
                     game.World.Signature[guest] &= ~WORKING_MASK;
                     game.World.DuszkiWorking++;
-                    need.Target[satisfy.NeedType] = door;
+                    need.Target[satisfy.NeedType] = entity;
                     walk.Path = [];
                     walk.DestinationTrigger = null;
                     // } else if (guests_at_the_door.length > 1) {
-                } else if (door === need.Target[satisfy.NeedType]) {
+                } else if (entity === need.Target[satisfy.NeedType]) {
                     // more than one duszek at the door, so redirect all but one to another target
                     need.Target[satisfy.NeedType] = undefined;
                 }
@@ -91,7 +91,7 @@ function update(game: Game, entity: number, delta: number) {
             if (satisfy.Ocupados.length < satisfy.Capacity) {
                 satisfy.Ocupados.push(guest);
                 game.World.Signature[guest] &= ~BEING_SATISFIED_MASK;
-                need.Target[satisfy.NeedType] = door;
+                need.Target[satisfy.NeedType] = entity;
                 walk.Path = [];
                 walk.DestinationTrigger = null;
 
@@ -112,7 +112,7 @@ function update(game: Game, entity: number, delta: number) {
 
                     game.World.Signature[tile_entities] |= Has.Dirty;
                 }
-            } else if (door === need.Target[satisfy.NeedType]) {
+            } else if (entity === need.Target[satisfy.NeedType]) {
                 // more than one duszek at the door, so redirect all but one to another target
                 need.Target[satisfy.NeedType] = undefined;
             }

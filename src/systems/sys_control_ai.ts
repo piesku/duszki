@@ -58,11 +58,10 @@ function update(game: Game, entity: number, delta: number) {
             food_target &&
             needs.Value[NeedType.FOOD] < needs.Value[NeedType.SLEEP]
         ) {
-            let destination_satisfier_mask = game.World.Signature[food_target];
             let destination_satisfier = game.World.Satisfy[food_target];
             let spiatial = game.World.SpatialNode2D[food_target];
             if (
-                destination_satisfier_mask & Has.Satisfy &&
+                game.World.Signature[food_target] & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.FOOD
             ) {
                 get_translation(destination_position, spiatial.World);
@@ -78,11 +77,10 @@ function update(game: Game, entity: number, delta: number) {
             sleep_target &&
             needs.Value[NeedType.SLEEP] < needs.Value[NeedType.FOOD]
         ) {
-            let destination_satisfier_mask = game.World.Signature[sleep_target];
             let destination_satisfier = game.World.Satisfy[sleep_target];
             let spiatial = game.World.SpatialNode2D[sleep_target];
             if (
-                destination_satisfier_mask & Has.Satisfy &&
+                game.World.Signature[sleep_target] & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.SLEEP
             ) {
                 get_translation(destination_position, spiatial.World);
@@ -98,11 +96,10 @@ function update(game: Game, entity: number, delta: number) {
             needs.Value[NeedType.SLEEP] > SATISFY_THRESHOLD &&
             work_target
         ) {
-            let destination_satisfier_mask = game.World.Signature[work_target];
             let destination_satisfier = game.World.Satisfy[work_target];
             let spiatial = game.World.SpatialNode2D[work_target];
             if (
-                destination_satisfier_mask & Has.Satisfy &&
+                game.World.Signature[work_target] & Has.Satisfy &&
                 destination_satisfier?.NeedType === NeedType.WORK
             ) {
                 get_translation(destination_position, spiatial.World);
