@@ -1,6 +1,7 @@
 import {instantiate} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {Entity, first_having} from "../lib/world.js";
+import {Tile} from "../sprites/spritesheet.js";
 import {destroy_all} from "./components/com_children.js";
 import {copy_position, set_position} from "./components/com_local_transform2d.js";
 import {set_sprite} from "./components/com_render2d.js";
@@ -95,7 +96,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
             game.World.Signature[entity] &= ~(Has.ControlAi | Has.Move2D | Has.Alive);
             game.World.Walk[entity].DestinationTrigger = null;
             game.World.Walk[entity].Path = [];
-            set_sprite(game, entity, 59);
+            set_sprite(game, entity, Tile.Sign);
             game.World.Render2D[entity].Shift = 0.9;
             game.World.Signature[entity] |= Has.Lifespan;
             break;

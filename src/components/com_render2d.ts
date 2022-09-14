@@ -7,7 +7,6 @@
 import {Vec4} from "../../lib/math.js";
 import {Entity} from "../../lib/world.js";
 import {FLOATS_PER_INSTANCE} from "../../materials/layout2d.js";
-import {spritesheet} from "../../sprites/spritesheet.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
@@ -25,7 +24,6 @@ export interface Render2D {
  * @param color The tint of the sprite.
  */
 export function render2d(tile_id: number, color: Vec4 = [1, 1, 1, 1]) {
-    let sprite_name = `${tile_id}.png`.padStart(7, "0");
     return (game: Game, entity: Entity) => {
         let instance_offset = entity * FLOATS_PER_INSTANCE;
         // Detail.
@@ -38,7 +36,7 @@ export function render2d(tile_id: number, color: Vec4 = [1, 1, 1, 1]) {
         game.World.InstanceData[instance_offset + 11] = color[3];
         // Sprite.
         game.World.InstanceData[instance_offset + 12] = 0;
-        game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name];
+        game.World.InstanceData[instance_offset + 13] = tile_id * 17;
         // game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
         // game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
 
@@ -58,9 +56,8 @@ export function shift(z: number) {
 }
 
 export function set_sprite(game: Game, entity: Entity, tile_id: number) {
-    let sprite_name = `${tile_id}.png`.padStart(7, "0");
     let instance_offset = entity * FLOATS_PER_INSTANCE;
-    game.World.InstanceData[instance_offset + 13] = spritesheet[sprite_name];
+    game.World.InstanceData[instance_offset + 13] = tile_id * 17;
     // game.World.InstanceData[instance_offset + 14] = spritesheet[sprite_name].width;
     // game.World.InstanceData[instance_offset + 15] = spritesheet[sprite_name].height;
 }

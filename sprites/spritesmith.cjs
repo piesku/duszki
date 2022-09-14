@@ -22,18 +22,5 @@ Spritesmith.run(
         }
 
         writeFileSync(__dirname + "/" + out_path, result.image);
-        let sheet = {};
-        for (let file in result.coordinates) {
-            let {x, y, width, height} = result.coordinates[file];
-            sheet[file] = y;
-        }
-
-        console.log(
-            `// prettier-ignore
-export let spritesheet: {
-    [key: string]: number;
-} =`,
-            JSON.stringify(sheet, null, 4)
-        );
     }
 );

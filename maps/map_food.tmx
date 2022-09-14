@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="3" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
-  <editorsettings>
-    <export target="map_food.json" format="json" />
-  </editorsettings>
-  <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Colored/tilemap.tsx" />
-  <layer id="1" name="Warstwa Kafelków 1" width="3" height="5">
-    <data encoding="csv">
-0,81,0,
-97,98,99,
-82,115,116,
-131,80,133,
-93,110,2147483756
+ <editorsettings>
+  <export target="map_food.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../assets/tilemap.tsx"/>
+ <layer id="1" name="Warstwa Kafelków 1" width="3" height="5">
+  <data encoding="csv">
+0,29,0,
+38,39,40,
+30,46,47,
+54,28,55,
+36,43,2147483690
 </data>
-  </layer>
+ </layer>
 </map>

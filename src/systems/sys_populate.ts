@@ -27,9 +27,9 @@ export function sys_populate(game: Game, delta: number) {
 
     if (
         total_duszki < initial_population &&
-        game.FrameStats.Beds > 0 &&
-        game.FrameStats.Workplaces > 0 &&
-        game.FrameStats.RestaurantSeats > 0
+        (game.FrameStats.Beds > 0 ||
+            game.FrameStats.Workplaces > 0 ||
+            game.FrameStats.RestaurantSeats > 0)
     ) {
         time_since_last_spawn = spawn_timeout;
         dispatch(game, Action.SpawnDuszek, {});
