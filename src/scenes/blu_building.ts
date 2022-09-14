@@ -2,6 +2,7 @@ import {Blueprint} from "../../lib/game.js";
 import {map_food} from "../../maps/map_food.js";
 import {map_sleep} from "../../maps/map_sleep.js";
 import {map_work} from "../../maps/map_work.js";
+import {Tile} from "../../sprites/spritesheet.js";
 import {children} from "../components/com_children.js";
 import {control_player} from "../components/com_control_player.js";
 import {disable} from "../components/com_disable.js";
@@ -17,7 +18,7 @@ import {Has} from "../world.js";
 
 const building_maps = [map_sleep, map_food, map_work];
 
-const window_sprites = [79, 107, 108, 111, 112];
+const window_sprites = [Tile.WindowLeft, Tile.WindowMiddle, Tile.WindowRidge];
 
 // House satisfies sleep
 // Farm satisfies food
@@ -54,7 +55,7 @@ export function blueprint_building(game: Game, map_id: number) {
                 spatial_node2d(),
                 ...tile,
                 // Render a quad under the window which will be lit up by sys_satisfy.
-                render2d(135, [0.3, 0.3, 0.3, 1]),
+                render2d(Tile.Blank, [0.3, 0.3, 0.3, 1]),
                 shift(-0.1),
             ]);
         }

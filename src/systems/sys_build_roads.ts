@@ -1,6 +1,7 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {set} from "../../lib/vec2.js";
+import {Tile} from "../../sprites/spritesheet.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {set_sprite} from "../components/com_render2d.js";
@@ -101,22 +102,23 @@ type NeighborSprites = {
 };
 
 let RoadNeighborSprites: NeighborSprites = {
-    [0]: 90,
-    [NeighborMasks.UP]: 104,
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: 85,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: 89,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 90,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: 88,
-    [NeighborMasks.UP | NeighborMasks.LEFT]: 85,
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: 88,
-    [NeighborMasks.UP | NeighborMasks.DOWN]: 104,
-    [NeighborMasks.RIGHT]: 87,
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: 87,
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 89,
-    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: 85,
-    [NeighborMasks.DOWN]: 104,
-    [NeighborMasks.LEFT]: 87,
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: 85,
+    [0]: Tile.RoadMiddle,
+    [NeighborMasks.UP]: Tile.RoadTopDown,
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: Tile.RoadRightDown,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: Tile.RoadLeftRightDown,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]:
+        Tile.RoadMiddle,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: Tile.RoadTopRightDown,
+    [NeighborMasks.UP | NeighborMasks.LEFT]: Tile.RoadRightDown,
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.RoadTopRightDown,
+    [NeighborMasks.UP | NeighborMasks.DOWN]: Tile.RoadTopDown,
+    [NeighborMasks.RIGHT]: Tile.RoadLeftRight,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: Tile.RoadLeftRight,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.RoadLeftRightDown,
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: Tile.RoadRightDown,
+    [NeighborMasks.DOWN]: Tile.RoadTopDown,
+    [NeighborMasks.LEFT]: Tile.RoadLeftRight,
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.RoadRightDown,
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
@@ -151,8 +153,8 @@ function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {
 
     let sprite = RoadNeighborSprites[neighbors];
     if (timesWalked > ROAD_UPDATE_WALKS_THRESHOLD) {
-        // Stone road tiles are offset from the regular road tiles by 33.
-        sprite = sprite - 33;
+        // Stone road tiles are offset from the regular road tiles by a constant amount.
+        sprite = sprite - 14;
     }
 
     set_sprite(game, tile, sprite);

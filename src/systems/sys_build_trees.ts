@@ -1,6 +1,7 @@
 import {instantiate} from "../../lib/game.js";
 import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {set} from "../../lib/vec2.js";
+import {Tile} from "../../sprites/spritesheet.js";
 import {destroy_all} from "../components/com_children.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {set_sprite} from "../components/com_render2d.js";
@@ -97,22 +98,23 @@ type NeighborSprites = {
 };
 
 let TreesNeighborSprites: NeighborSprites = {
-    [0]: 15,
-    [NeighborMasks.UP]: 45,
-    [NeighborMasks.UP | NeighborMasks.RIGHT]: 44,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: 124,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 28,
-    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: 121,
-    [NeighborMasks.UP | NeighborMasks.LEFT]: 44,
-    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: 121,
-    [NeighborMasks.UP | NeighborMasks.DOWN]: 120,
-    [NeighborMasks.RIGHT]: 27,
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: 119,
-    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: 123,
-    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: 10,
-    [NeighborMasks.DOWN]: 11,
-    [NeighborMasks.LEFT]: 27,
-    [NeighborMasks.LEFT | NeighborMasks.DOWN]: 10,
+    [0]: Tile.Tree,
+    [NeighborMasks.UP]: Tile.TreeTop,
+    [NeighborMasks.UP | NeighborMasks.RIGHT]: Tile.TreeTopRight,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT]: Tile.TreeTopLeftRight,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]:
+        Tile.TreeMiddle,
+    [NeighborMasks.UP | NeighborMasks.RIGHT | NeighborMasks.DOWN]: Tile.TreeTopRightDown,
+    [NeighborMasks.UP | NeighborMasks.LEFT]: Tile.TreeTopRight,
+    [NeighborMasks.UP | NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.TreeTopRightDown,
+    [NeighborMasks.UP | NeighborMasks.DOWN]: Tile.TreeTopDown,
+    [NeighborMasks.RIGHT]: Tile.TreeRight,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT]: Tile.TreeLeftRight,
+    [NeighborMasks.RIGHT | NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.TreeLeftRightDown,
+    [NeighborMasks.RIGHT | NeighborMasks.DOWN]: Tile.TreeRightDown,
+    [NeighborMasks.DOWN]: Tile.TreeDown,
+    [NeighborMasks.LEFT]: Tile.TreeRight,
+    [NeighborMasks.LEFT | NeighborMasks.DOWN]: Tile.TreeRightDown,
 };
 
 function choose_tile_based_on_neighbors(game: Game, x: number, y: number) {

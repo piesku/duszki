@@ -1,5 +1,2 @@
-export const map_work = {
-    Width: 4,
-    Height: 4,
-    Tiles: [92, 112, 109, 348, 41, 107, 93, 363, 7, 41, 42, 297, null, 7, 8, 263],
-};
+// prettier-ignore
+export const map_work = {"Width":4,"Height":4,"Tiles":[35,43,42,291,11,41,36,297,1,11,12,267,null,1,2,257]};

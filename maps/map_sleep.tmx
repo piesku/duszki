@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="3" height="3" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
-  <editorsettings>
-    <export target="map_sleep.json" format="json" />
-  </editorsettings>
-  <tileset firstgid="1" source="../assets/Monochrome RPG Tileset/Colored/tilemap.tsx" />
-  <layer id="1" name="Warstwa Kafelków 1" width="3" height="3">
-    <data encoding="csv">
+ <editorsettings>
+  <export target="map_sleep.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" source="../assets/tilemap.tsx"/>
+ <layer id="1" name="Warstwa Kafelków 1" width="3" height="3">
+  <data encoding="csv">
+2,3,2147483650,
 8,9,2147483656,
-25,26,2147483673,
-59,43,2147483707
+22,13,2147483670
 </data>
-  </layer>
+ </layer>
 </map>
