@@ -16,7 +16,7 @@ export function Details(game: Game) {
         let control = game.World.ControlAi[entity];
         let alive = (game.World.Signature[entity] & Has.ControlAi) === Has.ControlAi;
         return html`
-            <label>${control.Name}</label>
+            <big>${control.Name}</big>
             <label><em>${alive ? control.Says : "Dead"}</em></label>
             <label
                 >Happy
@@ -36,7 +36,7 @@ export function Details(game: Game) {
         let satisfy = game.World.Satisfy[entity];
         let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
         return html`
-            <label>${GENERATORS[generator.Id].Name}</label>
+            <big>${GENERATORS[generator.Id].Name}</big>
             <label>Occupancy <meter value="${occupancy}"></meter></label>
         `;
     }
