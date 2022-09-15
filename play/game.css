@@ -38,7 +38,7 @@ canvas#f {
 .erasing {
     cursor: not-allowed;
 }
-label {
+div > label {
     display: block;
 }
 meter {

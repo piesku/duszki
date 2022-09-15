@@ -1,4 +1,4 @@
-import {html} from "../../lib/html.js";
+import {html as htm} from "../../lib/html.js";
 import {Action} from "../actions.js";
 import {GeneratorId, GENERATORS} from "../config.js";
 import {Game} from "../game.js";
@@ -6,26 +6,30 @@ import {total_cost} from "../generator.js";
 import {cost_fmt} from "./Overview.js";
 
 export function Commands(game: Game) {
-    return html`<div onmousedown="event.stopPropagation();" onmouseup="event.stopPropagation();">
+    return htm`<nav onmousedown="event.stopPropagation();" onmouseup="event.stopPropagation();">
         <button onclick="$(${Action.EnterPlaceRoad})">Road</button>
         <button onclick="$(${Action.EnterPlaceTree})">Tree</button>
         <button onclick="$(${Action.EnterErase})">Erase</button>
         <hr />
 
-        ${BuildingButton(game, GeneratorId.Sleep)} ${BuildingButton(game, GeneratorId.Food)}
+        ${BuildingButton(game, GeneratorId.Sleep)}
+        ${BuildingButton(game, GeneratorId.Food)}
         ${BuildingButton(game, GeneratorId.Work)}
 
         <hr />
+        <label><input type=checkbox checked disabled> Autosave</label>
+        <label><input type=checkbox ${game.MusicEnabled && "checked"}
+            onchange="$(${Action.ToggleMusic}, this.checked)"> Music</label>
+        <hr />
         <button onclick="$(${Action.ResetGame})">Reset</button>
         <em>Play time: ${(game.World.Age / 60).toFixed(0)} min.</em>
-        <em>Autosave enabled.</em>
-    </div>`;
+    </nav>`;
 }
 
 function BuildingButton(game: Game, id: number) {
     let gen_config = GENERATORS[id];
     let gen_cost = total_cost(gen_config, game.GeneratorCounts[id]);
-    return html`
+    return htm`
         <button
             ${gen_cost > game.World.TotalWealth && "disabled"}
             onclick="$(${Action.EnterPlaceBuilding}, ${id})"
