@@ -38,9 +38,11 @@ export function sys_score(game: Game, delta: number) {
         let dialog = Dialog(
             game,
             `<h1>Welcome to AFTERLIFE!</h1>
-            <p>Where do Pac-Man's ghosts go when they die?</p>
-            <p>They come here — to the ghost town full of life!</p>
-            <p>Afterlife, that is.</p>`
+            <p>Where do Pac-Man's ghosts go when they die?</p><p>They come here — to the ghost town full of life!</p>
+            <hr>
+            <p>Foster a community of <em>duszki</em> (Polish for ghosts) by providing them with housing, food, and work.
+               Inspect and build by left-clicking, deselect and cancel by right-clicking.</p>
+            `
         );
         document.body.insertAdjacentHTML("beforeend", dialog);
     } else if (game.World.Population >= 10 ** (game.World.Milestone + 1)) {
