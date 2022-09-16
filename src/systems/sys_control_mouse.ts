@@ -1,7 +1,12 @@
+import {instantiate} from "../../lib/game.js";
 import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {Entity} from "../../lib/world.js";
+import {Tile} from "../../sprites/spritesheet.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
+import {lifespan} from "../components/com_lifespan.js";
+import {copy_position, local_transform2d} from "../components/com_local_transform2d.js";
 import {NeedType} from "../components/com_needs.js";
+import {render2d, shift} from "../components/com_render2d.js";
 import {query_up} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
@@ -40,6 +45,21 @@ export function sys_control_mouse(game: Game, delta: number) {
         if (cell && cell.TileEntity !== null) {
             if (cell.Ocupados.length > 0) {
                 game.SelectedEntity = cell.Ocupados[0];
+
+                if (game.World.Signature[game.SelectedEntity] & Has.Walk) {
+                    let walk = game.World.Walk[game.SelectedEntity];
+                    for (let i = 0; i < walk.Path.length; i++) {
+                        let cell = walk.Path[i];
+                        let ratio = (i + 1) / walk.Path.length;
+                        instantiate(game, [
+                            local_transform2d(),
+                            copy_position(cell.Position),
+                            render2d(Tile.Blank, [ratio, 1 - ratio, 0, ratio / 3]),
+                            shift(0.9),
+                            lifespan(3 * ratio),
+                        ]);
+                    }
+                }
 
                 if (DEBUG) {
                     let duszki: Record<Entity, object> = {};
