@@ -48,7 +48,10 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (true) {
+    control.TimeSinceDecision += delta;
+    if (control.TimeSinceDecision > control.DecisionInterval) {
+        control.TimeSinceDecision = 0;
+
         let current_destination = walk.Path[walk.Path.length - 1];
 
         if (
