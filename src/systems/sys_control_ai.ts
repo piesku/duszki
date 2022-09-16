@@ -5,7 +5,7 @@ import {Action, dispatch} from "../actions.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {GridCell, Has} from "../world.js";
-import {SATISFY_THRESHOLD} from "./sys_satisfy.js";
+import {LOW_SATISFY_THRESHOLD, SATISFY_THRESHOLD} from "./sys_satisfy.js";
 
 const QUERY = Has.ControlAi | Has.Walk | Has.Needs | Has.Move2D;
 
@@ -67,7 +67,12 @@ function update(game: Game, entity: number, delta: number) {
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
-                if (cell !== current_destination) {
+                if (current_destination === undefined) {
+                    walk.DestinationTrigger = cell;
+                } else if (
+                    cell !== current_destination &&
+                    needs.Value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD
+                ) {
                     walk.DestinationTrigger = cell;
                 }
             } else {
@@ -90,7 +95,12 @@ function update(game: Game, entity: number, delta: number) {
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
-                if (cell !== current_destination) {
+                if (current_destination === undefined) {
+                    walk.DestinationTrigger = cell;
+                } else if (
+                    cell !== current_destination &&
+                    needs.Value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
+                ) {
                     walk.DestinationTrigger = cell;
                 }
             } else {
@@ -113,7 +123,7 @@ function update(game: Game, entity: number, delta: number) {
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
                 if (cell !== current_destination) {
-                    walk.DestinationTrigger = game.World.Grid[y][x];
+                    walk.DestinationTrigger = cell;
                 }
             } else {
                 needs.Target[NeedType.WORK] = undefined;
