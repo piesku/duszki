@@ -50,8 +50,6 @@ function update(game: Game, entity: number, delta: number) {
 
     control.TimeSinceDecision += delta;
     if (control.TimeSinceDecision > control.DecisionInterval) {
-        control.TimeSinceDecision = 0;
-
         let current_destination = walk.Path[walk.Path.length - 1];
 
         if (
@@ -72,11 +70,13 @@ function update(game: Game, entity: number, delta: number) {
                 let cell = game.World.Grid[y][x];
                 if (current_destination === undefined) {
                     walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
                 } else if (
                     cell !== current_destination &&
                     needs.Value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD
                 ) {
                     walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
                 }
             } else {
                 // The target is not a valid food source.
@@ -100,11 +100,13 @@ function update(game: Game, entity: number, delta: number) {
                 let cell = game.World.Grid[y][x];
                 if (current_destination === undefined) {
                     walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
                 } else if (
                     cell !== current_destination &&
                     needs.Value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
                 ) {
                     walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
                 }
             } else {
                 needs.Target[NeedType.SLEEP] = undefined;
@@ -127,6 +129,7 @@ function update(game: Game, entity: number, delta: number) {
                 let cell = game.World.Grid[y][x];
                 if (cell !== current_destination) {
                     walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
                 }
             } else {
                 needs.Target[NeedType.WORK] = undefined;
@@ -134,6 +137,7 @@ function update(game: Game, entity: number, delta: number) {
         } else if (walkables.length > 0 && walk.Path.length === 0) {
             console.log("z jakiegoś powodu duszek is wandering around without a purpose");
             walk.DestinationTrigger = element(walkables);
+            control.TimeSinceDecision = 0;
             control.Says = "I'm bored!";
         }
     }
