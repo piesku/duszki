@@ -48,10 +48,13 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    let guests_on_jezyczek = jezyczek_cell.Ocupados;
-    for (let guest of guests_on_jezyczek) {
-        let need = game.World.Needs[guest];
-        need.Target[satisfy.NeedType] = entity;
+    if (satisfy.Ocupados.length < satisfy.Capacity) {
+        // Only advertise this building if it's not full.
+        let guests_on_jezyczek = jezyczek_cell.Ocupados;
+        for (let guest of guests_on_jezyczek) {
+            let need = game.World.Needs[guest];
+            need.Target[satisfy.NeedType] = entity;
+        }
     }
 
     // DOOR LOGIC
