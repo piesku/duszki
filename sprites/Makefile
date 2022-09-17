@@ -7,7 +7,7 @@ SPRITES := $(filter-out spritesheet.png, $(SPRITES))
 all: spritesheet.png.webp
 
 spritesheet.png: $(SPRITES)
-	node spritesmith.cjs $^ $@ > spritesheet.ts
+	node spritesmith.cjs $^ $@
 
 %.png.webp: %.png
 	cwebp -short -z 9 $< -o $@
