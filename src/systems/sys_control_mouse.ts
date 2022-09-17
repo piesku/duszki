@@ -12,6 +12,7 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 
 const QUERY = Has.ControlPlayer | Has.LocalTransform2D;
+const WALKING = Has.Walk | Has.Render2D;
 
 export function sys_control_mouse(game: Game, delta: number) {
     {
@@ -46,17 +47,23 @@ export function sys_control_mouse(game: Game, delta: number) {
             if (cell.Ocupados.length > 0) {
                 game.SelectedEntity = cell.Ocupados[0];
 
-                if (game.World.Signature[game.SelectedEntity] & Has.Walk) {
+                if ((game.World.Signature[game.SelectedEntity] & WALKING) === WALKING) {
                     let walk = game.World.Walk[game.SelectedEntity];
+                    let render = game.World.Render2D[game.SelectedEntity];
                     for (let i = 0; i < walk.Path.length; i++) {
                         let cell = walk.Path[i];
                         let ratio = (i + 1) / walk.Path.length;
                         instantiate(game, [
                             local_transform2d(),
                             copy_position(cell.Position),
-                            render2d(Tile.Blank, [ratio, 1 - ratio, 0, ratio / 3]),
-                            shift(0.9),
-                            lifespan(3 * ratio),
+                            render2d(Tile.Circle, [
+                                render.Color[0],
+                                render.Color[1],
+                                render.Color[2],
+                                ratio,
+                            ]),
+                            shift(2),
+                            lifespan(Math.min(3, walk.Path.length / 5) * ratio),
                         ]);
                     }
                 }
