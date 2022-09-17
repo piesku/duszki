@@ -40,6 +40,8 @@ export function sys_control_mouse(game: Game, delta: number) {
     }
 
     if (pointer_clicked(game, 0)) {
+        game.SelectedEntity = null;
+
         let x = Math.round(game.PointerPosition[0]);
         let y = Math.round(game.PointerPosition[1]);
         let cell = game.World.Grid[y]?.[x];
