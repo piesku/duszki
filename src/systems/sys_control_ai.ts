@@ -5,7 +5,7 @@ import {Action, dispatch} from "../actions.js";
 import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {GridCell, Has} from "../world.js";
-import {SATISFY_THRESHOLD} from "./sys_satisfy.js";
+import {LOW_SATISFY_THRESHOLD, SATISFY_THRESHOLD} from "./sys_satisfy.js";
 
 const QUERY = Has.ControlAi | Has.Walk | Has.Needs | Has.Move2D;
 
@@ -48,71 +48,96 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
-    if (walk.Path.length == 0) {
-        let food_target = needs.Target[NeedType.FOOD];
-        let sleep_target = needs.Target[NeedType.SLEEP];
-        let work_target = needs.Target[NeedType.WORK];
+    control.TimeSinceDecision += delta;
+    if (control.TimeSinceDecision > control.DecisionInterval) {
+        let current_destination = walk.Path[walk.Path.length - 1];
 
         if (
             needs.Value[NeedType.FOOD] < SATISFY_THRESHOLD &&
-            food_target &&
             needs.Value[NeedType.FOOD] < needs.Value[NeedType.SLEEP]
         ) {
-            let destination_satisfier = game.World.Satisfy[food_target];
-            let spiatial = game.World.SpatialNode2D[food_target];
+            control.Says = "I'm hungry!";
+            let food_target = needs.Target[NeedType.FOOD];
             if (
+                food_target &&
                 game.World.Signature[food_target] & Has.Satisfy &&
-                destination_satisfier?.NeedType === NeedType.FOOD
+                game.World.Satisfy[food_target].NeedType === NeedType.FOOD
             ) {
-                get_translation(destination_position, spiatial.World);
+                let target_spatial = game.World.SpatialNode2D[food_target];
+                get_translation(destination_position, target_spatial.World);
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
-                walk.DestinationTrigger = game.World.Grid[y][x];
-                control.Says = "I'm hungry!";
+                let cell = game.World.Grid[y][x];
+                if (current_destination === undefined) {
+                    walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
+                } else if (
+                    cell !== current_destination &&
+                    needs.Value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD
+                ) {
+                    walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
+                }
             } else {
+                // The target is not a valid food source.
                 needs.Target[NeedType.FOOD] = undefined;
             }
         } else if (
             needs.Value[NeedType.SLEEP] < SATISFY_THRESHOLD &&
-            sleep_target &&
             needs.Value[NeedType.SLEEP] < needs.Value[NeedType.FOOD]
         ) {
-            let destination_satisfier = game.World.Satisfy[sleep_target];
-            let spiatial = game.World.SpatialNode2D[sleep_target];
+            control.Says = "I'm tired!";
+            let sleep_target = needs.Target[NeedType.SLEEP];
             if (
+                sleep_target &&
                 game.World.Signature[sleep_target] & Has.Satisfy &&
-                destination_satisfier?.NeedType === NeedType.SLEEP
+                game.World.Satisfy[sleep_target].NeedType === NeedType.SLEEP
             ) {
-                get_translation(destination_position, spiatial.World);
+                let target_spatial = game.World.SpatialNode2D[sleep_target];
+                get_translation(destination_position, target_spatial.World);
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
-                walk.DestinationTrigger = game.World.Grid[y][x];
-                control.Says = "I'm tired!";
+                let cell = game.World.Grid[y][x];
+                if (current_destination === undefined) {
+                    walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
+                } else if (
+                    cell !== current_destination &&
+                    needs.Value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
+                ) {
+                    walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
+                }
             } else {
                 needs.Target[NeedType.SLEEP] = undefined;
             }
         } else if (
             needs.Value[NeedType.FOOD] > SATISFY_THRESHOLD &&
-            needs.Value[NeedType.SLEEP] > SATISFY_THRESHOLD &&
-            work_target
+            needs.Value[NeedType.SLEEP] > SATISFY_THRESHOLD
         ) {
-            let destination_satisfier = game.World.Satisfy[work_target];
-            let spiatial = game.World.SpatialNode2D[work_target];
+            control.Says = "Looking for work...";
+            let work_target = needs.Target[NeedType.WORK];
             if (
+                work_target &&
                 game.World.Signature[work_target] & Has.Satisfy &&
-                destination_satisfier?.NeedType === NeedType.WORK
+                game.World.Satisfy[work_target].NeedType === NeedType.WORK
             ) {
-                get_translation(destination_position, spiatial.World);
+                let target_spatial = game.World.SpatialNode2D[work_target];
+                get_translation(destination_position, target_spatial.World);
                 let x = Math.round(destination_position[0]);
                 let y = Math.round(destination_position[1]);
-                walk.DestinationTrigger = game.World.Grid[y][x];
-                control.Says = "Looking for work...";
+                let cell = game.World.Grid[y][x];
+                if (cell !== current_destination) {
+                    walk.DestinationTrigger = cell;
+                    control.TimeSinceDecision = 0;
+                }
             } else {
                 needs.Target[NeedType.WORK] = undefined;
             }
-        } else if (walkables.length > 0) {
+        } else if (walkables.length > 0 && walk.Path.length === 0) {
             console.log("z jakiegoś powodu duszek is wandering around without a purpose");
             walk.DestinationTrigger = element(walkables);
+            control.TimeSinceDecision = 0;
             control.Says = "I'm bored!";
         }
     }

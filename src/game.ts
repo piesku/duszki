@@ -53,6 +53,7 @@ export class Game extends Game3D {
     PointerPosition: Vec2 = [0, 0];
     ActiveBuilding: null | number = null;
     SelectedEntity: null | Entity = null;
+    MusicEnabled = true;
 
     // Number of buildings of each type.
     GeneratorCounts: Array<number> = [];
@@ -128,9 +129,12 @@ export class Game extends Game3D {
         sys_save(this, delta);
 
         // Rendering.
-        sys_audio_source(this, delta);
         sys_render2d(this, delta);
         sys_ui(this, delta);
+
+        if (this.MusicEnabled) {
+            sys_audio_source(this, delta);
+        }
     }
 
     override FrameReset(delta: number): void {

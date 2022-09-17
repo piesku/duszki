@@ -1,4 +1,4 @@
-import {html} from "../../lib/html.js";
+import {html as htm} from "../../lib/html.js";
 import {NeedType} from "../components/com_needs.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
@@ -15,28 +15,25 @@ export function Details(game: Game) {
         let needs = game.World.Needs[entity];
         let control = game.World.ControlAi[entity];
         let alive = (game.World.Signature[entity] & Has.ControlAi) === Has.ControlAi;
-        return html`
+        return htm`
             <big>${control.Name}</big>
             <label><em>${alive ? control.Says : "Dead"}</em></label>
-            <label
-                >Happy
-                <meter value="${needs.Value[NeedType.HAPPY]}" low="${LOW_SATISFY_THRESHOLD}"></meter
-            ></label>
-            <label
-                >Fed
-                <meter value="${needs.Value[NeedType.FOOD]}" low="${LOW_SATISFY_THRESHOLD}"></meter
-            ></label>
-            <label
-                >Rested
-                <meter value="${needs.Value[NeedType.SLEEP]}" low="${LOW_SATISFY_THRESHOLD}"></meter
-            ></label>
+            <hr>
+            <label>Happy <meter value="${needs.Value[NeedType.HAPPY]}"
+                low="${LOW_SATISFY_THRESHOLD}"></meter></label>
+            <label>Fed <meter value="${needs.Value[NeedType.FOOD]}"
+                low="${LOW_SATISFY_THRESHOLD}"></meter></label>
+            <label>Rested <meter value="${needs.Value[NeedType.SLEEP]}"
+                low="${LOW_SATISFY_THRESHOLD}"></meter></label>
         `;
     } else if (game.World.Signature[entity] & Has.Satisfy) {
         let generator = game.World.Generator[entity];
         let satisfy = game.World.Satisfy[entity];
         let occupancy = satisfy.Ocupados.length / satisfy.Capacity;
-        return html`
+        return htm`
             <big>${GENERATORS[generator.Id].Name}</big>
+            <label><em>${GENERATORS[generator.Id].Description}</em></label>
+            <hr>
             <label>Occupancy <meter value="${occupancy}"></meter></label>
         `;
     }

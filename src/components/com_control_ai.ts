@@ -6,6 +6,8 @@ import {Has} from "../world.js";
 export interface ControlAi {
     Name: string;
     Says: string;
+    DecisionInterval: number;
+    TimeSinceDecision: number;
 }
 
 export function control_ai() {
@@ -14,6 +16,8 @@ export function control_ai() {
         game.World.ControlAi[entity] = {
             Name: random_name(integer(2, 4)) + " " + random_name(integer(2, 4)),
             Says: "Hello!",
+            DecisionInterval: float(0.5, 1.5),
+            TimeSinceDecision: 0,
         };
     };
 }

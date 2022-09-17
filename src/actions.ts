@@ -22,6 +22,7 @@ export const enum Action {
     DuszekDied,
     ResetGame,
     MinimapNavigation,
+    ToggleMusic,
 }
 
 export function dispatch(game: Game, action: Action, payload: unknown) {
@@ -129,6 +130,11 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
                     game.World.Signature[camera_entity] |= Has.Dirty;
                 }
             }
+            break;
+        }
+        case Action.ToggleMusic: {
+            let enabled = payload as boolean;
+            game.MusicEnabled = enabled;
             break;
         }
     }
