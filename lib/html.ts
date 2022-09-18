@@ -12,6 +12,6 @@ function shift(values: Array<Interpolation>) {
 /**
  * Template literal tag for generating HTML strings in UI components.
  */
-export function html(strings: TemplateStringsArray, ...values: Array<Interpolation>) {
+export function htm(strings: TemplateStringsArray, ...values: Array<Interpolation>) {
     return strings.reduce((out, cur) => out + shift(values) + cur);
 }
