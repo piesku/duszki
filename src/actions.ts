@@ -105,7 +105,7 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         }
         case Action.ResetGame: {
             if (confirm("Are you sure you want to start a new game? All progress will be lost.")) {
-                clear(game.Store);
+                clear(game.Store, game.World.id);
                 location.reload();
             }
             break;

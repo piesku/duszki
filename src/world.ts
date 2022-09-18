@@ -76,8 +76,6 @@ export interface GridCell {
 }
 
 export class World extends WorldImpl {
-    id = 0;
-
     // Persistent game state.
     TotalWealth = 100;
     Age = 0;
