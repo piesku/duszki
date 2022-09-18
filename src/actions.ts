@@ -3,13 +3,8 @@ import {Vec2} from "../lib/math.js";
 import {Entity, first_having} from "../lib/world.js";
 import {Tile} from "../sprites/spritesheet.js";
 import {destroy_all} from "./components/com_children.js";
-import {lifespan} from "./components/com_lifespan.js";
-import {
-    copy_position,
-    local_transform2d,
-    set_position,
-} from "./components/com_local_transform2d.js";
-import {render2d, set_sprite, shift} from "./components/com_render2d.js";
+import {copy_position, set_position} from "./components/com_local_transform2d.js";
+import {set_sprite} from "./components/com_render2d.js";
 import {Game} from "./game.js";
 import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
@@ -146,23 +141,26 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         case Action.PathFound: {
             let entity = payload as Entity;
             if (entity === game.SelectedEntity) {
+                // Clear the previous path.
+                for (let y = 0; y < game.World.Grid.length; y++) {
+                    for (let x = 0; x < game.World.Grid[y].length; x++) {
+                        let cell = game.World.Grid[y][x];
+                        if (cell.Walkable && cell.TileEntity !== null) {
+                            let render = game.World.Render2D[cell.TileEntity];
+                            render.Color[3] = 1;
+                        }
+                    }
+                }
+
+                // Highlight the new path, except the last waypoint (the door).
                 let walk = game.World.Walk[entity];
-                let render = game.World.Render2D[entity];
-                for (let i = 0; i < walk.Path.length; i++) {
+                for (let i = 0; i < walk.Path.length - 1; i++) {
                     let cell = walk.Path[i];
                     let ratio = (i + 1) / walk.Path.length;
-                    instantiate(game, [
-                        local_transform2d(),
-                        copy_position(cell.Position),
-                        render2d(Tile.Circle, [
-                            render.Color[0],
-                            render.Color[1],
-                            render.Color[2],
-                            1.5 + ratio,
-                        ]),
-                        shift(2),
-                        lifespan((walk.Path.length / walk.Speed) * ratio),
-                    ]);
+                    if (cell.Walkable && cell.TileEntity !== null) {
+                        let render = game.World.Render2D[cell.TileEntity];
+                        render.Color[3] = 1 + ratio / 2;
+                    }
                 }
             }
             break;
