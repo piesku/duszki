@@ -1,5 +1,6 @@
 EXAMPLE ?= src
 SOURCES := $(shell find .. -type f -name "*.ts")
+RRFLAGS ?=
 
 all: index.html
 	@printf "Size gzipped: %s bytes\n" $(shell gzip index.html --stdout | wc -c)
@@ -30,7 +31,7 @@ game.terser.js: game.sed.js terser_compress.txt
 
 game.roadroller.js: game.terser.js
 # Set -O2 for better (and longer) compression.
-	npx --quiet roadroller -O2 --dirty $< -o $@
+	npx --quiet roadroller -O2 --dirty $(RRFLAGS) $< -o $@
 
 index.html: game.html game.roadroller.js game.css debug.css posthtml.cjs
 	node posthtml.cjs $< > $@
