@@ -38,7 +38,7 @@ export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
 
 export class Game extends GameImpl {
     Store: IDBDatabase;
-    World = new World(WORLD_CAPACITY);
+    World = new World(0, WORLD_CAPACITY);
 
     MinimapCanvas = document.querySelector("canvas#m") as HTMLCanvasElement;
     MinimapContext = this.MinimapCanvas.getContext("2d")!;

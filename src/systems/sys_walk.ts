@@ -2,6 +2,7 @@ import {Vec2} from "../../lib/math.js";
 import {path_find} from "../../lib/pathfind.js";
 import {add, distance_squared, normalize, subtract} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
+import {Action, dispatch} from "../actions.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {make_tiled_road, ROAD_UPDATE_WALKS_THRESHOLD} from "./sys_build_roads.js";
@@ -42,14 +43,12 @@ function update(game: Game, entity: Entity) {
     cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
-        // Search FROM the goal TO the origin, so that the waypoints are ordered
-        // from the one closest to the origin.
         //console.time("path_find");
-        let path = path_find(game.World, walk.DestinationTrigger, cell);
-        //console.timeEnd("path_find")
+        let path = path_find(game.World, cell, walk.DestinationTrigger);
+        //console.timeEnd("path_find");
         if (path) {
-            // Discard the first waypoint, which is always the origin node.
-            walk.Path = path.slice(1);
+            walk.Path = path;
+            dispatch(game, Action.PathFound, entity);
         }
 
         walk.DestinationTrigger = null;

@@ -3,10 +3,10 @@ import {float, integer} from "../../lib/random.js";
 import {grid, GridFlag} from "../components/com_grid.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {shift} from "../components/com_render2d.js";
-import {Game, WORLD_CAPACITY} from "../game.js";
+import {Game} from "../game.js";
 import {make_tiled_road} from "../systems/sys_build_roads.js";
 import {make_tiled_park} from "../systems/sys_build_trees.js";
-import {GridType, World} from "../world.js";
+import {GridType} from "../world.js";
 import {blueprint_camera_follow} from "./blu_camera_follow.js";
 import {blueprint_camera_main} from "./blu_camera_main.js";
 import {blueprint_empty, blueprint_grass} from "./blu_grass.js";
@@ -14,9 +14,6 @@ import {blueprint_road} from "./blu_road.js";
 import {blueprint_tree} from "./blu_tree.js";
 
 export function scene_editable_dungeon(game: Game) {
-    game.World = new World(WORLD_CAPACITY);
-    game.ViewportResized = true;
-
     // Main camera.
     instantiate(game, [
         ...blueprint_camera_main(game),

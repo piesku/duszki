@@ -27,10 +27,10 @@ export function get(db: IDBDatabase, id: number): Promise<World | undefined> {
     });
 }
 
-export function clear(db: IDBDatabase): Promise<undefined> {
+export function clear(db: IDBDatabase, id: number): Promise<undefined> {
     return new Promise((resolve, reject) => {
         let store = db.transaction("world", "readwrite").objectStore("world");
-        let req = store.clear();
+        let req = store.delete(id);
         req.onsuccess = () => resolve(req.result);
         req.onerror = () => reject(req.error);
     });

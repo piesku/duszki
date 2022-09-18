@@ -1,4 +1,4 @@
-import {html as htm} from "../../lib/html.js";
+import {htm} from "../../lib/html.js";
 import {NeedType} from "../components/com_needs.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";

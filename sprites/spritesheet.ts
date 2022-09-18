@@ -43,7 +43,7 @@ export const enum Tile {
     WindowLeft,
     Door,
     WindowMiddle,
-    Circle,
+    Placeholder,
     RoofSouth,
     RoofEast,
     TreeLeftRight,

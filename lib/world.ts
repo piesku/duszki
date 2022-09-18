@@ -9,11 +9,13 @@ export type Entity = number;
  * Creating and destroying entities is O(1).
  */
 export class WorldImpl {
+    id: number;
     Capacity: number;
     Signature: Array<number> = [];
     Graveyard: Array<Entity> = [];
 
-    constructor(capacity: number = 10_000) {
+    constructor(id: number, capacity: number = 10_000) {
+        this.id = id;
         this.Capacity = capacity;
     }
 }
