@@ -47,7 +47,8 @@ function update(game: Game, entity: Entity) {
         let path = path_find(game.World, cell, walk.DestinationTrigger);
         //console.timeEnd("path_find");
         if (path) {
-            walk.Path = path;
+            // Discard the origin cell.
+            walk.Path = path.slice(1);
             dispatch(game, Action.PathFound, entity);
         }
 
