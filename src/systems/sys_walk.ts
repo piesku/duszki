@@ -49,8 +49,7 @@ function update(game: Game, entity: Entity) {
         let path = path_find(game.World, walk.DestinationTrigger, cell);
         //console.timeEnd("path_find")
         if (path) {
-            // Discard the first waypoint, which is always the origin node.
-            walk.Path = path.slice(1);
+            walk.Path = path;
             dispatch(game, Action.PathFound, entity);
         }
 
