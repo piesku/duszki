@@ -4,7 +4,7 @@ import {map_sleep} from "../../maps/map_sleep.js";
 import {map_work} from "../../maps/map_work.js";
 import {Tile} from "../../sprites/spritesheet.js";
 import {children} from "../components/com_children.js";
-import {control_player} from "../components/com_control_player.js";
+import {ControlPlayerKind, control_player} from "../components/com_control_player.js";
 import {disable} from "../components/com_disable.js";
 import {generator} from "../components/com_generator.js";
 import {local_transform2d} from "../components/com_local_transform2d.js";
@@ -72,7 +72,7 @@ export function blueprint_building(game: Game, map_id: number) {
     return [
         spatial_node2d(),
         local_transform2d(),
-        control_player("building"),
+        control_player(ControlPlayerKind.Building),
         satisfy(building_type, capacities[building_type]),
         generator(map_id),
         disable(Has.Generator | Has.Satisfy),

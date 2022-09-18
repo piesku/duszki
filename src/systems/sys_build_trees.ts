@@ -3,6 +3,7 @@ import {pointer_clicked, pointer_down} from "../../lib/input.js";
 import {set} from "../../lib/vec2.js";
 import {Tile} from "../../sprites/spritesheet.js";
 import {destroy_all} from "../components/com_children.js";
+import {ControlPlayerKind} from "../components/com_control_player.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {set_sprite} from "../components/com_render2d.js";
 import {Game} from "../game.js";
@@ -17,7 +18,7 @@ export function sys_build_trees(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let control = game.World.ControlPlayer[ent];
-            if (control.Kind !== "tree") {
+            if (control.Kind !== ControlPlayerKind.Tree) {
                 continue;
             }
 

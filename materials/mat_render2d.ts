@@ -48,9 +48,8 @@ let fragment = `#version 300 es\n
             fc=tc;
         }else{
             fc=vc*texture(st,vt);
-            if(fc.a==0.){
-                discard;
-            }
+            if(fc.a==0.)discard;
+            fc.rgb*=fc.a;
         }
     }
 `;

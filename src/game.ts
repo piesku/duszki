@@ -1,7 +1,7 @@
 import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
-import {GL_BLEND, GL_DEPTH_TEST, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA} from "../lib/webgl.js";
+import {GL_DEPTH_TEST} from "../lib/webgl.js";
 import {Entity} from "../lib/world.js";
 import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
@@ -18,6 +18,7 @@ import {sys_control_camera_main} from "./systems/sys_control_camera_main.js";
 import {sys_control_mouse} from "./systems/sys_control_mouse.js";
 import {sys_follow} from "./systems/sys_follow2d.js";
 import {sys_generate} from "./systems/sys_generate.js";
+import {sys_highlight} from "./systems/sys_highlight.js";
 import {sys_lifespan} from "./systems/sys_lifespan.js";
 import {sys_move2d} from "./systems/sys_move2d.js";
 import {sys_needs} from "./systems/sys_needs.js";
@@ -88,8 +89,6 @@ export class Game extends Game3D {
         this.Ui.innerHTML = App();
 
         this.Gl.enable(GL_DEPTH_TEST);
-        this.Gl.enable(GL_BLEND);
-        this.Gl.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         this.Gl.clearColor(0.4, 0.4, 0.4, 1);
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
@@ -103,6 +102,7 @@ export class Game extends Game3D {
         sys_build_roads(this, delta);
         sys_build_trees(this, delta);
         sys_build_erase(this, delta);
+        sys_highlight(this, delta);
 
         // AI.
         sys_needs(this, delta);
