@@ -3,6 +3,7 @@ import {pointer_clicked} from "../../lib/input.js";
 import {get_translation} from "../../lib/mat2d.js";
 import {Vec2} from "../../lib/math.js";
 import {destroy_all, query_down} from "../components/com_children.js";
+import {ControlPlayerKind} from "../components/com_control_player.js";
 import {set_position} from "../components/com_local_transform2d.js";
 import {GENERATORS} from "../config.js";
 import {Game} from "../game.js";
@@ -26,7 +27,7 @@ export function sys_build_buildings(game: Game, delta: number) {
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
         if ((game.World.Signature[ent] & QUERY) == QUERY) {
             let control = game.World.ControlPlayer[ent];
-            if (control.Kind !== "building") {
+            if (control.Kind !== ControlPlayerKind.Building) {
                 continue;
             }
 
