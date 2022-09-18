@@ -3,8 +3,13 @@ import {Vec2} from "../lib/math.js";
 import {Entity, first_having} from "../lib/world.js";
 import {Tile} from "../sprites/spritesheet.js";
 import {destroy_all} from "./components/com_children.js";
-import {copy_position, set_position} from "./components/com_local_transform2d.js";
-import {set_sprite} from "./components/com_render2d.js";
+import {lifespan} from "./components/com_lifespan.js";
+import {
+    copy_position,
+    local_transform2d,
+    set_position,
+} from "./components/com_local_transform2d.js";
+import {render2d, set_sprite, shift} from "./components/com_render2d.js";
 import {Game} from "./game.js";
 import {blueprint_building} from "./scenes/blu_building.js";
 import {blueprint_duszek} from "./scenes/blu_duszek.js";
@@ -23,6 +28,7 @@ export const enum Action {
     ResetGame,
     MinimapNavigation,
     ToggleMusic,
+    PathFound,
 }
 
 export function dispatch(game: Game, action: Action, payload: unknown) {
@@ -135,6 +141,30 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         case Action.ToggleMusic: {
             let enabled = payload as boolean;
             game.MusicEnabled = enabled;
+            break;
+        }
+        case Action.PathFound: {
+            let entity = payload as Entity;
+            if (entity === game.SelectedEntity) {
+                let walk = game.World.Walk[entity];
+                let render = game.World.Render2D[entity];
+                for (let i = 0; i < walk.Path.length; i++) {
+                    let cell = walk.Path[i];
+                    let ratio = (i + 1) / walk.Path.length;
+                    instantiate(game, [
+                        local_transform2d(),
+                        copy_position(cell.Position),
+                        render2d(Tile.Circle, [
+                            render.Color[0],
+                            render.Color[1],
+                            render.Color[2],
+                            1.5 + ratio,
+                        ]),
+                        shift(2),
+                        lifespan((walk.Path.length / walk.Speed) * ratio),
+                    ]);
+                }
+            }
             break;
         }
     }
