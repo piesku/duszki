@@ -1,4 +1,4 @@
-import {Game3D} from "../lib/game.js";
+import {GameImpl} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
 import {GL_DEPTH_TEST} from "../lib/webgl.js";
@@ -36,7 +36,7 @@ import {World} from "./world.js";
 
 export const WORLD_CAPACITY = 65_536; // = 4MB of InstanceData.
 
-export class Game extends Game3D {
+export class Game extends GameImpl {
     Store: IDBDatabase;
     World = new World(WORLD_CAPACITY);
 
@@ -93,7 +93,7 @@ export class Game extends Game3D {
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
 
-    override FrameUpdate(delta: number) {
+    FrameUpdate(delta: number) {
         // Player input.
         sys_control_camera_main(this, delta);
         sys_control_camera_follow(this, delta);

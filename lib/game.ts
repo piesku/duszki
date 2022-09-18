@@ -40,6 +40,12 @@ export abstract class GameImpl {
 
     Ui = document.querySelector("main")!;
 
+    SceneCanvas = document.querySelector("#s")! as HTMLCanvasElement;
+    Gl = this.SceneCanvas.getContext("webgl2", {antialias: false})!;
+
+    Audio = new AudioContext();
+    Cameras: Array<Entity> = [];
+
     constructor() {
         document.addEventListener("visibilitychange", () =>
             document.hidden ? this.Stop() : this.Start()
@@ -107,8 +113,7 @@ export abstract class GameImpl {
         }
     }
 
-    FixedUpdate(step: number) {}
-    FrameUpdate(delta: number) {}
+    abstract FrameUpdate(delta: number): void;
 
     FrameReset(delta: number) {
         this.ViewportResized = false;
@@ -127,20 +132,6 @@ export abstract class GameImpl {
             this.InputDelta[name] = 0;
         }
     }
-}
-
-/**
- * The base Game class for 3D games.
- *
- * Stores references to the canvas elements and the WebGL2 context, as well as
- * Context2D instances for drawing behind and in front of the scene.
- */
-export abstract class Game3D extends GameImpl {
-    SceneCanvas = document.querySelector("#s")! as HTMLCanvasElement;
-    Gl = this.SceneCanvas.getContext("webgl2", {antialias: false})!;
-
-    Audio = new AudioContext();
-    Cameras: Array<Entity> = [];
 }
 
 type Mixin<G extends GameImpl> = (game: G, entity: Entity) => void;
