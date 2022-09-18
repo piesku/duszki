@@ -43,11 +43,9 @@ function update(game: Game, entity: Entity) {
     cell.Ocupados.push(entity);
 
     if (walk.DestinationTrigger !== null) {
-        // Search FROM the goal TO the origin, so that the waypoints are ordered
-        // from the one closest to the origin.
         //console.time("path_find");
-        let path = path_find(game.World, walk.DestinationTrigger, cell);
-        //console.timeEnd("path_find")
+        let path = path_find(game.World, cell, walk.DestinationTrigger);
+        //console.timeEnd("path_find");
         if (path) {
             walk.Path = path;
             dispatch(game, Action.PathFound, entity);

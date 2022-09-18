@@ -40,9 +40,9 @@ export function path_find(world: World, origin: GridCell, goal: GridCell) {
         let current = boundary.splice(lowest, 1)[0];
 
         if (current === goal) {
-            // We've reached the goal. Return an array of nodes from the goal to
-            // the destination.
-            return [...path_follow(predecessors, goal)];
+            // We've reached the goal. Return an array of nodes from the origin
+            // to the goal.
+            return [...path_follow(predecessors, goal)].reverse();
         }
 
         // Check top, down, left and right neighbors in a single loop.
