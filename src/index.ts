@@ -3,7 +3,7 @@ import {Game} from "./game.js";
 import {scene_editable_dungeon} from "./scenes/sce_editable_dungeon.js";
 import {connect, get} from "./store.js";
 
-const DEFAULT_WORLD_ID = 0;
+const DEFAULT_WORLD_ID = 1;
 
 async function main() {
     let db = await connect();
