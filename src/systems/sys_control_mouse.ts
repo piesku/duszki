@@ -62,7 +62,7 @@ export function sys_control_mouse(game: Game, delta: number) {
                                 render.Color[0],
                                 render.Color[1],
                                 render.Color[2],
-                                ratio,
+                                1.5 + ratio,
                             ]),
                             shift(2),
                             lifespan(Math.min(3, walk.Path.length / 5) * ratio),
