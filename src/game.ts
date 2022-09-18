@@ -1,7 +1,7 @@
 import {Game3D} from "../lib/game.js";
 import {Vec2} from "../lib/math.js";
 import {create_spritesheet_from} from "../lib/texture.js";
-import {GL_BLEND, GL_DEPTH_TEST, GL_ONE, GL_ONE_MINUS_SRC_ALPHA} from "../lib/webgl.js";
+import {GL_DEPTH_TEST} from "../lib/webgl.js";
 import {Entity} from "../lib/world.js";
 import {setup_render2d_buffers} from "../materials/layout2d.js";
 import {mat_render2d} from "../materials/mat_render2d.js";
@@ -89,9 +89,6 @@ export class Game extends Game3D {
         this.Ui.innerHTML = App();
 
         this.Gl.enable(GL_DEPTH_TEST);
-        this.Gl.enable(GL_BLEND);
-        // Alphe is premultiplied in the shader
-        this.Gl.blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         this.Gl.clearColor(0.4, 0.4, 0.4, 1);
         setup_render2d_buffers(this.Gl, this.InstanceBuffer);
     }
