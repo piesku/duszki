@@ -2,12 +2,10 @@ type Interpolation = string | number | boolean | undefined | null | Array<Interp
 
 function shift(values: Array<Interpolation>) {
     let value = values.shift();
-    if (typeof value === "boolean" || value == undefined) {
-        return "";
-    } else if (Array.isArray(value)) {
-        return value.join("");
-    } else {
+    if (value || value === 0) {
         return value;
+    } else {
+        return "";
     }
 }
 
