@@ -3,6 +3,7 @@ import {Vec2} from "../../lib/math.js";
 import {element} from "../../lib/random.js";
 import {Action, dispatch} from "../actions.js";
 import {NeedType} from "../components/com_needs.js";
+import {query_up} from "../components/com_spatial_node2d.js";
 import {Game} from "../game.js";
 import {GridCell, Has} from "../world.js";
 import {LOW_SATISFY_THRESHOLD, SATISFY_THRESHOLD} from "./sys_satisfy.js";
@@ -48,6 +49,22 @@ function update(game: Game, entity: number, delta: number) {
         return;
     }
 
+    if (walk.DestinationTrigger !== null) {
+        // sys_walk hasn't found a path to the destination. Forget the target
+        // corresponding to it; sys_needs will pick a new one at random.
+        let tile_entity = walk.DestinationTrigger.TileEntity;
+        if (tile_entity !== null) {
+            for (let parent_entity of query_up(game.World, tile_entity, Has.Satisfy)) {
+                let satisfy = game.World.Satisfy[parent_entity];
+                needs.Target[satisfy.NeedType] = undefined;
+                break;
+            }
+        }
+
+        // Clear the trigger to stop trying to find a path in sys_walk.
+        walk.DestinationTrigger = null;
+    }
+
     control.TimeSinceDecision += delta;
     if (control.TimeSinceDecision > control.DecisionInterval) {
         let current_destination = walk.Path[walk.Path.length - 1];
@@ -69,12 +86,14 @@ function update(game: Game, entity: number, delta: number) {
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
                 if (current_destination === undefined) {
+                    // Duszek is not currently walking anywhere.
                     walk.DestinationTrigger = cell;
                     control.TimeSinceDecision = 0;
                 } else if (
                     cell !== current_destination &&
                     needs.Value[NeedType.FOOD] < LOW_SATISFY_THRESHOLD
                 ) {
+                    // Duszek is walking somewhere else, but the target is closer.
                     walk.DestinationTrigger = cell;
                     control.TimeSinceDecision = 0;
                 }
@@ -99,12 +118,14 @@ function update(game: Game, entity: number, delta: number) {
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
                 if (current_destination === undefined) {
+                    // Duszek is not currently walking anywhere.
                     walk.DestinationTrigger = cell;
                     control.TimeSinceDecision = 0;
                 } else if (
                     cell !== current_destination &&
                     needs.Value[NeedType.SLEEP] < LOW_SATISFY_THRESHOLD
                 ) {
+                    // Duszek is walking somewhere else, but the target is closer.
                     walk.DestinationTrigger = cell;
                     control.TimeSinceDecision = 0;
                 }
@@ -128,6 +149,7 @@ function update(game: Game, entity: number, delta: number) {
                 let y = Math.round(destination_position[1]);
                 let cell = game.World.Grid[y][x];
                 if (cell !== current_destination) {
+                    // Duszek is walking somewhere else, but the target is closer.
                     walk.DestinationTrigger = cell;
                     control.TimeSinceDecision = 0;
                 }

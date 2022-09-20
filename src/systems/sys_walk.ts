@@ -50,9 +50,11 @@ function update(game: Game, entity: Entity) {
             // Discard the origin cell.
             walk.Path = path.slice(1);
             dispatch(game, Action.PathFound, entity);
-        }
 
-        walk.DestinationTrigger = null;
+            // Only clear the trigger if the path is valid. Otherwise, try again
+            // next frame, unless another system has already cleared it.
+            walk.DestinationTrigger = null;
+        }
     }
 
     if (walk.Path.length > 0) {
