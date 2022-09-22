@@ -74,7 +74,7 @@ function highlight_duszek(game: Game, entity: Entity) {
         let ratio = (i + 1) / walk.Path.length;
         if (cell.Walkable && cell.TileEntity !== null) {
             let render = game.World.Render2D[cell.TileEntity];
-            render.Color[3] = 1 + ratio / 2;
+            render.Color[3] = 1.2 + ratio / 3;
         }
     }
 }
