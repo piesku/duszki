@@ -5,6 +5,7 @@ import {Game} from "../game.js";
 import {Has} from "../world.js";
 
 const QUERY_DUSZEK = Has.ControlAi | Has.Render2D;
+const QUERY_BUILDING = Has.Satisfy | Has.Generator;
 
 export function sys_highlight(game: Game, delta: number) {
     // 1. Deselect all entities.
@@ -17,16 +18,19 @@ export function sys_highlight(game: Game, delta: number) {
         }
     }
 
+    // 2. Highlight the selected entity.
     for (let ent = 0; ent < game.World.Signature.length; ent++) {
-        if ((game.World.Signature[ent] & QUERY_DUSZEK) == QUERY_DUSZEK) {
-            if (ent === game.SelectedEntity) {
-                highlight(game, ent);
+        if (ent === game.SelectedEntity) {
+            if ((game.World.Signature[ent] & QUERY_DUSZEK) == QUERY_DUSZEK) {
+                highlight_duszek(game, ent);
+            } else if ((game.World.Signature[ent] & QUERY_BUILDING) == QUERY_BUILDING) {
+                highlight_building(game, ent);
             }
         }
     }
 }
 
-function highlight(game: Game, entity: Entity) {
+function highlight_duszek(game: Game, entity: Entity) {
     // Highlight the selected entity.
     let render = game.World.Render2D[entity];
     render.Color[3] = 2;
@@ -70,5 +74,12 @@ function highlight(game: Game, entity: Entity) {
             let render = game.World.Render2D[cell.TileEntity];
             render.Color[3] = 1 + ratio / 2;
         }
+    }
+}
+
+function highlight_building(game: Game, entity: Entity) {
+    for (let child_entity of query_down(game.World, entity, Has.Render2D)) {
+        let render = game.World.Render2D[child_entity];
+        render.Color[3] = 1.5;
     }
 }
