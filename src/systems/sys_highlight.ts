@@ -4,7 +4,7 @@ import {NeedType} from "../components/com_needs.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 
-const QUERY_DUSZEK = Has.ControlAi | Has.Render2D;
+const QUERY_DUSZEK = Has.ControlAi | Has.Needs;
 const QUERY_BUILDING = Has.Satisfy | Has.Generator;
 
 export function sys_highlight(game: Game, delta: number) {
@@ -32,8 +32,10 @@ export function sys_highlight(game: Game, delta: number) {
 
 function highlight_duszek(game: Game, entity: Entity) {
     // Highlight the selected entity.
-    let render = game.World.Render2D[entity];
-    render.Color[3] = 2;
+    if (game.World.Signature[entity] & Has.Render2D) {
+        let render = game.World.Render2D[entity];
+        render.Color[3] = 2;
+    }
 
     // Highlight the entity's needs.
     let needs = game.World.Needs[entity];
