@@ -2,7 +2,6 @@ import {Vec2} from "../../lib/math.js";
 import {path_find} from "../../lib/pathfind.js";
 import {add, distance_squared, normalize, subtract} from "../../lib/vec2.js";
 import {Entity} from "../../lib/world.js";
-import {Action, dispatch} from "../actions.js";
 import {Game} from "../game.js";
 import {Has} from "../world.js";
 import {make_tiled_road, ROAD_UPDATE_WALKS_THRESHOLD} from "./sys_build_roads.js";
@@ -49,7 +48,6 @@ function update(game: Game, entity: Entity) {
         if (path) {
             // Discard the origin cell.
             walk.Path = path.slice(1);
-            dispatch(game, Action.PathFound, entity);
 
             // Only clear the trigger if the path is valid. Otherwise, try again
             // next frame, unless another system has already cleared it.

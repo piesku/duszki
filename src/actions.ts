@@ -23,7 +23,6 @@ export const enum Action {
     ResetGame,
     MinimapNavigation,
     ToggleMusic,
-    PathFound,
 }
 
 export function dispatch(game: Game, action: Action, payload: unknown) {
@@ -136,33 +135,6 @@ export function dispatch(game: Game, action: Action, payload: unknown) {
         case Action.ToggleMusic: {
             let enabled = payload as boolean;
             game.MusicEnabled = enabled;
-            break;
-        }
-        case Action.PathFound: {
-            let entity = payload as Entity;
-            if (entity === game.SelectedEntity) {
-                // Clear the previous path.
-                for (let y = 0; y < game.World.Grid.length; y++) {
-                    for (let x = 0; x < game.World.Grid[y].length; x++) {
-                        let cell = game.World.Grid[y][x];
-                        if (cell.Walkable && cell.TileEntity !== null) {
-                            let render = game.World.Render2D[cell.TileEntity];
-                            render.Color[3] = 1;
-                        }
-                    }
-                }
-
-                // Highlight the new path, except the last waypoint (the door).
-                let walk = game.World.Walk[entity];
-                for (let i = 0; i < walk.Path.length - 1; i++) {
-                    let cell = walk.Path[i];
-                    let ratio = (i + 1) / walk.Path.length;
-                    if (cell.Walkable && cell.TileEntity !== null) {
-                        let render = game.World.Render2D[cell.TileEntity];
-                        render.Color[3] = 1 + ratio / 2;
-                    }
-                }
-            }
             break;
         }
     }

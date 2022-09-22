@@ -1,6 +1,5 @@
 import {pointer_clicked, pointer_viewport} from "../../lib/input.js";
 import {Entity} from "../../lib/world.js";
-import {Action, dispatch} from "../actions.js";
 import {viewport_to_world} from "../components/com_camera2d.js";
 import {NeedType} from "../components/com_needs.js";
 import {query_up} from "../components/com_spatial_node2d.js";
@@ -44,10 +43,6 @@ export function sys_control_mouse(game: Game, delta: number) {
         if (cell && cell.TileEntity !== null) {
             if (cell.Ocupados.length > 0) {
                 game.SelectedEntity = cell.Ocupados[0];
-
-                if ((game.World.Signature[game.SelectedEntity] & WALKING) === WALKING) {
-                    dispatch(game, Action.PathFound, game.SelectedEntity);
-                }
 
                 if (DEBUG) {
                     let duszki: Record<Entity, object> = {};
